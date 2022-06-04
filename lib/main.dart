@@ -1,8 +1,10 @@
+import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:badges/badges.dart';
+
+import 'package:test3/FlutterType.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +16,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'Hello world'),
     );
@@ -33,7 +34,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  Future<void> _refresh() async {}
+  Symbol lib2 = const Symbol('Text');
+
+  Future<void> _refresh() async {
+    print("Refresh");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         title: Text(widget.title),
         leading: IconButton(
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
           icon: const Icon(Icons.menu),
-          onPressed: () {},
+          onPressed: () {
+            print("AppBar leading");
+          },
         ),
       ),
       body: Center(
@@ -64,46 +70,72 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.all(8),
             itemCount: 50,
             itemBuilder: (BuildContext context, int index) {
-              return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 10, 0),
-                      child: const CircleAvatar(
-                        backgroundImage:
-                            NetworkImage('https://i.stack.imgur.com/Qt4JP.png'),
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: const <Widget>[
-                                Text(
-                                  'If you want the same background color, you should use a FlatButton instead, and Colors.transparent to avoid the elevation shadow from the RaisedButton',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                                Text('Description',
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 13)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    const Icon(
-                      Icons.arrow_forward_ios_sharp,
-                      color: Colors.grey,
-                      size: 17,
-                    ),
-                  ]);
+              return FlutterType.main(
+                  '''{
+                        "flutterType": "Row",
+                        "crossAxisAlignment": "start", 
+                        "children": [
+                          {
+                            "flutterType": "Container", 
+                            "margin": "0,5,10,0", 
+                            "child": {
+                              "flutterType": "CircleAvatar", 
+                              "backgroundImage": {
+                                "flutterType": "NetworkImage", 
+                                "src": "https://s.imgur.com/images/favicon-32x32.png"
+                              }
+                            }
+                          },
+                          {
+                            "flutterType": "Expanded", 
+                            "child": {
+                              "flutterType": "Row", 
+                              "crossAxisAlignment": "start", 
+                              "children": [
+                                {
+                                  "flutterType": "SizedBox", 
+                                  "width": 10
+                                },
+                                {
+                                  "flutterType": "Expanded", 
+                                  "child": {
+                                    "flutterType": "Column", 
+                                    "crossAxisAlignment": "start", 
+                                    "children": [
+                                      {
+                                        "flutterType": "Text", 
+                                        "data": "If you want the same background color, you should use a FlatButton instead, and Colors.transparent to avoid the elevation shadow from the RaisedButton", 
+                                        "style": {
+                                          "flutterType": "TextStyle", 
+                                          "fontSize": 15
+                                        }
+                                      }, 
+                                      {
+                                        "flutterType": "Text", 
+                                        "data": "Description", 
+                                        "style": {
+                                          "flutterType": "TextStyle",
+                                          "color": "grey", 
+                                          "fontSize": 13
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }, 
+                          {
+                            "flutterType": "SizedBox", 
+                            "width": 10
+                          }, 
+                          {
+                            "flutterType": "Icon", 
+                            "src": "arrow_forward_ios_sharp", 
+                            "size": 17
+                          }
+                        ]
+                      }''');
             },
             separatorBuilder: (BuildContext context, int index) =>
                 const Divider(),
@@ -114,7 +146,9 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 10,
         items: [
           const BottomNavigationBarItem(
-              label: 'Главная', icon: Icon(Icons.home)),
+            label: 'Главная',
+            icon: Icon(Icons.home),
+          ),
           BottomNavigationBarItem(
             icon: Badge(
                 position: BadgePosition.topEnd(top: -5, end: -22),
@@ -134,7 +168,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
-        onTap: (index) {},
+        onTap: (index) {
+          print("TabBar");
+        },
       ),
     );
   }
