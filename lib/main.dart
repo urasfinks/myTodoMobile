@@ -27,9 +27,10 @@ class MyApp extends StatelessWidget {
 }
 
 class DynamicPage extends StatefulWidget {
-  const DynamicPage({Key? key, required this.title}) : super(key: key);
+  const DynamicPage({Key? key, required this.title, this.root = false }) : super(key: key);
 
   final String title;
+  final bool root;
 
   @override
   State<DynamicPage> createState() => _DynamicPageState();
@@ -50,12 +51,12 @@ class _DynamicPageState extends State<DynamicPage> {
           statusBarColor: Colors.transparent, // Status bar
         ),
         title: Text(widget.title),
-        leading: IconButton(
+        leading: widget.root == true ? IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
             print("AppBar leading");
           },
-        ),
+        ) : null,
       ),
       body: Center(
         child: LiquidPullToRefresh(
@@ -140,8 +141,9 @@ class _DynamicPageState extends State<DynamicPage> {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => const SecondRoute(
+                      builder: (context) => const DynamicPage(
                         title: 'Soround',
+                        root: false,
                       ),
                     ),
                   );
@@ -197,7 +199,7 @@ class _MainPageState extends State<MainPage> {
           case 0:
             return CupertinoTabView(builder: (context) {
               return const CupertinoPageScaffold(
-                  child: DynamicPage(title: 'Opa 1'));
+                  child: DynamicPage(title: 'Opa 1', root: true,));
             });
           case 1:
             return CupertinoTabView(builder: (context) {
