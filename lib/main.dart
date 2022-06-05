@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -15,27 +16,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(title: 'Hello world'),
+      onGenerateRoute: (RouteSettings settings) {
+        return CupertinoPageRoute(
+            builder: (_) => const MainPage(), settings: settings);
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class DynamicPage extends StatefulWidget {
+  const DynamicPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<DynamicPage> createState() => _DynamicPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-
-  Symbol lib2 = const Symbol('Text');
-
+class _DynamicPageState extends State<DynamicPage> {
   Future<void> _refresh() async {
     print("Refresh");
   }
@@ -70,8 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.all(8),
             itemCount: 50,
             itemBuilder: (BuildContext context, int index) {
-              return FlutterType.main(
-                  '''{
+              return GestureDetector(
+                child: FlutterType.main('''{
                         "flutterType": "Row",
                         "crossAxisAlignment": "start", 
                         "children": [
@@ -135,15 +135,40 @@ class _MyHomePageState extends State<MyHomePage> {
                             "size": 17
                           }
                         ]
-                      }''');
+                      }'''),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => const SecondRoute(
+                        title: 'Soround',
+                      ),
+                    ),
+                  );
+                },
+              );
             },
             separatorBuilder: (BuildContext context, int index) =>
                 const Divider(),
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 10,
+    );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
         items: [
           const BottomNavigationBarItem(
             label: 'Главная',
@@ -151,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Badge(
-                position: BadgePosition.topEnd(top: -5, end: -22),
+                position: BadgePosition.topEnd(top: 0, end: -22),
                 shape: BadgeShape.square,
                 borderRadius: BorderRadius.circular(10),
                 badgeContent: const Text(
@@ -166,11 +191,55 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Аккаунт',
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: (index) {
-          print("TabBar");
-        },
+      ),
+      tabBuilder: (context, index) {
+        switch (index) {
+          case 0:
+            return CupertinoTabView(builder: (context) {
+              return const CupertinoPageScaffold(
+                  child: DynamicPage(title: 'Opa 1'));
+            });
+          case 1:
+            return CupertinoTabView(builder: (context) {
+              return const CupertinoPageScaffold(
+                  child: SecondRoute(title: 'Opa 2'));
+            });
+          case 2:
+            return CupertinoTabView(builder: (context) {
+              return const CupertinoPageScaffold(
+                  child: SecondRoute(title: 'Opa 3'));
+            });
+          default:
+            return const CupertinoTabView();
+        }
+      },
+    );
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({super.key, required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        elevation: 0,
+        backgroundColor: Colors.blue[600],
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent, // Status bar
+        ),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Go back!'),
+        ),
       ),
     );
   }
