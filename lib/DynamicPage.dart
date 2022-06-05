@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
-import 'FlutterType.dart';
+import 'DynamicWidget/FlutterType.dart';
 
 class DynamicPage extends StatefulWidget {
   const DynamicPage({Key? key, required this.title, this.root = false})

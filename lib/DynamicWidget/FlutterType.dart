@@ -209,7 +209,7 @@ class FlutterType {
 
   static dynamic _pIcon(parsedJson) {
     return Icon(
-      IconsMap[def(parsedJson, 'src', null)],
+      iconsMap[def(parsedJson, 'src', null)],
       color: castToMaterialColor(def(parsedJson, 'color', null)),
       size: castToDouble(def(parsedJson, 'size', null)),
     );

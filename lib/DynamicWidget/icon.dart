@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Icon data map for Material Icons
-const Map<String, IconData> IconsMap = <String, IconData>{
+const Map<String, IconData> iconsMap = <String, IconData>{
   'arrow_forward_ios_sharp': Icons.arrow_forward_ios_sharp,
   'ac_unit': Icons.ac_unit,
   'access_alarm': Icons.access_alarm,
