@@ -6,7 +6,8 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'FlutterType.dart';
 
 class DynamicPage extends StatefulWidget {
-  const DynamicPage({Key? key, required this.title, this.root = false }) : super(key: key);
+  const DynamicPage({Key? key, required this.title, this.root = false})
+      : super(key: key);
 
   final String title;
   final bool root;
@@ -30,12 +31,14 @@ class _DynamicPageState extends State<DynamicPage> {
           statusBarColor: Colors.transparent, // Status bar
         ),
         title: Text(widget.title),
-        leading: widget.root == true ? IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            print("AppBar leading");
-          },
-        ) : null,
+        leading: widget.root == true
+            ? IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  print("AppBar leading");
+                },
+              )
+            : null,
       ),
       body: Center(
         child: LiquidPullToRefresh(
@@ -47,7 +50,7 @@ class _DynamicPageState extends State<DynamicPage> {
           onRefresh: _refresh,
           child: ListView.separated(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 60),
             itemCount: 50,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
@@ -130,7 +133,7 @@ class _DynamicPageState extends State<DynamicPage> {
               );
             },
             separatorBuilder: (BuildContext context, int index) =>
-            const Divider(),
+                const Divider(),
           ),
         ),
       ),
