@@ -14,6 +14,13 @@ class FlutterType {
     return def(parsedJson, null, defaultWidget);
   }
 
+  static Widget mainJson(Map<String, dynamic> jsonData) {
+    if (jsonData.isEmpty) {
+      return defaultWidget;
+    }
+    return def(jsonData, null, defaultWidget);
+  }
+
   static dynamic getByType(String containsKey, map, dynamic def) {
     Map<String, Function> map1 = {
       "Text": _pText,

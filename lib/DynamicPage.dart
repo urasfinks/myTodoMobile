@@ -4,21 +4,93 @@ import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import 'DynamicWidget/FlutterType.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DynamicPage extends StatefulWidget {
-  const DynamicPage({Key? key, required this.title, this.root = false})
+  const DynamicPage(
+      {Key? key, required this.title, required this.url, this.root = false})
       : super(key: key);
 
   final String title;
   final bool root;
+  final String url;
 
   @override
   State<DynamicPage> createState() => _DynamicPageState();
 }
 
 class _DynamicPageState extends State<DynamicPage> {
-  Future<void> _refresh() async {
-    print("Refresh");
+  Future<Map<String, dynamic>> getServerData() async {
+    final response = await http.get(Uri.parse(widget.url));
+    if (response.statusCode == 200) {
+      print('load data');
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
+  ListView getListView(
+      bool separated,
+      ScrollPhysics physics,
+      EdgeInsetsGeometry? padding,
+      int itemCount,
+      IndexedWidgetBuilder itemBuilder,
+      IndexedWidgetBuilder separatorBuilder) {
+    if (separated == true) {
+      return ListView.separated(
+          physics: physics,
+          padding: padding,
+          itemCount: itemCount,
+          itemBuilder: itemBuilder,
+          separatorBuilder: separatorBuilder);
+    } else {
+      return ListView.builder(
+          physics: physics,
+          padding: padding,
+          itemCount: itemCount,
+          itemBuilder: itemBuilder);
+    }
+  }
+
+  Widget getFutureBuilder() {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: getServerData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return getListView(
+              snapshot.data!['separated'] == null ||
+                  snapshot.data!['separated'] == true,
+              const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              FlutterType.parseEdgeInsetsGeometry(
+                  FlutterType.def(snapshot.data, 'padding', null)),
+              snapshot.data!['list'].length, (BuildContext context, int index) {
+            return GestureDetector(
+              child: FlutterType.mainJson(snapshot.data!['list'][index]),
+              onTap: () {
+                if (snapshot.data!['list'][index]['url'] != null) {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => DynamicPage(
+                        title: 'Soround',
+                        url: snapshot.data!['list'][index]['url'],
+                        root: false,
+                      ),
+                    ),
+                  );
+                }
+              },
+            );
+          }, (BuildContext context, int index) => const Divider());
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+        return const CircularProgressIndicator();
+      },
+    );
   }
 
   @override
@@ -47,94 +119,10 @@ class _DynamicPageState extends State<DynamicPage> {
           springAnimationDurationInMilliseconds: 500,
           animSpeedFactor: 2,
           height: 90,
-          onRefresh: _refresh,
-          child: ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 60),
-            itemCount: 50,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                child: FlutterType.main('''{
-                        "flutterType": "Row",
-                        "crossAxisAlignment": "start", 
-                        "children": [
-                          {
-                            "flutterType": "Container", 
-                            "margin": "0,5,10,0", 
-                            "child": {
-                              "flutterType": "CircleAvatar", 
-                              "backgroundImage": {
-                                "flutterType": "NetworkImage", 
-                                "src": "https://s.imgur.com/images/favicon-32x32.png"
-                              }
-                            }
-                          },
-                          {
-                            "flutterType": "Expanded", 
-                            "child": {
-                              "flutterType": "Row", 
-                              "crossAxisAlignment": "start", 
-                              "children": [
-                                {
-                                  "flutterType": "SizedBox", 
-                                  "width": 10
-                                },
-                                {
-                                  "flutterType": "Expanded", 
-                                  "child": {
-                                    "flutterType": "Column", 
-                                    "crossAxisAlignment": "start", 
-                                    "children": [
-                                      {
-                                        "flutterType": "Text", 
-                                        "data": "If you want the same background color, you should use a FlatButton instead, and Colors.transparent to avoid the elevation shadow from the RaisedButton", 
-                                        "style": {
-                                          "flutterType": "TextStyle", 
-                                          "fontSize": 15
-                                        }
-                                      }, 
-                                      {
-                                        "flutterType": "Text", 
-                                        "data": "Description", 
-                                        "style": {
-                                          "flutterType": "TextStyle",
-                                          "color": "grey", 
-                                          "fontSize": 13
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
-                              ]
-                            }
-                          }, 
-                          {
-                            "flutterType": "SizedBox", 
-                            "width": 10
-                          }, 
-                          {
-                            "flutterType": "Icon", 
-                            "src": "arrow_forward_ios_sharp", 
-                            "size": 17
-                          }
-                        ]
-                      }'''),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => const DynamicPage(
-                        title: 'Soround',
-                        root: false,
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(),
-          ),
+          onRefresh: () async {
+            setState(() {});
+          },
+          child: getFutureBuilder(),
         ),
       ),
     );

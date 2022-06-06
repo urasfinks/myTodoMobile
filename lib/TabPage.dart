@@ -45,7 +45,11 @@ class _TabPageState extends State<TabPage> {
           case 0:
             return CupertinoTabView(builder: (context) {
               return const CupertinoPageScaffold(
-                  child: DynamicPage(title: 'Opa 1', root: true,));
+                  child: DynamicPage(
+                title: 'Opa 1',
+                url: 'http://jamsys.ru/json/1.json',
+                root: true,
+              ));
             });
           case 1:
             return CupertinoTabView(builder: (context) {
