@@ -7,6 +7,8 @@ import 'DynamicWidget/FlutterType.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'Util.dart';
+
 class DynamicPage extends StatefulWidget {
   const DynamicPage(
       {Key? key, required this.title, required this.url, this.root = false})
@@ -31,35 +33,12 @@ class _DynamicPageState extends State<DynamicPage> {
     }
   }
 
-  ListView getListView(
-      bool separated,
-      ScrollPhysics physics,
-      EdgeInsetsGeometry? padding,
-      int itemCount,
-      IndexedWidgetBuilder itemBuilder,
-      IndexedWidgetBuilder separatorBuilder) {
-    if (separated == true) {
-      return ListView.separated(
-          physics: physics,
-          padding: padding,
-          itemCount: itemCount,
-          itemBuilder: itemBuilder,
-          separatorBuilder: separatorBuilder);
-    } else {
-      return ListView.builder(
-          physics: physics,
-          padding: padding,
-          itemCount: itemCount,
-          itemBuilder: itemBuilder);
-    }
-  }
-
   Widget getFutureBuilder() {
     return FutureBuilder<Map<String, dynamic>>(
       future: getServerData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return getListView(
+          return Util.getListView(
               snapshot.data!['separated'] == null ||
                   snapshot.data!['separated'] == true,
               const BouncingScrollPhysics(

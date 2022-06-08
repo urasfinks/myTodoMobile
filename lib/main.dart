@@ -1,8 +1,8 @@
 import 'dart:core';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_redux/flutter_redux.dart';
+import 'AppStore.dart';
 import 'TabPage.dart';
 
 void main() {
@@ -14,18 +14,15 @@ class RouterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: (RouteSettings settings) {
-        return CupertinoPageRoute(
-            builder: (_) => const TabPage(), settings: settings);
-      },
+    return StoreProvider(
+      store: AppStore.store,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: (RouteSettings settings) {
+          return CupertinoPageRoute(
+              builder: (_) => const TabPage(), settings: settings);
+        },
+      ),
     );
   }
 }
-
-
-
-
-
-
