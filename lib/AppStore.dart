@@ -37,6 +37,7 @@ class AppStore {
   void apply() {
     store.dispatch(null);
   }
+
   StoreConnector connect(ViewModelBuilder<AppStore> builder){
     return StoreConnector<AppStore, AppStore>(
       converter: (store) => store.state,
