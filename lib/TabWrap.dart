@@ -26,15 +26,18 @@ class _TabWrapState extends State<TabWrap> {
           ),
           BottomNavigationBarItem(
             icon: Badge(
-                position: BadgePosition.topEnd(top: 0, end: -22),
-                shape: BadgeShape.square,
-                borderRadius: BorderRadius.circular(10),
-                badgeContent: AppStore.connect(context, (store) => Text(
+              position: BadgePosition.topEnd(top: 0, end: -22),
+              shape: BadgeShape.square,
+              borderRadius: BorderRadius.circular(10),
+              badgeContent: AppStore.connect(
+                context,
+                (store) => Text(
                   store.get("cart", '0'),
                   style: const TextStyle(color: Colors.white, fontSize: 8),
-                )),
-
-                child: const Icon(Icons.business)),
+                ),
+              ),
+              child: const Icon(Icons.business),
+            ),
             label: 'Организация',
           ),
           const BottomNavigationBarItem(
@@ -46,24 +49,27 @@ class _TabWrapState extends State<TabWrap> {
       tabBuilder: (context, index) {
         switch (index) {
           case 0:
-            return CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                  child: DynamicPage(
-                title: 'Opa 1',
-                url: 'http://jamsys.ru/json/1.json',
-                root: true,
-              ));
-            });
+            return CupertinoTabView(
+              builder: (context) => const CupertinoPageScaffold(
+                child: DynamicPage(
+                  title: 'Opa 1',
+                  url: 'http://jamsys.ru/json/1.json',
+                  root: true,
+                ),
+              ),
+            );
           case 1:
-            return CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                  child: SecondPageTest(title: 'Opa 2'));
-            });
+            return CupertinoTabView(
+              builder: (context) => const CupertinoPageScaffold(
+                child: SecondPageTest(title: 'Opa 2'),
+              ),
+            );
           case 2:
-            return CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                  child: SecondPageTest(title: 'Opa 3'));
-            });
+            return CupertinoTabView(
+              builder: (context) => const CupertinoPageScaffold(
+                child: SecondPageTest(title: 'Opa 3'),
+              ),
+            );
           default:
             return const CupertinoTabView();
         }
