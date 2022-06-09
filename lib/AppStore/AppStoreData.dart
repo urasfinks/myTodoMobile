@@ -18,12 +18,26 @@ class AppStoreData {
     _map[key] = value;
   }
 
-  void inc(String key, {int step = 1}) {
-    _map[key] += step;
+  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0}) {
+    _map[key] = double.parse("${_map[key]}") + step;
+    if(_map[key] < min){
+      _map[key] = min;
+    }
+    if(_map[key] > max){
+      _map[key] = max;
+    }
+    _map[key] = (_map[key]).toStringAsFixed(fixed);
   }
 
-  void dec(String key, {int step = 1}) {
-    _map[key] -= step;
+  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0}) {
+    _map[key] = double.parse("${_map[key]}") - step;
+    if(_map[key] < min){
+      _map[key] = min;
+    }
+    if(_map[key] > max){
+      _map[key] = max;
+    }
+    _map[key] = (_map[key]).toStringAsFixed(fixed);
   }
 
   void apply() {
