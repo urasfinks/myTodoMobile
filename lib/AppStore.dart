@@ -1,49 +1,47 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'AppStoreData.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
-typedef ViewModelBuilder<AppStore> = Widget Function(
-    BuildContext context,
-    AppStore store,
-    );
-
-class AppStore {
+class AppStore{
   static Store<AppStore> store = Store(
         (AppStore state, dynamic action) => state,
     initialState: AppStore(),
   );
 
-  Map<String, dynamic> _map = {};
-
-  dynamic get(String key, dynamic defValue) {
-    if (_map[key] == null) {
-      _map[key] = defValue;
-    }
-    return _map[key];
+  static AppStoreData getStore(BuildContext context, String name){
+    return StoreProvider.of<AppStore>(context).state.get(context, name);
   }
 
-  void set(String key, dynamic value) {
-    _map[key] = value;
+  static AppStoreData? getStoreByName(BuildContext context, String name){
+    return StoreProvider.of<AppStore>(context).state.getByName(name);
   }
 
-  void inc(String key, {int step = 1}) {
-    _map[key] += step;
-  }
-
-  void dec(String key, {int step = 1}) {
-    _map[key] -= step;
-  }
-
-  void apply() {
-    store.dispatch(null);
-  }
-
-  StoreConnector connect(Widget Function(AppStore store) builder){
-    return StoreConnector<AppStore, AppStore>(
-      converter: (store) => store.state,
+  static StoreConnector connect(BuildContext context, Widget Function(AppStoreData store) builder){
+    return StoreConnector<AppStore, AppStoreData>(
+      converter: (store) => store.state.get(context, ""),
       builder: (context, state){
         return Function.apply(builder, [state]);
       },
     );
   }
+
+  final Map<BuildContext, AppStoreData> _map = {};
+
+  dynamic get(BuildContext key, String name) {
+    if (_map[key] == null) {
+      _map[key] = AppStoreData(AppStore.store, name);
+    }
+    return _map[key];
+  }
+
+  AppStoreData? getByName(String name) {
+    for(var item in _map.entries){
+      if(item.value.name == name){
+        return item.value;
+      }
+    }
+    return null;
+  }
+
 }

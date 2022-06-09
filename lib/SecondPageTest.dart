@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-
-import 'AppStore.dart';
+import 'package:test3/AppStore.dart';
+import 'AppStoreData.dart';
 
 class SecondPageTest extends StatefulWidget {
   final String title;
@@ -16,7 +15,10 @@ class SecondPageTest extends StatefulWidget {
 class _SecondPageTest extends State<SecondPageTest> {
   @override
   Widget build(BuildContext context) {
-    final AppStore store = StoreProvider.of<AppStore>(context).state;
+
+    final AppStoreData store = AppStore.getStore(context, widget.title);
+    final AppStoreData? storeTabPage = AppStore.getStoreByName(context, "TabPage");
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -36,20 +38,23 @@ class _SecondPageTest extends State<SecondPageTest> {
                 store.apply();
                 //Navigator.of(context).pop();
               },
-              child: store.connect((store) => Text('Go back! ${store.get("x", 0)}')),
+              child: AppStore.connect(context, (store) => Text('Go back! ${store.get("x", 0)}')),
             ),
             ElevatedButton(
               onPressed: () {
                 store.inc('x1');
-                store.set("cart", "${store.get('x1', 0)}");
                 store.apply();
+
+                if(storeTabPage != null){
+                  storeTabPage.set("cart", "${store.get('x1', 0)}");
+                  storeTabPage.apply();
+                }
                 //Navigator.of(context).pop();
               },
-              child: store.connect((store) => Text('Go back! ${store.get("x1", 0)}')),
+              child: AppStore.connect(context, (store) => Text('Go back! ${store.get("x1", 0)}')),
             ),
           ],
         ),
-
       ),
     );
   }
