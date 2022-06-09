@@ -1,7 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 import 'package:test3/SecondPageTest.dart';
 
 import 'AppStore.dart';
@@ -17,7 +17,7 @@ class TabPage extends StatefulWidget {
 class _TabPageState extends State<TabPage> {
   @override
   Widget build(BuildContext context) {
-    final AppStore store = StoreProvider.of<AppStore>(context).state;
+    final AppStore store = context.watch<AppStore>();
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         currentIndex: 1,
@@ -31,11 +31,10 @@ class _TabPageState extends State<TabPage> {
                 position: BadgePosition.topEnd(top: 0, end: -22),
                 shape: BadgeShape.square,
                 borderRadius: BorderRadius.circular(10),
-                badgeContent: store.connect((context, store) => Text(
-                  store.get("cart", '0'),
+                badgeContent: Text(
+                  "${store.get('x1', 0)}",
                   style: const TextStyle(color: Colors.white, fontSize: 8),
-                )),
-
+                ),
                 child: const Icon(Icons.business)),
             label: 'Организация',
           ),

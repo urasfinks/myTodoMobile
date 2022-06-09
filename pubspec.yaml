@@ -37,8 +37,7 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.0
   badges: ^2.0.3
   http: ^0.13.4
-  redux: ^5.0.0
-  flutter_redux: ^0.10.0
+  provider: ^6.0.3
 
 dev_dependencies:
   flutter_test:
