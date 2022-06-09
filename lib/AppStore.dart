@@ -1,6 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
-class AppStore with ChangeNotifier {
+typedef ViewModelBuilder<AppStore> = Widget Function(
+    BuildContext context,
+    AppStore store,
+    );
+
+class AppStore {
+  static Store<AppStore> store = Store(
+        (AppStore state, dynamic action) => state,
+    initialState: AppStore(),
+  );
+
   Map<String, dynamic> _map = {};
 
   dynamic get(String key, dynamic defValue) {
@@ -23,8 +35,13 @@ class AppStore with ChangeNotifier {
   }
 
   void apply() {
-    //store.dispatch(null);
-    notifyListeners();
+    store.dispatch(null);
   }
 
+  StoreConnector connect(ViewModelBuilder<AppStore> builder){
+    return StoreConnector<AppStore, AppStore>(
+      converter: (store) => store.state,
+      builder: builder,
+    );
+  }
 }
