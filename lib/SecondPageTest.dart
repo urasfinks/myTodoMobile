@@ -67,7 +67,7 @@ class _SecondPageTest extends State<SecondPageTest> {
                   padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                 ),
                 AppStore.connect(
-                    context, (store) => Text("${store.get('c1', 1.0)}")),
+                    context, (store) => Text("${store.get('c1', 1)}")),
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
