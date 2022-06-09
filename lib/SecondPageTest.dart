@@ -36,7 +36,7 @@ class _SecondPageTest extends State<SecondPageTest> {
                 store.apply();
                 //Navigator.of(context).pop();
               },
-              child: store.connect((context, store) => Text('Go back! ${store.get("x", 0)}')),
+              child: store.connect((store) => Text('Go back! ${store.get("x", 0)}')),
             ),
             ElevatedButton(
               onPressed: () {
@@ -45,7 +45,7 @@ class _SecondPageTest extends State<SecondPageTest> {
                 store.apply();
                 //Navigator.of(context).pop();
               },
-              child: store.connect((context, state) => Text('Go back! ${state.get("x1", 0)}')),
+              child: store.connect((store) => Text('Go back! ${store.get("x1", 0)}')),
             ),
           ],
         ),

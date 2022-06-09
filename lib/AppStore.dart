@@ -38,10 +38,12 @@ class AppStore {
     store.dispatch(null);
   }
 
-  StoreConnector connect(ViewModelBuilder<AppStore> builder){
+  StoreConnector connect(Widget Function(AppStore store) builder){
     return StoreConnector<AppStore, AppStore>(
       converter: (store) => store.state,
-      builder: builder,
+      builder: (context, state){
+        return Function.apply(builder, [state]);
+      },
     );
   }
 }

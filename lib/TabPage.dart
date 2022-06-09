@@ -31,7 +31,7 @@ class _TabPageState extends State<TabPage> {
                 position: BadgePosition.topEnd(top: 0, end: -22),
                 shape: BadgeShape.square,
                 borderRadius: BorderRadius.circular(10),
-                badgeContent: store.connect((context, store) => Text(
+                badgeContent: store.connect((store) => Text(
                   store.get("cart", '0'),
                   style: const TextStyle(color: Colors.white, fontSize: 8),
                 )),
