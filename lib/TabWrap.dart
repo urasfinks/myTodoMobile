@@ -5,14 +5,14 @@ import 'package:test3/AppStore.dart';
 import 'package:test3/SecondPageTest.dart';
 import 'DynamicPage.dart';
 
-class TabPage extends StatefulWidget {
-  const TabPage({Key? key}) : super(key: key);
+class TabWrap extends StatefulWidget {
+  const TabWrap({Key? key}) : super(key: key);
 
   @override
-  State<TabPage> createState() => _TabPageState();
+  State<TabWrap> createState() => _TabWrapState();
 }
 
-class _TabPageState extends State<TabPage> {
+class _TabWrapState extends State<TabWrap> {
   @override
   Widget build(BuildContext context) {
     AppStore.getStore(context, "TabPage");

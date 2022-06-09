@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'AppStore.dart';
-import 'TabPage.dart';
+import 'TabWrap.dart';
 
 void main() {
   runApp(const RouterPage());
@@ -20,7 +20,7 @@ class RouterPage extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (RouteSettings settings) {
           return CupertinoPageRoute(
-              builder: (_) => const TabPage(), settings: settings);
+              builder: (_) => const TabWrap(), settings: settings);
         },
       ),
     );
