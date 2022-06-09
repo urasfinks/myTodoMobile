@@ -141,10 +141,11 @@ class FlutterType {
     }
     var values = edgeInsetsGeometryString.split(",");
     return EdgeInsets.only(
-        left: double.parse(values[0]),
-        top: double.parse(values[1]),
-        right: double.parse(values[2]),
-        bottom: double.parse(values[3]));
+      left: double.parse(values[0]),
+      top: double.parse(values[1]),
+      right: double.parse(values[2]),
+      bottom: double.parse(values[3]),
+    );
   }
 
   static dynamic _pText(parsedJson) {

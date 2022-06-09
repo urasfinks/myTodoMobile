@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
-import 'DynamicWidget/FlutterType.dart';
+import 'DynamicUI/FlutterType.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

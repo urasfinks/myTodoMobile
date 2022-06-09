@@ -1,7 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:test3/AppStore.dart';
+import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/SecondPageTest.dart';
 import 'DynamicPage.dart';
 

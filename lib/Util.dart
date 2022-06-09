@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class Util{
+class Util {
   static ListView getListView(
       bool separated,
       ScrollPhysics physics,
@@ -10,17 +10,19 @@ class Util{
       IndexedWidgetBuilder separatorBuilder) {
     if (separated == true) {
       return ListView.separated(
-          physics: physics,
-          padding: padding,
-          itemCount: itemCount,
-          itemBuilder: itemBuilder,
-          separatorBuilder: separatorBuilder);
+        physics: physics,
+        padding: padding,
+        itemCount: itemCount,
+        itemBuilder: itemBuilder,
+        separatorBuilder: separatorBuilder,
+      );
     } else {
       return ListView.builder(
-          physics: physics,
-          padding: padding,
-          itemCount: itemCount,
-          itemBuilder: itemBuilder);
+        physics: physics,
+        padding: padding,
+        itemCount: itemCount,
+        itemBuilder: itemBuilder,
+      );
     }
   }
 }

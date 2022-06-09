@@ -2,7 +2,7 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'AppStore.dart';
+import 'AppStore/AppStore.dart';
 import 'TabWrap.dart';
 
 void main() {

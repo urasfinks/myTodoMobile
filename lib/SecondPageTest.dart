@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:test3/AppStore.dart';
-import 'AppStoreData.dart';
+import 'package:test3/AppStore/AppStore.dart';
+import 'AppStore/AppStoreData.dart';
 
 class SecondPageTest extends StatefulWidget {
   final String title;
