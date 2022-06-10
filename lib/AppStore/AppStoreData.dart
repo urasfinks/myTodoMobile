@@ -40,6 +40,15 @@ class AppStoreData {
     _map[key] = (_map[key]).toStringAsFixed(fixed);
   }
 
+  void toggle(String key){
+    String x = "${_map[key]}".toLowerCase();
+    if(x == "true" || x == 1){
+      _map[key] = true;
+    }else{
+      _map[key] = false;
+    }
+  }
+
   void apply() {
     store.dispatch(null);
   }
