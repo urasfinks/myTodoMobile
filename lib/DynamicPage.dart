@@ -24,12 +24,16 @@ class DynamicPage extends StatefulWidget {
 
 class _DynamicPageState extends State<DynamicPage> {
   Future<Map<String, dynamic>> getServerData() async {
-    final response = await http.get(Uri.parse(widget.url));
-    if (response.statusCode == 200) {
-      print('load data');
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load album');
+    print('load data');
+    try{
+      final response = await http.get(Uri.parse(widget.url));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return jsonDecode('{"list": [{"flutterType": "Text","data": "Ошибка загрузки"}]}');
+      }
+    }catch(e){
+      return jsonDecode('{"list": [{"flutterType": "Text","data": "${e.toString()}"}]}');
     }
   }
 
