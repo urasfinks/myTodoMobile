@@ -1,3 +1,5 @@
+import 'WebSocket.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test3/AppStore/AppStore.dart';
@@ -14,8 +16,10 @@ class SecondPageTest extends StatefulWidget {
 }
 
 class _SecondPageTest extends State<SecondPageTest> {
+
   @override
   Widget build(BuildContext context) {
+    WebSocket().subscribe(widget.title);
     final AppStoreData store = AppStore.getStore(context, widget.title);
     final AppStoreData? storeTabPage =
         AppStore.getStoreByName(context, "TabPage");
@@ -82,6 +86,7 @@ class _SecondPageTest extends State<SecondPageTest> {
       ),
     );
   }
+
 }
 
 

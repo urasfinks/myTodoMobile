@@ -1,4 +1,7 @@
+import '../WebSocket.dart';
+
 import 'package:redux/redux.dart';
+
 
 class AppStoreData {
   AppStoreData(this.store, this.name);
@@ -16,41 +19,59 @@ class AppStoreData {
 
   void set(String key, dynamic value) {
     _map[key] = value;
+    onChange(key);
   }
 
-  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0}) {
+  void inc(String key,
+      {double step = 1.0,
+      double min = -999.0,
+      double max = 999.0,
+      int fixed = 0}) {
     _map[key] = double.parse("${_map[key]}") + step;
-    if(_map[key] < min){
+    if (_map[key] < min) {
       _map[key] = min;
     }
-    if(_map[key] > max){
+    if (_map[key] > max) {
       _map[key] = max;
     }
     _map[key] = (_map[key]).toStringAsFixed(fixed);
+    onChange(key);
   }
 
-  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0}) {
+  void dec(String key,
+      {double step = 1.0,
+      double min = -999.0,
+      double max = 999.0,
+      int fixed = 0}) {
     _map[key] = double.parse("${_map[key]}") - step;
-    if(_map[key] < min){
+    if (_map[key] < min) {
       _map[key] = min;
     }
-    if(_map[key] > max){
+    if (_map[key] > max) {
       _map[key] = max;
     }
     _map[key] = (_map[key]).toStringAsFixed(fixed);
+    onChange(key);
   }
 
-  void toggle(String key){
+  void toggle(String key) {
     String x = "${_map[key]}".toLowerCase();
-    if(x == "true" || x == "1"){
+    if (x == "true" || x == "1") {
       _map[key] = true;
-    }else{
+    } else {
       _map[key] = false;
     }
+    onChange(key);
+  }
+
+  void onChange(String key) {
+    WebSocket().send(
+      name,
+      {"actione": "update", "key": key, "value": _map[key]}
+    );
   }
 
   void apply() {
     store.dispatch(null);
   }
-
 }

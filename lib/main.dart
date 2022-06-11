@@ -7,6 +7,8 @@ import 'TabWrap.dart';
 
 void main() {
   runApp(const RouterPage());
+  //WebSocket().subscribe("Hello");
+  //WebSocket().unsubscribe("Hello");
 }
 
 class RouterPage extends StatelessWidget {
