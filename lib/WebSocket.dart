@@ -11,32 +11,34 @@ class WebSocket {
 
   WebSocket._internal();
 
-  WebSocketChannel? _channel = null;
+  WebSocketChannel? _channel;
 
   bool _connect = false;
-  List<String> _subscriber = [];
+  final List<String> _subscribeListDataUID = [];
 
-  void subscribe(String subject){
-    if(!_subscriber.contains(subject)){
-      _subscriber.add(subject);
+  void subscribe(String dataUID){
+    if(!_subscribeListDataUID.contains(dataUID)){
+      _subscribeListDataUID.add(dataUID);
       _onListen();
-      send(subject, {"action": "subscribe"});
+      send(dataUID, "subscribe");
     }
   }
 
-  void unsubscribe(String subject){
-    send(subject, {"action": "unsubscribe"});
-    _subscriber.remove(subject);
+  void unsubscribe(String dataUID){
+    send(dataUID, "unsubscribe");
+    _subscribeListDataUID.remove(dataUID);
     _onClose();
   }
 
-  send(String subject, dynamic data){
+  send(String dataUID, String action, {dynamic data}){
     String toSend = json.encode({
-      "subject": subject,
-      "data": data
+      "DataUID": dataUID,
+      "Action": action,
+      if (data != null) "Data": data
     });
-    print(toSend);
-    if (_subscriber.contains(subject) && !_connect && _channel != null) {
+
+    print("$toSend; connect: $_connect");
+    if (_subscribeListDataUID.contains(dataUID) && _connect == true && _channel != null) {
       _channel!.sink.add(toSend);
     }
   }
@@ -46,6 +48,7 @@ class WebSocket {
       _channel = WebSocketChannel.connect(
         Uri.parse('ws://jamsys.ru:8081/websocket'),
       );
+      _connect = true;
       _channel!.stream.listen((message) {
         print(message);
       });
@@ -53,7 +56,7 @@ class WebSocket {
   }
 
   _onClose(){
-    if(_channel != null && _subscriber.isEmpty && _channel != null){
+    if(_channel != null && _subscribeListDataUID.isEmpty && _channel != null){
       _channel!.sink.close(status.goingAway);
       _connect = false;
     }

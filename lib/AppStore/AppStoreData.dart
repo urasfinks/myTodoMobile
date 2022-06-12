@@ -2,7 +2,6 @@ import '../WebSocket.dart';
 
 import 'package:redux/redux.dart';
 
-
 class AppStoreData {
   AppStoreData(this.store, this.name);
 
@@ -65,10 +64,8 @@ class AppStoreData {
   }
 
   void onChange(String key) {
-    WebSocket().send(
-      name,
-      {"actione": "update", "key": key, "value": _map[key]}
-    );
+    WebSocket()
+        .send(name, "update", data: {"key": key, "value": _map[key]});
   }
 
   void apply() {
