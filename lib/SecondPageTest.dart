@@ -21,6 +21,9 @@ class _SecondPageTest extends State<SecondPageTest> {
   Widget build(BuildContext context) {
     WebSocket().subscribe(widget.title);
     final AppStoreData store = AppStore.getStore(context, widget.title);
+    store.setOnIndexRevisionError(() {
+      print("Reload page");
+    });
     final AppStoreData? storeTabPage =
         AppStore.getStoreByName(context, "TabPage");
 

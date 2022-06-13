@@ -4,6 +4,14 @@ import 'AppStoreData.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class AppStore{
+  static final AppStore _singleton = AppStore._internal();
+
+  factory AppStore() {
+    return _singleton;
+  }
+
+  AppStore._internal();
+
   static Store<AppStore> store = Store(
         (AppStore state, dynamic action) => state,
     initialState: AppStore(),

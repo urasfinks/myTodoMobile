@@ -1,6 +1,9 @@
+import 'package:test3/AppStore/AppStore.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'dart:convert';
+
+import 'AppStore/AppStoreData.dart';
 
 class WebSocket {
   static final WebSocket _singleton = WebSocket._internal();
@@ -37,7 +40,7 @@ class WebSocket {
       if (data != null) "Data": data
     });
 
-    print("$toSend; connect: $_connect");
+    print("Send: $toSend; connect: $_connect");
     if (_subscribeListDataUID.contains(dataUID) && _connect == true && _channel != null) {
       _channel!.sink.add(toSend);
     }
@@ -50,9 +53,39 @@ class WebSocket {
       );
       _connect = true;
       _channel!.stream.listen((message) {
-        print(message);
+        print("Recive: $message");
+        Map<String, dynamic> jsonDecoded = json.decode(message);
+        if(check(jsonDecoded, {"Action": "update_revision", "Revision": null, "DataUID": null})){
+          AppStore().getByName(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
+        }
+        if(check(jsonDecoded, {"Action": "reload_page", "DataUID": null})){
+          AppStore().getByName(jsonDecoded["DataUID"])?.onIndexRevisionError();
+        }
+        if(check(jsonDecoded, {"Action": "update_state", "Revision": null, "DataUID": null, "Data": null})){
+          AppStoreData? storeData = AppStore().getByName(jsonDecoded["DataUID"]);
+          if(storeData != null){
+            if(check(jsonDecoded["Data"], {"key": null, "value": null})){
+              storeData.set(jsonDecoded["Data"]["key"], jsonDecoded["Data"]["value"], notify: false);
+              storeData.apply();
+            }
+            storeData.setIndexRevision(jsonDecoded["Revision"]);
+          }
+        }
       });
     }
+  }
+
+  bool check(dynamic object, Map<String, dynamic> map){
+    //print(map.keys);
+    for(String key in map.keys){
+      if(object[key] == null){
+        return false;
+      }
+      if(map[key] != null && object[key] != map[key]){
+        return false;
+      }
+    }
+    return true;
   }
 
   _onClose(){
