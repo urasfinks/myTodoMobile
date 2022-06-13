@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/SecondPageTest.dart';
 import 'DynamicPage.dart';
+//import 'WebSocket.dart';
 
 class TabWrap extends StatefulWidget {
   const TabWrap({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _TabWrapState extends State<TabWrap> {
 
   @override
   Widget build(BuildContext context) {
+    //WebSocket().subscribe("TabPage");
     AppStore.getStore(context, "TabPage");
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
