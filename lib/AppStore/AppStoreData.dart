@@ -100,7 +100,7 @@ class AppStoreData {
 
   void onChange(String key) {
     WebSocket()
-        .send(name, "update_state", data: {"key": key, "value": _map[key]});
+        .send(name, "UPDATE_STATE", data: {"key": key, "value": _map[key]});
   }
 
   void apply() {

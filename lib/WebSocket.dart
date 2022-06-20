@@ -23,12 +23,12 @@ class WebSocket {
     if(!_subscribeListDataUID.contains(dataUID)){
       _subscribeListDataUID.add(dataUID);
       _onListen();
-      send(dataUID, "subscribe");
+      send(dataUID, "SUBSCRIBE");
     }
   }
 
   void unsubscribe(String dataUID){
-    send(dataUID, "unsubscribe");
+    send(dataUID, "UNSUBSCRIBE");
     _subscribeListDataUID.remove(dataUID);
     _onClose();
   }
@@ -55,13 +55,13 @@ class WebSocket {
       _channel!.stream.listen((message) {
         print("Recive: $message");
         Map<String, dynamic> jsonDecoded = json.decode(message);
-        if(check(jsonDecoded, {"Action": "update_revision", "Revision": null, "DataUID": null})){
+        if(check(jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null})){
           AppStore().getByName(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
         }
-        if(check(jsonDecoded, {"Action": "reload_page", "DataUID": null})){
+        if(check(jsonDecoded, {"Action": "RELOAD_PAGE", "DataUID": null})){
           AppStore().getByName(jsonDecoded["DataUID"])?.onIndexRevisionError();
         }
-        if(check(jsonDecoded, {"Action": "update_state", "Revision": null, "DataUID": null, "Data": null})){
+        if(check(jsonDecoded, {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null})){
           AppStoreData? storeData = AppStore().getByName(jsonDecoded["DataUID"]);
           if(storeData != null){
             if(check(jsonDecoded["Data"], {"key": null, "value": null})){
