@@ -35,6 +35,7 @@ class WebSocket {
 
   send(String dataUID, String action, {dynamic data}){
     String toSend = json.encode({
+      "PersonKey": AppStore.personKey,
       "DataUID": dataUID,
       "Action": action,
       if (data != null) "Data": data
@@ -49,7 +50,7 @@ class WebSocket {
   _onListen(){
     if (!_connect) {
       _channel = WebSocketChannel.connect(
-        Uri.parse('ws://jamsys.ru:8081/websocket'),
+        Uri.parse('ws://jamsys.ru:8081/websocket/${AppStore.personKey}'),
       );
       _connect = true;
       _channel!.stream.listen((message) {

@@ -2,13 +2,25 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'AppStore/AppStore.dart';
 import 'TabWrap.dart';
 
-void main() {
+Future<void> loadPref() async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? key = prefs.getString('key');
+  if(key == null || "" == key){
+    await prefs.setString('key', AppStore.personKey);
+  }
+  AppStore.personKey = prefs.getString('key')!;
+  print("Person key: ${AppStore.personKey}");
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
+  await loadPref();
   runApp(const RouterPage());
-  //WebSocket().subscribe("Hello");
-  //WebSocket().unsubscribe("Hello");
 }
 
 class RouterPage extends StatelessWidget {

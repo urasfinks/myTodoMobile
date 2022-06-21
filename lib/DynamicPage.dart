@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:test3/AppStore/AppStore.dart';
 
 import 'DynamicUI/FlutterType.dart';
 import 'package:http/http.dart' as http;
@@ -26,7 +27,10 @@ class _DynamicPageState extends State<DynamicPage> {
   Future<Map<String, dynamic>> getServerData() async {
     print('load data');
     try{
-      final response = await http.get(Uri.parse(widget.url));
+      Map<String, String> requestHeaders = {
+        'Authorization': AppStore.personKey
+      };
+      final response = await http.get(Uri.parse(widget.url), headers: requestHeaders);
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {

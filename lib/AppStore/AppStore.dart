@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:redux/redux.dart';
 import 'AppStoreData.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:uuid/uuid.dart';
 
 class AppStore{
+
+  static String personKey = const Uuid().v4();
   static final AppStore _singleton = AppStore._internal();
 
   factory AppStore() {
