@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'AppStore/AppStore.dart';
 import 'TabWrap.dart';
 
+
 Future<void> loadPref() async {
   final prefs = await SharedPreferences.getInstance();
   final String? key = prefs.getString('key');
@@ -18,6 +19,8 @@ Future<void> loadPref() async {
 }
 
 void main() async {
+
+
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
   await loadPref();
   runApp(const RouterPage());
