@@ -19,8 +19,6 @@ Future<void> loadPref() async {
 }
 
 void main() async {
-
-
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
   await loadPref();
   runApp(const RouterPage());
@@ -37,7 +35,7 @@ class RouterPage extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (RouteSettings settings) {
           return CupertinoPageRoute(
-              builder: (_) => const TabWrap(), settings: settings);
+              builder: (context) => TabWrap(context), settings: settings);
         },
       ),
     );

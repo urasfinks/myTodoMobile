@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,32 +13,41 @@ import 'dart:convert';
 import 'Util.dart';
 
 class DynamicPage extends StatefulWidget {
-  const DynamicPage(
-      {Key? key, required this.title, required this.url, this.root = false})
-      : super(key: key);
-
   final String title;
   final bool root;
   final String url;
+  final String parentState;
+
+  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false}) : super(key: key);
 
   @override
   State<DynamicPage> createState() => _DynamicPageState();
 }
 
 class _DynamicPageState extends State<DynamicPage> {
+
   Future<Map<String, dynamic>> getServerData() async {
     print('load data');
-    try{
-      Map<String, String> requestHeaders = {
-        'Authorization': AppStore.personKey
-      };
-      final response = await http.get(Uri.parse(widget.url), headers: requestHeaders);
+    try {
+      Map<String, String> requestHeaders = {'Authorization': AppStore.personKey};
+
+      final response = await http.post(Uri.parse(widget.url), headers: requestHeaders, body: widget.parentState);
+      print(response.body);
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        var data = jsonDecode(response.body);
+        //data['list']=[{"flutterType": "Text","data": "Ошибка загрузки"}];
+        List list = [];
+        for(dynamic d in data['Data']){
+          String ret = Util.template(d['data'], data['Template'][d['template']]);
+          list.add(jsonDecode(ret));
+        }
+        data['list'] = list;
+        return data;
       } else {
         return jsonDecode('{"list": [{"flutterType": "Text","data": "Ошибка загрузки"}]}');
       }
-    }catch(e){
+    } catch (e) {
+      print(e.toString());
       return jsonDecode('{"list": [{"flutterType": "Text","data": "${e.toString()}"}]}');
     }
   }
@@ -47,31 +58,31 @@ class _DynamicPageState extends State<DynamicPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Util.getListView(
-              snapshot.data!['separated'] == null ||
-                  snapshot.data!['separated'] == true,
-              const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              FlutterType.parseEdgeInsetsGeometry(
-                  FlutterType.def(snapshot.data, 'padding', null)),
-              snapshot.data!['list'].length, (BuildContext context, int index) {
-            return GestureDetector(
-              child: FlutterType.mainJson(snapshot.data!['list'][index]),
-              onTap: () {
-                if (snapshot.data!['list'][index]['url'] != null) {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => DynamicPage(
-                        title: 'Soround',
-                        url: snapshot.data!['list'][index]['url'],
-                        root: false,
+            snapshot.data!['separated'] == null || snapshot.data!['separated'] == true,
+            const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            snapshot.data!['list'].length,
+            (BuildContext context, int index) {
+              return FlutterType.mainJson(snapshot.data!['list'][index]);
+              /*return GestureDetector(
+                child: FlutterType.mainJson(snapshot.data!['list'][index]),
+                onTap: () {
+                  if (snapshot.data!['list'][index]['url'] != null) {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => DynamicPage(
+                          title: snapshot.data!['list'][index]['title'],
+                          url: snapshot.data!['list'][index]['url'],
+                          parentState: "",
+                          root: false,
+                        ),
                       ),
-                    ),
-                  );
-                }
-              },
-            );
-          }, (BuildContext context, int index) => const Divider());
+                    );
+                  }
+                },
+              );*/
+            },
+          );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }

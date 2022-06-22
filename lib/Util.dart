@@ -1,37 +1,54 @@
-import 'package:flutter/cupertino.dart';
-import 'package:stubble/stubble.dart';
+import 'package:flutter/material.dart';
 
 class Util {
   static ListView getListView(
       bool separated,
       ScrollPhysics physics,
-      EdgeInsetsGeometry? padding,
       int itemCount,
-      IndexedWidgetBuilder itemBuilder,
-      IndexedWidgetBuilder separatorBuilder) {
+      IndexedWidgetBuilder itemBuilder
+      ) {
     if (separated == true) {
       return ListView.separated(
         physics: physics,
-        padding: padding,
         itemCount: itemCount,
         itemBuilder: itemBuilder,
-        separatorBuilder: separatorBuilder,
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
       );
     } else {
       return ListView.builder(
         physics: physics,
-        padding: padding,
         itemCount: itemCount,
         itemBuilder: itemBuilder,
       );
     }
   }
 
-  //print(Util.template({'name': 'Stubble', 'test':{'x':'y'}}, 'Hello! I\'m {{test.x}}! Nice to meet you!'));
+  static String path(dynamic data, String path){
+    List<String> exp = path.split(".");
+    dynamic cur = data;
+    for(String key in exp){
+      if(cur != null && cur[key] != null){
+        cur = cur[key];
+      }
+    }
+    return cur != null ? cur.toString() : "null";
+  }
+
   static String template(dynamic data, String template){
-    final s = Stubble();
-    final fn = s.compile(template);
-    return fn(data);
+    List<String> exp = template.split('\${');
+
+    for (String expItem in exp) {
+      if (!expItem.contains("}")) {
+        continue;
+      }
+      List<String> exp2 = expItem.split("}");
+      if (exp2.isEmpty) {
+        continue;
+      }
+      String name = exp2[0];
+      template = template.replaceAll("\${$name}", path(data, name));
+    }
+    return template;
   }
 
 }

@@ -7,7 +7,8 @@ import 'DynamicPage.dart';
 //import 'WebSocket.dart';
 
 class TabWrap extends StatefulWidget {
-  const TabWrap({Key? key}) : super(key: key);
+  final BuildContext context;
+  const TabWrap(this.context, {Key? key}) : super(key: key);
 
   @override
   State<TabWrap> createState() => _TabWrapState();
@@ -21,7 +22,7 @@ class _TabWrapState extends State<TabWrap> {
     AppStore.getStore(context, "TabPage");
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        currentIndex: 1,
+        currentIndex: 2,
         items: [
           const BottomNavigationBarItem(
             label: 'Главная',
@@ -54,11 +55,7 @@ class _TabWrapState extends State<TabWrap> {
           case 0:
             return CupertinoTabView(
               builder: (context) => const CupertinoPageScaffold(
-                child: DynamicPage(
-                  title: 'Opa 1',
-                  url: 'http://jamsys.ru/json/1.json',
-                  root: true,
-                ),
+                child: SecondPageTest(title: 'Opa 1'),
               ),
             );
           case 1:
@@ -70,7 +67,12 @@ class _TabWrapState extends State<TabWrap> {
           case 2:
             return CupertinoTabView(
               builder: (context) => const CupertinoPageScaffold(
-                child: SecondPageTest(title: 'Opa 3'),
+                child: DynamicPage(
+                  title: 'Opa 1',
+                  url: 'http://jamsys.ru:8081/project/system',
+                  parentState: "",
+                  root: true,
+                ),
               ),
             );
           default:
