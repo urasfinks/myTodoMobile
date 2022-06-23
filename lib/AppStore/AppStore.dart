@@ -31,18 +31,23 @@ class AppStore{
     return StoreProvider.of<AppStore>(context).state.getByName(name);
   }
 
-  static StoreConnector connect(BuildContext context, Widget Function(AppStoreData? store, dynamic defaultValue) builder, {syncSocket = false, defaultValue = ""}){
-    return StoreConnector<AppStore, AppStoreData>(
-      converter: (store) => store.state.get(context, "", {syncSocket: syncSocket}),
-      builder: (context, state){
-        return Function.apply(builder, [state, defaultValue]);
-      },
-    );
+  static dynamic connect(String dataUID, Widget Function(AppStoreData? store, dynamic defaultValue) builder, {syncSocket = false, defaultValue = ""}){
+    AppStoreData? byName = store.state.getByName(dataUID);
+    if(byName != null){
+      return StoreConnector<AppStore, AppStoreData>(
+        converter: (store) => store.state.getByName(dataUID)!,
+        builder: (context, state){
+          return Function.apply(builder, [state, defaultValue]);
+        },
+      );
+    }else{
+      return Function.apply(builder, [null, defaultValue]);
+    }
   }
 
   final Map<BuildContext, AppStoreData> _map = {};
 
-  dynamic get(BuildContext key, String? name, Map map, {bool syncSocket = false }) {
+  AppStoreData? get(BuildContext key, String? name, Map map, {bool syncSocket = false }) {
     if(name != null && name != "" && _map[key] == null){
       _map[key] = AppStoreData(AppStore.store, name);
       return _map[key];

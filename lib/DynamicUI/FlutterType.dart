@@ -1,225 +1,95 @@
-import 'dart:core';
-import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'DynamicUI.dart';
+import 'FlutterTypeConstant.dart';
 import 'icon.dart';
 
-class FlutterType {
+class FlutterType{
+
   static Widget defaultWidget = const SizedBox(width: 0);
 
-  static Widget main(String jsonData) {
-    if (jsonData.isEmpty) {
-      return defaultWidget;
-    }
-    final parsedJson = jsonDecode(jsonData);
-    return def(parsedJson, null, defaultWidget);
-  }
-
-  static Widget mainJson(Map<String, dynamic> jsonData) {
-    if (jsonData.isEmpty) {
-      return defaultWidget;
-    }
-    return def(jsonData, null, defaultWidget);
-  }
-
-  static dynamic getByType(String containsKey, map, dynamic def) {
-    Map<String, Function> map1 = {
-      "Text": _pText,
-      "TextStyle": _pTextStyle,
-      "Column": _pColumn,
-      "Expanded": _pExpanded,
-      "SizedBox": _pSizedBox,
-      "Row": _pRow,
-      "Container": _pContainer,
-      "NetworkImage": _pNetworkImage,
-      "CircleAvatar": _pCircleAvatar,
-      "Icon": _pIcon,
-    };
-    return map1.containsKey(containsKey)
-        ? Function.apply(map1[containsKey]!, [map])
-        : def;
-  }
-
-  static dynamic def(map, key, def) {
-    dynamic ret;
-    if (key != null) {
-      ret = map.containsKey(key) ? map[key] : def;
-    } else {
-      ret = map;
-    }
-
-    if (ret.runtimeType.toString() ==
-            '_InternalLinkedHashMap<String, dynamic>' &&
-        ret.containsKey('flutterType')) {
-      return FlutterType.getByType(ret['flutterType'] as String, ret, def);
-    }
-    return ret;
-  }
-
-  static double? castToDouble(value) {
-    if (value == null) {
-      return null;
-    }
-    return double.parse(value.toString());
-  }
-
-  static dynamic castToCrossAxisAlignment(value) {
-    Map<String, CrossAxisAlignment> map = {
-      'start': CrossAxisAlignment.start,
-      'center': CrossAxisAlignment.center,
-      'end': CrossAxisAlignment.end,
-      'baseline': CrossAxisAlignment.baseline,
-      'stretch': CrossAxisAlignment.stretch,
-    };
-    return map.containsKey(value) ? map[value] : null;
-  }
-
-  static Color? castToMaterialColor(String? value) {
-    if (value == null) {
-      return null;
-    }
-    if (value.startsWith("#")) {
-      return parseHexColor(value);
-    } else {
-      Map<String, Color> map = {
-        "grey": Colors.grey,
-        "blue": Colors.blue,
-        "red": Colors.red,
-        "transparent": Colors.transparent,
-        "amber": Colors.amber,
-        "black": Colors.black,
-        "white": Colors.white,
-        "yellow": Colors.yellow,
-        "brown": Colors.brown,
-        "cyan": Colors.cyan,
-        "green": Colors.green,
-        "indigo": Colors.indigo,
-        "orange": Colors.orange,
-        "lime": Colors.lime,
-        "pink": Colors.pink,
-        "purple": Colors.purple,
-        "teal": Colors.teal
-      };
-      return map.containsKey(value) ? map[value] : null;
-    }
-  }
-
-  static Color? parseHexColor(String? hexColorString) {
-    if (hexColorString == null) {
-      return null;
-    }
-    hexColorString = hexColorString.toUpperCase().replaceAll("#", "");
-    if (hexColorString.length == 6) {
-      hexColorString = "FF$hexColorString";
-    }
-    int colorInt = int.parse(hexColorString, radix: 16);
-    return Color(colorInt);
-  }
-
-  static FontWeight? parseFontWeight(String? textFontWeight) {
-    Map<String, FontWeight> map = {
-      "normal": FontWeight.normal,
-      "bold": FontWeight.bold,
-      "w100": FontWeight.w100,
-      "w200": FontWeight.w200,
-      "w300": FontWeight.w300,
-      "w400": FontWeight.w400,
-      "w500": FontWeight.w500,
-      "w600": FontWeight.w600,
-      "w700": FontWeight.w700,
-      "w800": FontWeight.w800,
-      "w900": FontWeight.w900,
-    };
-    return map.containsKey(textFontWeight) ? map[textFontWeight] : null;
-  }
-
-  static EdgeInsetsGeometry? parseEdgeInsetsGeometry(
-      String? edgeInsetsGeometryString) {
-    //left,top,right,bottom
-    if (edgeInsetsGeometryString == null ||
-        edgeInsetsGeometryString.trim() == '') {
-      return null;
-    }
-    var values = edgeInsetsGeometryString.split(",");
-    return EdgeInsets.only(
-      left: double.parse(values[0]),
-      top: double.parse(values[1]),
-      right: double.parse(values[2]),
-      bottom: double.parse(values[3]),
-    );
-  }
-
-  static dynamic _pText(parsedJson) {
+  static dynamic pText(parsedJson) {
     return Text(
-      def(parsedJson, 'data', ''),
-      style: def(parsedJson, 'style', null),
+      DynamicUI.def(parsedJson, 'data', ''),
+      style: DynamicUI.def(parsedJson, 'style', null),
     );
   }
 
-  static dynamic _pTextStyle(parsedJson) {
+  static dynamic pTextStyle(parsedJson) {
     return TextStyle(
-      color: castToMaterialColor(def(parsedJson, 'color', null)),
-      fontSize: castToDouble(def(parsedJson, 'fontSize', null)),
+      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null)),
+      fontSize: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'fontSize', null)),
+      fontStyle: FlutterTypeConstant.parseToFontStyle(DynamicUI.def(parsedJson, 'fontStyle', null)),
+      fontWeight: FlutterTypeConstant.parseFontWeight(DynamicUI.def(parsedJson, 'fontWeight', null)),
     );
   }
-
-  static List<Widget> defList(parsedJson, String key) {
-    List<Widget> list = [];
-    List l2 = def(parsedJson, key, []);
-    for (int i = 0; i < l2.length; i++) {
-      list.add(def(l2[i], null, defaultWidget));
-    }
-    return list;
-  }
-
-  static dynamic _pColumn(parsedJson) {
+  static dynamic pColumn(parsedJson) {
     return Column(
-      crossAxisAlignment:
-          castToCrossAxisAlignment(def(parsedJson, 'crossAxisAlignment', null)),
-      children: defList(parsedJson, 'children'),
+      crossAxisAlignment: FlutterTypeConstant.parseToCrossAxisAlignment(DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center')),
+      children: DynamicUI.defList(parsedJson, 'children'),
     );
   }
 
-  static dynamic _pExpanded(parsedJson) {
+  static dynamic pPadding(parsedJson) {
+    return Padding(
+      padding: FlutterTypeConstant.parseEdgeInsetsGeometry(DynamicUI.def(parsedJson, 'padding', null))!,
+      child: DynamicUI.def(parsedJson, 'child', defaultWidget),
+    );
+  }
+
+  static dynamic pExpanded(parsedJson) {
     return Expanded(
-      child: def(parsedJson, 'child', defaultWidget),
+      child: DynamicUI.def(parsedJson, 'child', defaultWidget),
     );
   }
 
-  static dynamic _pSizedBox(parsedJson) {
+  static dynamic pSizedBox(parsedJson) {
     return SizedBox(
-      width: castToDouble(def(parsedJson, 'width', null)),
+      width: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'width', null)),
+      height: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'height', null)),
     );
   }
 
-  static dynamic _pRow(parsedJson) {
+  static dynamic pRow(parsedJson) {
     return Row(
-        crossAxisAlignment: castToCrossAxisAlignment(
-            def(parsedJson, 'crossAxisAlignment', null)),
-        children: defList(parsedJson, 'children'));
-  }
-
-  static dynamic _pContainer(parsedJson) {
-    return Container(
-      margin: parseEdgeInsetsGeometry(def(parsedJson, 'margin', null)),
-      padding: parseEdgeInsetsGeometry(def(parsedJson, 'padding', null)),
-      child: def(parsedJson, 'child', defaultWidget),
+        crossAxisAlignment: FlutterTypeConstant.parseToCrossAxisAlignment(DynamicUI.def(parsedJson, 'crossAxisAlignment', null)),
+        children: DynamicUI.defList(parsedJson, 'children')
     );
   }
 
-  static dynamic _pNetworkImage(parsedJson) {
-    return NetworkImage(def(parsedJson, 'src', null));
+  static dynamic pContainer(parsedJson) {
+    return Container(
+      margin: FlutterTypeConstant.parseEdgeInsetsGeometry(DynamicUI.def(parsedJson, 'margin', null)),
+      padding: FlutterTypeConstant.parseEdgeInsetsGeometry(DynamicUI.def(parsedJson, 'padding', null)),
+      width: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'width', null)),
+      height: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'height', null)),
+      child: DynamicUI.def(parsedJson, 'child', defaultWidget),
+    );
   }
 
-  static dynamic _pCircleAvatar(parsedJson) {
-    return CircleAvatar(
-        backgroundImage: def(parsedJson, 'backgroundImage', null));
+  static dynamic pSpacer(parsedJson) {
+    return const Spacer();
   }
 
-  static dynamic _pIcon(parsedJson) {
+  static dynamic pCenter(parsedJson) {
+    return Center(
+      child: DynamicUI.def(parsedJson, 'child', defaultWidget),
+    );
+  }
+
+  static dynamic pNetworkImage(parsedJson) {
+    return NetworkImage(DynamicUI.def(parsedJson, 'src', null));
+  }
+
+  static dynamic pCircleAvatar(parsedJson) {
+    return CircleAvatar(backgroundImage: DynamicUI.def(parsedJson, 'backgroundImage', null));
+  }
+
+  static dynamic pIcon(parsedJson) {
     return Icon(
-      iconsMap[def(parsedJson, 'src', null)],
-      color: castToMaterialColor(def(parsedJson, 'color', null)),
-      size: castToDouble(def(parsedJson, 'size', null)),
+      iconsMap[DynamicUI.def(parsedJson, 'src', null)],
+      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null)),
+      size: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'size', null)),
     );
   }
 

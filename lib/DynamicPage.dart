@@ -7,9 +7,10 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:test3/AppStore/AppStore.dart';
 
 import 'AppStore/AppStoreData.dart';
-import 'DynamicUI/FlutterType.dart';
+import 'DynamicUI/DynamicUI.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'DynamicUI/FlutterTypeConstant.dart';
 import 'WebSocket.dart';
 
 import 'Util.dart';
@@ -18,7 +19,8 @@ class DynamicPage extends StatefulWidget {
   final String title;
   final bool root;
   final String url;
-  final String parentState;  final String dataUID;
+  final String parentState;
+  final String dataUID;
 
   const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = ""}) : super(key: key);
 
@@ -45,7 +47,7 @@ class _DynamicPageState extends State<DynamicPage> {
           isUpdate = true;
         }
 
-        if(data['State'] != null && data['State'] != "" && store != null){
+        if (data['State'] != null && data['State'] != "" && store != null) {
           Map<String, dynamic> map = data['State'];
           for (var item in map.entries) {
             store.set(item.key, item.value, notify: false);
@@ -58,7 +60,7 @@ class _DynamicPageState extends State<DynamicPage> {
           WebSocket().subscribe(widget.dataUID);
           isUpdate = true;
         }
-        if(isUpdate == true && store != null){
+        if (isUpdate == true && store != null) {
           store.apply();
         }
 
@@ -70,7 +72,60 @@ class _DynamicPageState extends State<DynamicPage> {
         data['list'] = list;
         return data;
       } else {
-        return jsonDecode('{"list": [{"flutterType": "Text","data": "Ошибка загрузки"}]}');
+        //return jsonDecode('{"list": [{"flutterType": "Text","data": "Ошибка загрузки"}]}');
+        return {
+          "list": [
+            {
+              "flutterType": "Center",
+              "child": {
+                "flutterType": "Column",
+                "children": [
+                  {
+                    "flutterType": "SizedBox",
+                    "height": 50
+                  },
+                  {
+                    "flutterType": "Text",
+                    "data": "${response.statusCode}",
+                    "style": {
+                      "flutterType": "TextStyle",
+                      "fontStyle": "normal",
+                      "fontWeight": "bold",
+                      "fontSize": 100,
+                      "color": "#ff0000",
+                    }
+                  },
+                  {
+                    "flutterType": "Text",
+                    "data": "Ошибка загрузки",
+                    "style": {
+                      "flutterType": "TextStyle",
+                      "fontSize": 16,
+                      "color": "#ff0000",
+                    }
+                  },
+                  {
+                    "flutterType": "SizedBox",
+                    "height": 16
+                  },
+                  {
+                    "flutterType": "Padding",
+                    "padding": "20,0,20,0",
+                    "child": {
+                      "flutterType": "Text",
+                      "data": "${response.body}",
+                      "style": {
+                        "flutterType": "TextStyle",
+                        "fontSize": 12,
+                        "color": "#ff0000",
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        };
       }
     } catch (e) {
       print(e.toString());
@@ -84,13 +139,13 @@ class _DynamicPageState extends State<DynamicPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Util.getListView(
-            snapshot.data!['separated'] == null || snapshot.data!['separated'] == true,
+            snapshot.data!['Separated'] == null || snapshot.data!['Separated'] == true,
             const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             snapshot.data!['list'].length,
             (BuildContext context, int index) {
               //return FlutterType.mainJson(snapshot.data!['list'][index]);
               return GestureDetector(
-                child: FlutterType.mainJson(snapshot.data!['list'][index]),
+                child: DynamicUI.mainJson(snapshot.data!['list'][index]),
                 onTap: () {
                   if (snapshot.data!['list'][index]['url'] != null) {
                     Navigator.push(
@@ -128,7 +183,7 @@ class _DynamicPageState extends State<DynamicPage> {
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // Status bar
         ),
-        title: AppStore.connect(context, (store, def) => Text(store != null ? store.get("title", def): def), defaultValue: widget.title),
+        title: AppStore.connect(widget.dataUID, (store, def) => Text(store != null ? store.get("title", def) : def), defaultValue: widget.title),
         leading: widget.root == true
             ? IconButton(
                 icon: const Icon(Icons.menu),
@@ -148,7 +203,10 @@ class _DynamicPageState extends State<DynamicPage> {
           onRefresh: () async {
             setState(() {});
           },
-          child: getFutureBuilder(),
+          child: Container(
+            padding: FlutterTypeConstant.parseEdgeInsetsGeometry("10,0,10,0"),
+            child: getFutureBuilder(),
+          ),
         ),
       ),
     );

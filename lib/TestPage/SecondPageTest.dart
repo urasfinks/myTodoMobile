@@ -1,10 +1,10 @@
-import 'WebSocket.dart';
+import '../WebSocket.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test3/AppStore/AppStore.dart';
-import 'AppStore/AppStoreData.dart';
-import 'AppStore/Invoke.dart';
+import '../AppStore/AppStoreData.dart';
+import '../AppStore/Invoke.dart';
 
 class SecondPageTest extends StatefulWidget {
   final String title;
@@ -47,7 +47,7 @@ class _SecondPageTest extends State<SecondPageTest> {
                 //Navigator.of(context).pop();
               },
               child: AppStore.connect(
-                  context, (store, def) => Text('Go back! ${store?.get("x", 0)}'), defaultValue: 0),
+                  "", (store, def) => Text('Go back! ${store?.get("x", 0)}'), defaultValue: 0),
             ),
             ElevatedButton(
               onPressed: () {
@@ -61,7 +61,7 @@ class _SecondPageTest extends State<SecondPageTest> {
                 //Navigator.of(context).pop();
               },
               child: AppStore.connect(
-                  context, (store, def) => Text('Go back! ${store?.get("x1", 0)}'), defaultValue: 0),
+                  "", (store, def) => Text('Go back! ${store?.get("x1", 0)}'), defaultValue: 0),
             ),
             Row(
               children: [
@@ -76,7 +76,7 @@ class _SecondPageTest extends State<SecondPageTest> {
                   padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                 ),
                 AppStore.connect(
-                    context, (store, def) => Text("${store?.get('c1', 1)}"), defaultValue: 1),
+                    "", (store, def) => Text("${store?.get('c1', 1)}"), defaultValue: 1),
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {

@@ -2,7 +2,8 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test3/AppStore/AppStore.dart';
-import 'package:test3/SecondPageTest.dart';
+import 'package:test3/TestPage/FailPage.dart';
+import 'package:test3/TestPage/SecondPageTest.dart';
 import 'DynamicPage.dart';
 //import 'WebSocket.dart';
 
@@ -34,7 +35,7 @@ class _TabWrapState extends State<TabWrap> {
               shape: BadgeShape.square,
               borderRadius: BorderRadius.circular(10),
               badgeContent: AppStore.connect(
-                context,
+                "",
                 (store, def) => Text(
                   store != null ? store.get("cart", '0') : def,
                   style: const TextStyle(color: Colors.white, fontSize: 8),
@@ -62,7 +63,7 @@ class _TabWrapState extends State<TabWrap> {
           case 1:
             return CupertinoTabView(
               builder: (context) => const CupertinoPageScaffold(
-                child: SecondPageTest(title: 'Opa 2'),
+                child: FailPage(title: 'Opa 2'),
               ),
             );
           case 2:
@@ -70,7 +71,7 @@ class _TabWrapState extends State<TabWrap> {
               builder: (context) => CupertinoPageScaffold(
                 child: DynamicPage(
                   title: 'Opa 1',
-                  url: 'http://jamsys.ru:8081/project/system',
+                  url: 'http://jamsys.ru:8081/project/system/account',
                   parentState: "",
                   root: true,
                   dataUID: AppStore.personKey,
