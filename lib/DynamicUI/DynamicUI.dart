@@ -27,16 +27,19 @@ class DynamicUI {
       "Text": FlutterType.pText,
       "TextStyle": FlutterType.pTextStyle,
       "Column": FlutterType.pColumn,
-      "Expanded": FlutterType.pExpanded,
-      "SizedBox": FlutterType.pSizedBox,
       "Row": FlutterType.pRow,
+      "Expanded": FlutterType.pExpanded,
+      "Padding": FlutterType.pPadding,
+      "SizedBox": FlutterType.pSizedBox,
       "Container": FlutterType.pContainer,
+      "Center": FlutterType.pCenter,
       "NetworkImage": FlutterType.pNetworkImage,
       "CircleAvatar": FlutterType.pCircleAvatar,
       "Icon": FlutterType.pIcon,
-      "Center": FlutterType.pCenter,
+      "AssetImage": FlutterType.pAssetImage,
+      "DecorationImage": FlutterType.pDecorationImage,
+      "BoxDecoration": FlutterType.pBoxDecoration,
       "Spacer": FlutterType.pSpacer,
-      "Padding": FlutterType.pPadding,
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map]) : def;
   }

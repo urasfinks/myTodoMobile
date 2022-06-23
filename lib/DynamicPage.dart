@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:test3/AppStore/AppStore.dart';
+import 'package:test3/DynamicUI/page/ErrorPage.dart';
 
 import 'AppStore/AppStoreData.dart';
 import 'DynamicUI/DynamicUI.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'DynamicUI/FlutterTypeConstant.dart';
 import 'WebSocket.dart';
 
 import 'Util.dart';
@@ -72,60 +72,7 @@ class _DynamicPageState extends State<DynamicPage> {
         data['list'] = list;
         return data;
       } else {
-        //return jsonDecode('{"list": [{"flutterType": "Text","data": "Ошибка загрузки"}]}');
-        return {
-          "list": [
-            {
-              "flutterType": "Center",
-              "child": {
-                "flutterType": "Column",
-                "children": [
-                  {
-                    "flutterType": "SizedBox",
-                    "height": 50
-                  },
-                  {
-                    "flutterType": "Text",
-                    "data": "${response.statusCode}",
-                    "style": {
-                      "flutterType": "TextStyle",
-                      "fontStyle": "normal",
-                      "fontWeight": "bold",
-                      "fontSize": 100,
-                      "color": "#ff0000",
-                    }
-                  },
-                  {
-                    "flutterType": "Text",
-                    "data": "Ошибка загрузки",
-                    "style": {
-                      "flutterType": "TextStyle",
-                      "fontSize": 16,
-                      "color": "#ff0000",
-                    }
-                  },
-                  {
-                    "flutterType": "SizedBox",
-                    "height": 16
-                  },
-                  {
-                    "flutterType": "Padding",
-                    "padding": "20,0,20,0",
-                    "child": {
-                      "flutterType": "Text",
-                      "data": "${response.body}",
-                      "style": {
-                        "flutterType": "TextStyle",
-                        "fontSize": 12,
-                        "color": "#ff0000",
-                      }
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        };
+        return ErrorPage.getPage(response.statusCode.toString(), response.body);
       }
     } catch (e) {
       print(e.toString());
@@ -203,10 +150,12 @@ class _DynamicPageState extends State<DynamicPage> {
           onRefresh: () async {
             setState(() {});
           },
-          child: Container(
+          child: getFutureBuilder(),
+          /*child: Container(
+            color: FlutterTypeConstant.parseToMaterialColor("rgba:0,0,0,0.5"),
             padding: FlutterTypeConstant.parseEdgeInsetsGeometry("10,0,10,0"),
             child: getFutureBuilder(),
-          ),
+          ),*/
         ),
       ),
     );
