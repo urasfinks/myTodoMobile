@@ -3,12 +3,17 @@ import '../WebSocket.dart';
 import 'package:redux/redux.dart';
 
 class AppStoreData {
-  AppStoreData(this.store, this.name);
+  AppStoreData(this.store, this.name, {this.syncSocket = false});
 
+  bool syncSocket;
   final Store store;
   final String name;
   final Map<String, dynamic> _map = {};
   int _indexRevision = 0;
+
+  void setSyncSocket(bool syncSocket){
+    this.syncSocket = syncSocket;
+  }
 
   void Function()? _onIndexRevisionError;
 
@@ -16,20 +21,20 @@ class AppStoreData {
     _onIndexRevisionError = fn;
   }
 
-  void onIndexRevisionError(){
+  void onIndexRevisionError() {
     if (_onIndexRevisionError != null) {
       Function.apply(_onIndexRevisionError!, []);
     }
   }
 
   void setIndexRevision(int newValue, {bool checkSequence = true}) {
-    if(checkSequence == true){
+    if (checkSequence == true) {
       if (_indexRevision == newValue - 1) {
         _indexRevision++;
       } else {
         onIndexRevisionError();
       }
-    }else{
+    } else {
       _indexRevision = newValue;
     }
   }
@@ -42,18 +47,14 @@ class AppStoreData {
   }
 
   void set(String key, dynamic value, {bool notify = true}) {
+    print("Set: $key = $value");
     _map[key] = value;
     if (notify == true) {
       onChange(key);
     }
   }
 
-  void inc(String key,
-      {double step = 1.0,
-      double min = -999.0,
-      double max = 999.0,
-      int fixed = 0,
-      bool notify = true}) {
+  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") + step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -67,12 +68,7 @@ class AppStoreData {
     }
   }
 
-  void dec(String key,
-      {double step = 1.0,
-      double min = -999.0,
-      double max = 999.0,
-      int fixed = 0,
-      bool notify = true}) {
+  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") - step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -99,12 +95,12 @@ class AppStoreData {
   }
 
   void onChange(String key) {
-    WebSocket()
-        .send(name, "UPDATE_STATE", data: {"key": key, "value": _map[key]});
+    if (syncSocket) {
+      WebSocket().send(name, "UPDATE_STATE", data: {"key": key, "value": _map[key]});
+    }
   }
 
   void apply() {
     store.dispatch(null);
   }
-
 }

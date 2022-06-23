@@ -35,10 +35,11 @@ class _TabWrapState extends State<TabWrap> {
               borderRadius: BorderRadius.circular(10),
               badgeContent: AppStore.connect(
                 context,
-                (store) => Text(
-                  store.get("cart", '0'),
+                (store, def) => Text(
+                  store != null ? store.get("cart", '0') : def,
                   style: const TextStyle(color: Colors.white, fontSize: 8),
                 ),
+                defaultValue: '0'
               ),
               child: const Icon(Icons.business),
             ),
@@ -66,12 +67,13 @@ class _TabWrapState extends State<TabWrap> {
             );
           case 2:
             return CupertinoTabView(
-              builder: (context) => const CupertinoPageScaffold(
+              builder: (context) => CupertinoPageScaffold(
                 child: DynamicPage(
                   title: 'Opa 1',
                   url: 'http://jamsys.ru:8081/project/system',
                   parentState: "",
                   root: true,
+                  dataUID: AppStore.personKey,
                 ),
               ),
             );

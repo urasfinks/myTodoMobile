@@ -20,30 +20,37 @@ class AppStore{
     initialState: AppStore(),
   );
 
-  static AppStoreData getStore(BuildContext context, String name){
-    return StoreProvider.of<AppStore>(context).state.get(context, name);
+  static AppStoreData? getStore(BuildContext context, String? name, {bool syncSocket = false}){
+    if(name == null || name == ""){
+      return null;
+    }
+    return StoreProvider.of<AppStore>(context).state.get(context, name, {syncSocket: syncSocket});
   }
 
   static AppStoreData? getStoreByName(BuildContext context, String name){
     return StoreProvider.of<AppStore>(context).state.getByName(name);
   }
 
-  static StoreConnector connect(BuildContext context, Widget Function(AppStoreData store) builder){
+  static StoreConnector connect(BuildContext context, Widget Function(AppStoreData? store, dynamic defaultValue) builder, {syncSocket = false, defaultValue = ""}){
     return StoreConnector<AppStore, AppStoreData>(
-      converter: (store) => store.state.get(context, ""),
+      converter: (store) => store.state.get(context, "", {syncSocket: syncSocket}),
       builder: (context, state){
-        return Function.apply(builder, [state]);
+        return Function.apply(builder, [state, defaultValue]);
       },
     );
   }
 
   final Map<BuildContext, AppStoreData> _map = {};
 
-  dynamic get(BuildContext key, String name) {
-    if (_map[key] == null) {
+  dynamic get(BuildContext key, String? name, Map map, {bool syncSocket = false }) {
+    if(name != null && name != "" && _map[key] == null){
       _map[key] = AppStoreData(AppStore.store, name);
+      return _map[key];
     }
-    return _map[key];
+    if(_map[key] != null){
+      return _map[key];
+    }
+    return null;
   }
 
   AppStoreData? getByName(String name) {

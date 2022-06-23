@@ -6,9 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:test3/AppStore/AppStore.dart';
 
+import 'AppStore/AppStoreData.dart';
 import 'DynamicUI/FlutterType.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'WebSocket.dart';
 
 import 'Util.dart';
 
@@ -16,15 +18,16 @@ class DynamicPage extends StatefulWidget {
   final String title;
   final bool root;
   final String url;
-  final String parentState;
+  final String parentState;  final String dataUID;
 
-  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false}) : super(key: key);
+  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = ""}) : super(key: key);
 
   @override
   State<DynamicPage> createState() => _DynamicPageState();
 }
 
 class _DynamicPageState extends State<DynamicPage> {
+  AppStoreData? appStoreData;
 
   Future<Map<String, dynamic>> getServerData() async {
     print('load data');
@@ -35,9 +38,32 @@ class _DynamicPageState extends State<DynamicPage> {
       print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        //data['list']=[{"flutterType": "Text","data": "Ошибка загрузки"}];
+        AppStoreData? store = AppStore().getByName(widget.dataUID);
+        bool isUpdate = false;
+        if (data['Title'] != null && data['Title'] != "" && store != null) {
+          store.set("title", data['Title'], notify: false);
+          isUpdate = true;
+        }
+
+        if(data['State'] != null && data['State'] != "" && store != null){
+          Map<String, dynamic> map = data['State'];
+          for (var item in map.entries) {
+            store.set(item.key, item.value, notify: false);
+          }
+          isUpdate = true;
+        }
+
+        if (data['SyncSocket'] != null && data['SyncSocket'] == true && store != null) {
+          store.setSyncSocket(true);
+          WebSocket().subscribe(widget.dataUID);
+          isUpdate = true;
+        }
+        if(isUpdate == true && store != null){
+          store.apply();
+        }
+
         List list = [];
-        for(dynamic d in data['Data']){
+        for (dynamic d in data['Data']) {
           String ret = Util.template(d['data'], data['Template'][d['template']]);
           list.add(jsonDecode(ret));
         }
@@ -62,8 +88,8 @@ class _DynamicPageState extends State<DynamicPage> {
             const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             snapshot.data!['list'].length,
             (BuildContext context, int index) {
-              return FlutterType.mainJson(snapshot.data!['list'][index]);
-              /*return GestureDetector(
+              //return FlutterType.mainJson(snapshot.data!['list'][index]);
+              return GestureDetector(
                 child: FlutterType.mainJson(snapshot.data!['list'][index]),
                 onTap: () {
                   if (snapshot.data!['list'][index]['url'] != null) {
@@ -80,7 +106,7 @@ class _DynamicPageState extends State<DynamicPage> {
                     );
                   }
                 },
-              );*/
+              );
             },
           );
         } else if (snapshot.hasError) {
@@ -93,6 +119,8 @@ class _DynamicPageState extends State<DynamicPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppStoreData? s = AppStore.getStore(context, widget.dataUID);
+    print("Store: $s; ${widget.url}; ${widget.dataUID}");
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -100,7 +128,7 @@ class _DynamicPageState extends State<DynamicPage> {
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // Status bar
         ),
-        title: Text(widget.title),
+        title: AppStore.connect(context, (store, def) => Text(store != null ? store.get("title", def): def), defaultValue: widget.title),
         leading: widget.root == true
             ? IconButton(
                 icon: const Icon(Icons.menu),
