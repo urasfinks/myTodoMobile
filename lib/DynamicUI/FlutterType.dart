@@ -4,7 +4,6 @@ import 'FlutterTypeConstant.dart';
 import 'icon.dart';
 
 class FlutterType {
-
   static Widget defaultWidget = const SizedBox(width: 0);
 
   static dynamic pText(parsedJson) {
@@ -25,16 +24,14 @@ class FlutterType {
 
   static dynamic pColumn(parsedJson) {
     return Column(
-      crossAxisAlignment: FlutterTypeConstant.parseToCrossAxisAlignment(DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center')),
+      crossAxisAlignment: FlutterTypeConstant.parseToCrossAxisAlignment(DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center'))!,
+      mainAxisAlignment: FlutterTypeConstant.parseToMainAxisAlignment(DynamicUI.def(parsedJson, 'mainAxisAlignment', 'start'))!,
       children: DynamicUI.defList(parsedJson, 'children'),
     );
   }
 
   static dynamic pRow(parsedJson) {
-    return Row(
-        crossAxisAlignment: FlutterTypeConstant.parseToCrossAxisAlignment(DynamicUI.def(parsedJson, 'crossAxisAlignment', null)),
-        children: DynamicUI.defList(parsedJson, 'children')
-    );
+    return Row(crossAxisAlignment: FlutterTypeConstant.parseToCrossAxisAlignment(DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center'))!, mainAxisAlignment: FlutterTypeConstant.parseToMainAxisAlignment(DynamicUI.def(parsedJson, 'mainAxisAlignment', 'start'))!, children: DynamicUI.defList(parsedJson, 'children'));
   }
 
   static dynamic pExpanded(parsedJson) {
@@ -54,6 +51,7 @@ class FlutterType {
     return SizedBox(
       width: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'width', null)),
       height: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'height', null)),
+      child: DynamicUI.def(parsedJson, 'child', null),
     );
   }
 
@@ -65,6 +63,8 @@ class FlutterType {
       height: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'height', null)),
       child: DynamicUI.def(parsedJson, 'child', defaultWidget),
       decoration: DynamicUI.def(parsedJson, 'decoration', null),
+      alignment: FlutterTypeConstant.parseAlignmentGeometry(DynamicUI.def(parsedJson, 'alignment', null)),
+      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null)),
     );
   }
 
@@ -79,7 +79,14 @@ class FlutterType {
   }
 
   static dynamic pCircleAvatar(parsedJson) {
-    return CircleAvatar(backgroundImage: DynamicUI.def(parsedJson, 'backgroundImage', null));
+    return CircleAvatar(
+      backgroundImage: DynamicUI.def(parsedJson, 'backgroundImage', null),
+      backgroundColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'backgroundColor', null)),
+      radius: FlutterTypeConstant.parseToDouble(
+        DynamicUI.def(parsedJson, 'radius', null),
+      ),
+      child: DynamicUI.def(parsedJson, 'child', null),
+    );
   }
 
   static dynamic pIcon(parsedJson) {
@@ -109,9 +116,12 @@ class FlutterType {
 
   static dynamic pBoxDecoration(parsedJson) {
     return BoxDecoration(
-      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null)),
+      color: FlutterTypeConstant.parseToMaterialColor(
+        DynamicUI.def(parsedJson, 'color', null),
+      ),
       image: DynamicUI.def(parsedJson, 'image', null),
-      borderRadius: BorderRadius.all(Radius.circular(DynamicUI.def(parsedJson, 'borderRadius', 0.0))),
+      borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', null)),
+      gradient: DynamicUI.def(parsedJson, 'gradient', null),
     );
   }
 
@@ -119,4 +129,51 @@ class FlutterType {
     return const Spacer();
   }
 
+  static dynamic pLinearGradient(parsedJson) {
+    return LinearGradient(
+      begin: FlutterTypeConstant.parseAlignmentGeometry(
+        DynamicUI.def(parsedJson, 'begin', 'centerLeft'),
+      )!,
+      colors: FlutterTypeConstant.parseListColor(
+        DynamicUI.def(parsedJson, 'colors', null),
+      ),
+    );
+  }
+
+  static dynamic pDivider(parsedJson) {
+    return Divider(
+      height: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'height', null)),
+      thickness: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'thickness', null)),
+      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null)),
+    );
+  }
+
+  static dynamic pElevatedButtonIcon(parsedJson) {
+    return ElevatedButton.icon(
+      onPressed: () {},
+      style: DynamicUI.def(parsedJson, 'style', null),
+      icon: DynamicUI.def(parsedJson, 'icon', null),
+      label: DynamicUI.def(parsedJson, 'label', null),
+    );
+  }
+
+  static dynamic pButtonStyle(parsedJson) {
+    return ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(
+        FlutterTypeConstant.parseToMaterialColor(
+          DynamicUI.def(parsedJson, 'backgroundColor', null),
+        ),
+      ),
+      shadowColor: MaterialStateProperty.all(
+        FlutterTypeConstant.parseToMaterialColor(
+          DynamicUI.def(parsedJson, 'shadowColor', 'transparent'),
+        ),
+      ),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+          borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', null))!,
+        ),
+      ),
+    );
+  }
 }

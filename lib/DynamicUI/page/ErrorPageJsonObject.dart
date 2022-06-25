@@ -1,5 +1,5 @@
-class ErrorPage{
-  static dynamic getPage(String status, String error){
+class ErrorPageJsonObject{
+  static dynamic getPage(String status, String errorSide, String error){
     return {
       "list": [
         {
@@ -37,7 +37,7 @@ class ErrorPage{
               },
               {
                 "flutterType": "Text",
-                "data": "Ошибка сервера",
+                "data": errorSide,
                 "style": {
                   "flutterType": "TextStyle",
                   "fontSize": 16,

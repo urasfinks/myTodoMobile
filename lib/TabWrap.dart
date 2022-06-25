@@ -2,8 +2,8 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test3/AppStore/AppStore.dart';
+import 'package:test3/DynamicUI/page/AccountPage.dart';
 import 'package:test3/TestPage/FailPage.dart';
-import 'package:test3/TestPage/SecondPageTest.dart';
 import 'DynamicPage.dart';
 //import 'WebSocket.dart';
 
@@ -57,7 +57,7 @@ class _TabWrapState extends State<TabWrap> {
           case 0:
             return CupertinoTabView(
               builder: (context) => const CupertinoPageScaffold(
-                child: SecondPageTest(title: 'Opa 1'),
+                child: AccountPage(title: 'Аккаунт'),
               ),
             );
           case 1:
@@ -70,7 +70,7 @@ class _TabWrapState extends State<TabWrap> {
             return CupertinoTabView(
               builder: (context) => CupertinoPageScaffold(
                 child: DynamicPage(
-                  title: 'Opa 1',
+                  title: 'Аккаунт',
                   url: 'http://jamsys.ru:8081/project/system/account',
                   parentState: "",
                   root: true,

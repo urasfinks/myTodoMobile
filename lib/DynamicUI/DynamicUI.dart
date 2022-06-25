@@ -40,6 +40,10 @@ class DynamicUI {
       "DecorationImage": FlutterType.pDecorationImage,
       "BoxDecoration": FlutterType.pBoxDecoration,
       "Spacer": FlutterType.pSpacer,
+      "LinearGradient": FlutterType.pLinearGradient,
+      "Divider": FlutterType.pDivider,
+      "ElevatedButtonIcon": FlutterType.pElevatedButtonIcon,
+      "ButtonStyle": FlutterType.pButtonStyle
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map]) : def;
   }

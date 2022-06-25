@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:test3/AppStore/AppStore.dart';
-import 'package:test3/DynamicUI/page/ErrorPage.dart';
+import 'package:test3/DynamicUI/page/AccountPageJsonObject.dart';
+import 'package:test3/DynamicUI/page/ErrorPageJsonObject.dart';
 
 import 'AppStore/AppStoreData.dart';
 import 'DynamicUI/DynamicUI.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'DynamicUI/FlutterTypeConstant.dart';
 import 'WebSocket.dart';
 
 import 'Util.dart';
@@ -30,6 +32,10 @@ class DynamicPage extends StatefulWidget {
 
 class _DynamicPageState extends State<DynamicPage> {
   AppStoreData? appStoreData;
+
+  Future<Map<String, dynamic>> getServerDataTest() async {
+    return AccountPageJsonObject.getPage();
+  }
 
   Future<Map<String, dynamic>> getServerData() async {
     print('load data');
@@ -72,17 +78,17 @@ class _DynamicPageState extends State<DynamicPage> {
         data['list'] = list;
         return data;
       } else {
-        return ErrorPage.getPage(response.statusCode.toString(), response.body);
+        return ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body);
       }
     } catch (e) {
       print(e.toString());
-      return jsonDecode('{"list": [{"flutterType": "Text","data": "${e.toString()}"}]}');
+      return ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString());
     }
   }
 
   Widget getFutureBuilder() {
     return FutureBuilder<Map<String, dynamic>>(
-      future: getServerData(),
+      future: getServerDataTest(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Util.getListView(
@@ -124,6 +130,7 @@ class _DynamicPageState extends State<DynamicPage> {
     AppStoreData? s = AppStore.getStore(context, widget.dataUID);
     print("Store: $s; ${widget.url}; ${widget.dataUID}");
     return Scaffold(
+      backgroundColor: FlutterTypeConstant.parseToMaterialColor("blue.600"),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.blue[600],
@@ -150,10 +157,10 @@ class _DynamicPageState extends State<DynamicPage> {
           onRefresh: () async {
             setState(() {});
           },
-          child: getFutureBuilder(),
+          child: getFutureBuilder()
           /*child: Container(
-            color: FlutterTypeConstant.parseToMaterialColor("rgba:0,0,0,0.5"),
-            padding: FlutterTypeConstant.parseEdgeInsetsGeometry("10,0,10,0"),
+            color: FlutterTypeConstant.parseToMaterialColor("blue.600"),
+            //padding: FlutterTypeConstant.parseEdgeInsetsGeometry("10,0,10,0"),
             child: getFutureBuilder(),
           ),*/
         ),
