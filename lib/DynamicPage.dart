@@ -19,12 +19,11 @@ import 'Util.dart';
 
 class DynamicPage extends StatefulWidget {
   final String title;
-  final bool root;
   final String url;
   final String parentState;
   final String dataUID;
 
-  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = ""}) : super(key: key);
+  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.dataUID = ""}) : super(key: key);
 
   @override
   State<DynamicPage> createState() => _DynamicPageState();
@@ -108,7 +107,6 @@ class _DynamicPageState extends State<DynamicPage> {
                           title: snapshot.data!['list'][index]['title'],
                           url: snapshot.data!['list'][index]['url'],
                           parentState: "",
-                          root: false,
                         ),
                       ),
                     );
@@ -138,14 +136,6 @@ class _DynamicPageState extends State<DynamicPage> {
           statusBarColor: Colors.transparent, // Status bar
         ),
         title: AppStore.connect(widget.dataUID, (store, def) => Text(store != null ? store.get("title", def) : def), defaultValue: widget.title),
-        leading: widget.root == true
-            ? IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  print("AppBar leading");
-                },
-              )
-            : null,
       ),
       body: Center(
         child: LiquidPullToRefresh(

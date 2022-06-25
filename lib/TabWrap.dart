@@ -73,7 +73,6 @@ class _TabWrapState extends State<TabWrap> {
                   title: 'Аккаунт',
                   url: 'http://jamsys.ru:8081/project/system/account',
                   parentState: "",
-                  root: true,
                   dataUID: AppStore.personKey,
                 ),
               ),
