@@ -23,7 +23,7 @@ class _TabWrapState extends State<TabWrap> {
     AppStore.getStore(context, "TabPage");
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        currentIndex: 2,
+        currentIndex: 0,
         items: [
           const BottomNavigationBarItem(
             label: 'Главная',

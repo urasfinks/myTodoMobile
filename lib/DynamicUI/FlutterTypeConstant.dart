@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test3/DynamicPage/DynamicPage.dart';
 import 'package:test3/DynamicPage/DynamicPageUtil.dart';
 
 class FlutterTypeConstant {
@@ -200,17 +199,18 @@ class FlutterTypeConstant {
         bottomLeft: Radius.circular(parseToDouble(l[3])!),
       );
     } else {
-      return BorderRadius.all(Radius.circular(parseToDouble(value)!));
+      return BorderRadius.all(Radius.circular(parseToDouble(value.toString())!));
     }
   }
 
-  static dynamic parseUtilFunction(String value, DynamicPage context){
+  static dynamic parseUtilFunction(String value){
     Map<String, Function> map = {
       "getFutureBuilder": DynamicPageUtil.getFutureBuilder,
       "test": DynamicPageUtil.test,
     };
     if(map.containsKey(value)){
-      return Function.apply(map[value]!, [context]);
+      return map[value];
+      //return Function.apply(!, [context]);
     }
     return null;
   }

@@ -13,7 +13,7 @@ class DynamicPage extends StatefulWidget {
   final String url;
   final String parentState;
   final String dataUID;
-  final String wrapPage; //{"flutterType": "Container", "color": "red.600", "padding": "20,0,10,0", "child": "():getFutureBuilder"}
+  final String wrapPage; //{"flutterType": "Container", "color": "red.600", "padding": "20,0,10,0", "child": "()=>getFutureBuilder"}
   final String pullToRefreshBackgroundColor;
   final String appBarBackgroundColor;
   final String backgroundColor;

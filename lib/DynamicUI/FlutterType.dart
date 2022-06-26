@@ -185,4 +185,26 @@ class FlutterType {
     );
   }
 
+  static dynamic pMaterial(parsedJson, DynamicPage context) {
+    return Material(
+      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null, context)),
+      borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', null, context)),
+      child: DynamicUI.def(parsedJson, 'child', null, context),
+    );
+  }
+
+  static dynamic pInkWell(parsedJson, DynamicPage context) {
+    return InkWell(
+      customBorder: DynamicUI.def(parsedJson, 'customBorder', null, context),
+      splashColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'splashColor', null, context)),
+      highlightColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'highlightColor', null, context)),
+      child: DynamicUI.def(parsedJson, 'child', null, context),
+    );
+  }
+
+  static dynamic pRoundedRectangleBorder(parsedJson, DynamicPage context) {
+    return RoundedRectangleBorder(
+      borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', 0, context))!,
+    );
+  }
 }

@@ -39,11 +39,17 @@ class _AccountPage extends State<AccountPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Icon(
-                    Icons.notifications_active,
-                    size: 24,
-                    color: FlutterTypeConstant.parseToMaterialColor("#ffffff"),
-                  ),
+                  InkWell(
+                    child: Icon(
+                      Icons.notifications_active,
+                      size: 24,
+                      color: FlutterTypeConstant.parseToMaterialColor("#ffffff"),
+                    ),
+                    onTap: (){
+                      print("Halom");
+                    },
+                  )
+                  ,
                   Text(
                     " 3",
                     style: TextStyle(fontSize: 17, color: FlutterTypeConstant.parseToMaterialColor("#ffffff")),
@@ -92,26 +98,40 @@ class _AccountPage extends State<AccountPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              padding: FlutterTypeConstant.parseEdgeInsetsGeometry("5,12,5,0"),
-                              width: 100,
-                              height: 70,
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                                color: FlutterTypeConstant.parseToMaterialColor("#ffffff"),
-                              ),
-                              alignment: Alignment.center,
-                              child: Column(
-                                children: const [
-                                  Icon(Icons.cancel, size: 18, color: Colors.red),
-                                  SizedBox(
-                                    height: 10,
+                            Material(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                              child: InkWell(
+                                customBorder: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                splashColor: Colors.grey[200],
+                                highlightColor: Colors.transparent,
+                                onTap: (){
+                                  print("Tap");
+                                },
+                                child: Container(
+                                  padding: FlutterTypeConstant.parseEdgeInsetsGeometry("5,12,5,0"),
+                                  width: 100,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+
                                   ),
-                                  Text(
-                                    "Аккаунт",
-                                    style: TextStyle(color: Colors.black),
-                                  )
-                                ],
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    children: const [
+                                      Icon(Icons.cancel, size: 18, color: Colors.red),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "Аккаунт",
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                             Container(

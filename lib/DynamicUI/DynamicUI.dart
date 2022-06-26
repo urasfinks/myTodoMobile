@@ -5,9 +5,7 @@ import 'package:test3/DynamicPage/DynamicPage.dart';
 import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 import 'FlutterType.dart';
 
-
 class DynamicUI {
-
   static Widget main(String jsonData, DynamicPage context) {
     if (jsonData.isEmpty) {
       return FlutterType.defaultWidget;
@@ -45,7 +43,9 @@ class DynamicUI {
       "LinearGradient": FlutterType.pLinearGradient,
       "Divider": FlutterType.pDivider,
       "ElevatedButtonIcon": FlutterType.pElevatedButtonIcon,
-      "ButtonStyle": FlutterType.pButtonStyle
+      "ButtonStyle": FlutterType.pButtonStyle,
+      "Material": FlutterType.pMaterial,
+      "InkWell": FlutterType.pInkWell,
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, context]) : def;
   }
@@ -60,8 +60,19 @@ class DynamicUI {
     if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
       return DynamicUI.getByType(ret['flutterType'] as String, ret, def, context);
     }
-    if(ret.runtimeType.toString() == "String" && ret.toString().contains("():")){
-      return FlutterTypeConstant.parseUtilFunction(ret.toString().split("():")[1], context);
+    if (ret.runtimeType.toString() == "String" && ret.toString().contains("):")) {
+      List<String> exp = ret.toString().split("):");
+      return FlutterTypeConstant.parseUtilFunction(exp[1]);
+    }
+    if (ret.runtimeType.toString() == "String" && ret.toString().contains(")=>")) {
+      List<String> exp = ret.toString().split(")=>");
+      List<dynamic> args = [];
+      args.add(context);
+      List<String> exp2 = exp[0].split("(");
+      if(exp2.length > 1 && map.containsKey(exp2[1])){
+        args.add(map.get(exp2[1]));
+      }
+      return Function.apply(FlutterTypeConstant.parseUtilFunction(exp[1]), args);
     }
     return ret;
   }
@@ -74,5 +85,4 @@ class DynamicUI {
     }
     return list;
   }
-
 }
