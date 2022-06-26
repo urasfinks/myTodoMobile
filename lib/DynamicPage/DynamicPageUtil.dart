@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
+import '../DynamicUI/FlutterTypeConstant.dart';
 import '../Util.dart';
 import 'DynamicPage.dart';
 import '../DynamicUI/DynamicUI.dart';
@@ -15,7 +16,7 @@ import 'dart:async';
 class DynamicPageUtil{
   static Widget getFutureBuilder(DynamicPage widget) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: getServerDataTest(widget),
+      future: getServerData(widget),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Util.getListView(
@@ -46,7 +47,9 @@ class DynamicPageUtil{
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
-        return const CircularProgressIndicator();
+        return CircularProgressIndicator(
+          backgroundColor: FlutterTypeConstant.parseToMaterialColor(widget.progressIndicatorBackgroundColor),
+        );
       },
     );
   }

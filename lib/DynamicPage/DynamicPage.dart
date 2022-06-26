@@ -17,6 +17,7 @@ class DynamicPage extends StatefulWidget {
   final String pullToRefreshBackgroundColor;
   final String appBarBackgroundColor;
   final String backgroundColor;
+  final String progressIndicatorBackgroundColor;
 
   const DynamicPage({Key? key,
     required this.title,
@@ -27,7 +28,8 @@ class DynamicPage extends StatefulWidget {
     this.wrapPage = "",
     this.appBarBackgroundColor = "blue.600",
     this.pullToRefreshBackgroundColor = "#ffffff",
-    this.backgroundColor = "#ffffff"
+    this.backgroundColor = "#ffffff",
+    this.progressIndicatorBackgroundColor = "blue.600"
   }) : super(key: key);
 
   @override

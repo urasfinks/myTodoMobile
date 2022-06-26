@@ -76,6 +76,7 @@ class _TabWrapState extends State<TabWrap> {
                   dataUID: AppStore.personKey,
                   backgroundColor: "blue.600",
                   pullToRefreshBackgroundColor: "blue.600",
+                  progressIndicatorBackgroundColor: "#ffffff",
                 ),
               ),
             );
