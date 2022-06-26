@@ -71,7 +71,7 @@ class _TabWrapState extends State<TabWrap> {
               builder: (context) => CupertinoPageScaffold(
                 child: DynamicPage(
                   title: 'Аккаунт',
-                  url: 'http://jamsys.ru:8081/project/system/account',
+                  url: 'project/system/account',
                   parentState: "",
                   dataUID: AppStore.personKey,
                   backgroundColor: "blue.600",

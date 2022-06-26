@@ -63,7 +63,7 @@ class DynamicPageUtil{
     try {
       Map<String, String> requestHeaders = {'Authorization': AppStore.personKey};
 
-      final response = await http.post(Uri.parse(widget.url), headers: requestHeaders, body: widget.parentState);
+      final response = await http.post(Uri.parse("${AppStore.host}${widget.url}"), headers: requestHeaders, body: widget.parentState);
       print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
