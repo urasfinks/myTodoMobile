@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Util {
-  static ListView getListView(
-      bool separated,
-      ScrollPhysics physics,
-      int itemCount,
-      IndexedWidgetBuilder itemBuilder
-      ) {
+  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, IndexedWidgetBuilder itemBuilder) {
     if (separated == true) {
       return ListView.separated(
         physics: physics,
@@ -23,18 +18,18 @@ class Util {
     }
   }
 
-  static String path(dynamic data, String path){
+  static String path(dynamic data, String path) {
     List<String> exp = path.split(".");
     dynamic cur = data;
-    for(String key in exp){
-      if(cur != null && cur[key] != null){
+    for (String key in exp) {
+      if (cur != null && cur[key] != null) {
         cur = cur[key];
       }
     }
     return cur != null ? cur.toString() : "null";
   }
 
-  static String template(dynamic data, String template){
+  static String template(dynamic data, String template) {
     List<String> exp = template.split('\${');
 
     for (String expItem in exp) {
@@ -50,5 +45,7 @@ class Util {
     }
     return template;
   }
+
+
 
 }

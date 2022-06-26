@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicUI/page/AccountPage.dart';
 import 'package:test3/TestPage/FailPage.dart';
-import 'DynamicPage.dart';
+import 'DynamicPage/DynamicPage.dart';
 //import 'WebSocket.dart';
 
 class TabWrap extends StatefulWidget {

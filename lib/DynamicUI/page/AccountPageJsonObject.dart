@@ -75,7 +75,7 @@ class AccountPageJsonObject {
               },
               {
                 "flutterType": "Text",
-                "data": "Последний раз были: 24.06.2022 15:06",
+                "data": "Последний вход: 24.06.2022 15:06",
                 "style": {
                   "flutterType": "TextStyle",
                   "fontSize": 14,
@@ -489,6 +489,80 @@ class AccountPageJsonObject {
                           "style": {
                             "flutterType": "ButtonStyle",
                             "backgroundColor": "blue.600",
+                            "shadowColor": "transparent",
+                            "borderRadius": 20
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "flutterType": "SizedBox",
+                      "height": 20
+                    },
+                    {
+                      "flutterType": "Container",
+                      "margin": "30,0,30,0",
+                      "child": {
+                        "flutterType": "SizedBox",
+                        "width": "infinity",
+                        "height": 43,
+                        "child": {
+                          "flutterType": "ElevatedButtonIcon",
+                          "icon": {
+                            "flutterType": "Icon",
+                            "src": "message",
+                            "size": 18,
+                            "color": "blue"
+                          },
+                          "label": {
+                            "flutterType": "Text",
+                            "data": "Оставить отзыв / предложение",
+                            "style": {
+                              "flutterType": "TextStyle",
+                              "fontSize": 14,
+                              "color": "blue"
+                            }
+                          },
+                          "style": {
+                            "flutterType": "ButtonStyle",
+                            "backgroundColor": "#ffffff",
+                            "shadowColor": "transparent",
+                            "borderRadius": 20
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "flutterType": "SizedBox",
+                      "height": 20
+                    },
+                    {
+                      "flutterType": "Container",
+                      "margin": "30,0,30,0",
+                      "child": {
+                        "flutterType": "SizedBox",
+                        "width": "infinity",
+                        "height": 43,
+                        "child": {
+                          "flutterType": "ElevatedButtonIcon",
+                          "icon": {
+                            "flutterType": "Icon",
+                            "src": "payment",
+                            "size": 18,
+                            "color": "blue"
+                          },
+                          "label": {
+                            "flutterType": "Text",
+                            "data": "Помочь материально",
+                            "style": {
+                              "flutterType": "TextStyle",
+                              "fontSize": 14,
+                              "color": "blue"
+                            }
+                          },
+                          "style": {
+                            "flutterType": "ButtonStyle",
+                            "backgroundColor": "#ffffff",
                             "shadowColor": "transparent",
                             "borderRadius": 20
                           }

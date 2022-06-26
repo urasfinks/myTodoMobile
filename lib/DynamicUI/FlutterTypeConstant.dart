@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:test3/DynamicPage/DynamicPage.dart';
+import 'package:test3/DynamicPage/DynamicPageUtil.dart';
 
 class FlutterTypeConstant {
   static dynamic parseToFontStyle(String? value) {
@@ -200,6 +202,16 @@ class FlutterTypeConstant {
     } else {
       return BorderRadius.all(Radius.circular(parseToDouble(value)!));
     }
+  }
 
+  static dynamic parseUtilFunction(String value, DynamicPage context){
+    Map<String, Function> map = {
+      "getFutureBuilder": DynamicPageUtil.getFutureBuilder,
+      "test": DynamicPageUtil.test,
+    };
+    if(map.containsKey(value)){
+      return Function.apply(map[value]!, [context]);
+    }
+    return null;
   }
 }
