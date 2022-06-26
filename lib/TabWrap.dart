@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicUI/page/AccountPage.dart';
-import 'package:test3/TestPage/FailPage.dart';
+import 'package:test3/DynamicUI/page/FailPage.dart';
 import 'DynamicPage/DynamicPage.dart';
 //import 'WebSocket.dart';
 
@@ -74,6 +74,8 @@ class _TabWrapState extends State<TabWrap> {
                   url: 'http://jamsys.ru:8081/project/system/account',
                   parentState: "",
                   dataUID: AppStore.personKey,
+                  backgroundColor: "blue.600",
+                  pullToRefreshBackgroundColor: "blue.600",
                 ),
               ),
             );

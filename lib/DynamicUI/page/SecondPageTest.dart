@@ -1,10 +1,10 @@
-import '../WebSocket.dart';
+import '../../WebSocket.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test3/AppStore/AppStore.dart';
-import '../AppStore/AppStoreData.dart';
-import '../AppStore/Invoke.dart';
+import '../../AppStore/AppStoreData.dart';
+import '../../AppStore/Invoke.dart';
 
 class SecondPageTest extends StatefulWidget {
   final String title;

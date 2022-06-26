@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../DynamicUI/FlutterTypeConstant.dart';
+import '../FlutterTypeConstant.dart';
 
 class FailPage extends StatefulWidget {
   final String title;

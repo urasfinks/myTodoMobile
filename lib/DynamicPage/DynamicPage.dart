@@ -7,15 +7,28 @@ import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
 
-class DynamicPage extends StatefulWidget{
+class DynamicPage extends StatefulWidget {
   final String title;
   final bool root;
   final String url;
   final String parentState;
   final String dataUID;
-  final String wrapPage;
+  final String wrapPage; //{"flutterType": "Container", "color": "red.600", "padding": "20,0,10,0", "child": "():getFutureBuilder"}
+  final String pullToRefreshBackgroundColor;
+  final String appBarBackgroundColor;
+  final String backgroundColor;
 
-  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = "", this.wrapPage = ""}) : super(key: key);
+  const DynamicPage({Key? key,
+    required this.title,
+    required this.url,
+    required this.parentState,
+    this.root = false,
+    this.dataUID = "",
+    this.wrapPage = "",
+    this.appBarBackgroundColor = "blue.600",
+    this.pullToRefreshBackgroundColor = "#ffffff",
+    this.backgroundColor = "#ffffff"
+  }) : super(key: key);
 
   @override
   State<DynamicPage> createState() => _DynamicPageState();
@@ -30,10 +43,10 @@ class _DynamicPageState extends State<DynamicPage> {
     print("Store: $s; ${widget.url}; ${widget.dataUID}");
 
     return Scaffold(
-      backgroundColor: FlutterTypeConstant.parseToMaterialColor("blue.600"),
+      backgroundColor: FlutterTypeConstant.parseToMaterialColor(widget.backgroundColor),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.blue[600],
+        backgroundColor: FlutterTypeConstant.parseToMaterialColor(widget.appBarBackgroundColor),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // Status bar
         ),
@@ -41,7 +54,7 @@ class _DynamicPageState extends State<DynamicPage> {
       ),
       body: Center(
         child: LiquidPullToRefresh(
-          color: Colors.blue[600],
+          color: FlutterTypeConstant.parseToMaterialColor(widget.pullToRefreshBackgroundColor),
           showChildOpacityTransition: false,
           springAnimationDurationInMilliseconds: 500,
           animSpeedFactor: 2,
@@ -49,7 +62,6 @@ class _DynamicPageState extends State<DynamicPage> {
           onRefresh: () async {
             setState(() {});
           },
-          /*child: DynamicUI.mainJson({"flutterType": "Container", "color": "red.600", "padding": "20,0,10,0", "child": "():getFutureBuilder"}, widget),*/
           child: widget.wrapPage.isNotEmpty ? DynamicUI.main(widget.wrapPage, widget) : DynamicPageUtil.getFutureBuilder(widget),
         ),
       ),
