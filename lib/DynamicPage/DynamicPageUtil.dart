@@ -113,7 +113,7 @@ class DynamicPageUtil{
     }
   }
 
-  static dynamic testTap(DynamicPage context, dynamic data){
+  static dynamic openWindow(DynamicPage context, dynamic data){
     AppStoreData? s = AppStore().getByName(context.dataUID);
     if(s != null){
       Navigator.push(
@@ -123,13 +123,6 @@ class DynamicPageUtil{
         ),
       );
     }
-    /*title: 'Аккаунт',
-            url: 'project/system/account',
-            parentState: "",
-            dataUID: AppStore.personKey,
-            backgroundColor: "blue.600",
-            pullToRefreshBackgroundColor: "blue.600",
-            progressIndicatorBackgroundColor: "#ffffff",*/
     return null;
   }
 

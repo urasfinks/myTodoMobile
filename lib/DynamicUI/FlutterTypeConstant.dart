@@ -207,7 +207,7 @@ class FlutterTypeConstant {
     Map<String, Function> map = {
       "getFutureBuilder": DynamicPageUtil.getFutureBuilder,
       "test": DynamicPageUtil.test,
-      "testTap": DynamicPageUtil.testTap,
+      "openWindow": DynamicPageUtil.openWindow,
     };
     if(map.containsKey(value)){
       return map[value];
