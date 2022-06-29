@@ -211,8 +211,8 @@ class FlutterTypeConstant {
     };
     if(map.containsKey(value)){
       return map[value];
-      //return Function.apply(!, [context]);
     }
     return null;
   }
+
 }
