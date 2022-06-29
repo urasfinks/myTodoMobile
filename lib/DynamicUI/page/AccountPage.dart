@@ -114,9 +114,8 @@ class _AccountPage extends State<AccountPage> {
                                   padding: FlutterTypeConstant.parseEdgeInsetsGeometry("5,12,5,0"),
                                   width: 100,
                                   height: 70,
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
                                   ),
                                   alignment: Alignment.center,
                                   child: Column(

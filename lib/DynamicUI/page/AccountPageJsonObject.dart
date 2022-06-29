@@ -108,108 +108,147 @@ class AccountPageJsonObject {
                         "mainAxisAlignment": "spaceBetween",
                         "children":[
                           {
-                            "flutterType": "Container",
-                            "padding": "5,12,5,0",
-                            "width": 100,
-                            "height": 70,
-                            "alignment": "center",
-                            "decoration": {
-                              "flutterType": "BoxDecoration",
-                              "borderRadius": 20,
-                              "color": "#ffffff"
-                            },
+                            "flutterType": "Material",
+                            "color": "white",
+                            "borderRadius": 20,
                             "child": {
-                              "flutterType": "Column",
-                              "children": [
-                                {
-                                  "flutterType": "Icon",
-                                  "src": "cancel",
-                                  "size": 18,
-                                  "color": "red"
+                              "flutterType": "InkWell",
+                              "customBorder": {
+                                "flutterType": "RoundedRectangleBorder",
+                                "borderRadius": 20
+                              },
+                              "splashColor": "grey.200",
+                              "highlightColor": "white",
+                              "child": {
+                                "flutterType": "Container",
+                                "padding": "5,12,5,0",
+                                "width": 100,
+                                "height": 70,
+                                "alignment": "center",
+                                "decoration": {
+                                  "flutterType": "BoxDecoration",
+                                  "borderRadius": 20
                                 },
-                                {
-                                  "flutterType": "SizedBox",
-                                  "height": 10
-                                },
-                                {
-                                  "flutterType": "Text",
-                                  "data": "Аккаунт",
-                                  "style": {
-                                    "flutterType": "TextStyle",
-                                    "color": "black"
-                                  }
+                                "child": {
+                                  "flutterType": "Column",
+                                  "children": [
+                                    {
+                                      "flutterType": "Icon",
+                                      "src": "cancel",
+                                      "size": 18,
+                                      "color": "red"
+                                    },
+                                    {
+                                      "flutterType": "SizedBox",
+                                      "height": 10
+                                    },
+                                    {
+                                      "flutterType": "Text",
+                                      "data": "Аккаунт",
+                                      "style": {
+                                        "flutterType": "TextStyle",
+                                        "color": "black"
+                                      }
+                                    }
+                                  ]
                                 }
-                              ]
+                              }
                             }
                           },
                           {
-                            "flutterType": "Container",
-                            "padding": "5,12,5,0",
-                            "width": 100,
-                            "height": 70,
-                            "alignment": "center",
-                            "decoration": {
-                              "flutterType": "BoxDecoration",
-                              "borderRadius": 20,
-                              "color": "#ffffff"
-                            },
+                            "flutterType": "Material",
+                            "color": "white",
+                            "borderRadius": 20,
                             "child": {
-                              "flutterType": "Column",
-                              "children": [
-                                {
-                                  "flutterType": "Icon",
-                                  "src": "note",
-                                  "size": 18,
-                                  "color": "black"
+                              "flutterType": "InkWell",
+                              "customBorder": {
+                                "flutterType": "RoundedRectangleBorder",
+                                "borderRadius": 20
+                              },
+                              "splashColor": "grey.200",
+                              "highlightColor": "white",
+                              "child": {
+                                "flutterType": "Container",
+                                "padding": "5,12,5,0",
+                                "width": 100,
+                                "height": 70,
+                                "alignment": "center",
+                                "decoration": {
+                                  "flutterType": "BoxDecoration",
+                                  "borderRadius": 20,
                                 },
-                                {
-                                  "flutterType": "SizedBox",
-                                  "height": 10
-                                },
-                                {
-                                  "flutterType": "Text",
-                                  "data": "Заметки",
-                                  "style": {
-                                    "flutterType": "TextStyle",
-                                    "color": "black"
-                                  }
+                                "child": {
+                                  "flutterType": "Column",
+                                  "children": [
+                                    {
+                                      "flutterType": "Icon",
+                                      "src": "note",
+                                      "size": 18,
+                                      "color": "black"
+                                    },
+                                    {
+                                      "flutterType": "SizedBox",
+                                      "height": 10
+                                    },
+                                    {
+                                      "flutterType": "Text",
+                                      "data": "Заметки",
+                                      "style": {
+                                        "flutterType": "TextStyle",
+                                        "color": "black"
+                                      }
+                                    }
+                                  ]
                                 }
-                              ]
+                              }
                             }
                           },
                           {
-                            "flutterType": "Container",
-                            "padding": "5,12,5,0",
-                            "width": 100,
-                            "height": 70,
-                            "alignment": "center",
-                            "decoration": {
-                              "flutterType": "BoxDecoration",
-                              "borderRadius": 20,
-                              "color": "#ffffff"
-                            },
+                            "flutterType": "Material",
+                            "color": "white",
+                            "borderRadius": 20,
                             "child": {
-                              "flutterType": "Column",
-                              "children": [
-                                {
-                                  "flutterType": "Icon",
-                                  "src": "favorite",
-                                  "size": 18,
-                                  "color": "black"
+                              "flutterType": "InkWell",
+                              "customBorder": {
+                                "flutterType": "RoundedRectangleBorder",
+                                "borderRadius": 20
+                              },
+                              "splashColor": "grey.200",
+                              "highlightColor": "white",
+                              "child": {
+                                "flutterType": "Container",
+                                "padding": "5,12,5,0",
+                                "width": 100,
+                                "height": 70,
+                                "alignment": "center",
+                                "decoration": {
+                                  "flutterType": "BoxDecoration",
+                                  "borderRadius": 20,
                                 },
-                                {
-                                  "flutterType": "SizedBox",
-                                  "height": 10
-                                },
-                                {
-                                  "flutterType": "Text",
-                                  "data": "Избранное",
-                                  "style": {
-                                    "flutterType": "TextStyle",
-                                    "color": "black"
-                                  }
+                                "child": {
+                                  "flutterType": "Column",
+                                  "children": [
+                                    {
+                                      "flutterType": "Icon",
+                                      "src": "favorite",
+                                      "size": 18,
+                                      "color": "black"
+                                    },
+                                    {
+                                      "flutterType": "SizedBox",
+                                      "height": 10
+                                    },
+                                    {
+                                      "flutterType": "Text",
+                                      "data": "Избранное",
+                                      "style": {
+                                        "flutterType": "TextStyle",
+                                        "color": "black"
+                                      }
+                                    }
+                                  ]
                                 }
-                              ]
+                              }
                             }
                           }
                         ]

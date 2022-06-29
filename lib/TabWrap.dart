@@ -23,7 +23,7 @@ class _TabWrapState extends State<TabWrap> {
     AppStore.getStore(context, "TabPage");
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        currentIndex: 0,
+        currentIndex: 2,
         items: [
           const BottomNavigationBarItem(
             label: 'Главная',
@@ -77,6 +77,7 @@ class _TabWrapState extends State<TabWrap> {
                   backgroundColor: "blue.600",
                   pullToRefreshBackgroundColor: "blue.600",
                   progressIndicatorBackgroundColor: "#ffffff",
+                  root: true,
                 ),
               ),
             );

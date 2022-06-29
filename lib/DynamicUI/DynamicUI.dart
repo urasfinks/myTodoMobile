@@ -46,10 +46,14 @@ class DynamicUI {
       "ButtonStyle": FlutterType.pButtonStyle,
       "Material": FlutterType.pMaterial,
       "InkWell": FlutterType.pInkWell,
+      "RoundedRectangleBorder": FlutterType.pRoundedRectangleBorder
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, context]) : def;
   }
 
+  static dynamic parseFunction(map, key, def, DynamicPage context) {
+
+  }
   static dynamic def(map, key, def, DynamicPage context) {
     dynamic ret;
     if (key != null) {
@@ -60,17 +64,17 @@ class DynamicUI {
     if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
       return DynamicUI.getByType(ret['flutterType'] as String, ret, def, context);
     }
-    if (ret.runtimeType.toString() == "String" && ret.toString().contains("):")) {
+    if (ret.runtimeType.toString() == "String" && ret.toString().contains("):")) { //Return reference function
       List<String> exp = ret.toString().split("):");
-      return FlutterTypeConstant.parseUtilFunction(exp[1]);
+      return FlutterTypeConstant.parseUtilFunction(exp[1]); //Input arguments needs context
     }
-    if (ret.runtimeType.toString() == "String" && ret.toString().contains(")=>")) {
+    if (ret.runtimeType.toString() == "String" && ret.toString().contains(")=>")) { //Return execute function
       List<String> exp = ret.toString().split(")=>");
       List<dynamic> args = [];
       args.add(context);
       List<String> exp2 = exp[0].split("(");
       if(exp2.length > 1 && map.containsKey(exp2[1])){
-        args.add(map.get(exp2[1]));
+        args.add(map[exp2[1]]);
       }
       return Function.apply(FlutterTypeConstant.parseUtilFunction(exp[1]), args);
     }

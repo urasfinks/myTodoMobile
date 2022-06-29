@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../AppStore/AppStore.dart';
@@ -59,6 +60,11 @@ class DynamicPageUtil{
   }
 
   static Future<Map<String, dynamic>> getServerData(DynamicPage widget) async {
+    if(!widget.root){
+      await Future.delayed(const Duration(milliseconds: 350), () {
+        print("DELAY");
+      });
+    }
     print('load data');
     try {
       Map<String, String> requestHeaders = {'Authorization': AppStore.personKey};
@@ -105,6 +111,26 @@ class DynamicPageUtil{
       print(e.toString());
       return ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString());
     }
+  }
+
+  static dynamic testTap(DynamicPage context, dynamic data){
+    AppStoreData? s = AppStore().getByName(context.dataUID);
+    if(s != null){
+      Navigator.push(
+        s.getCtx()!,
+        CupertinoPageRoute(
+          builder: (context) => DynamicPage.fromJson(data),
+        ),
+      );
+    }
+    /*title: 'Аккаунт',
+            url: 'project/system/account',
+            parentState: "",
+            dataUID: AppStore.personKey,
+            backgroundColor: "blue.600",
+            pullToRefreshBackgroundColor: "blue.600",
+            progressIndicatorBackgroundColor: "#ffffff",*/
+    return null;
   }
 
   static Widget test(DynamicPage context){

@@ -1,9 +1,19 @@
+import 'package:flutter/cupertino.dart';
+
 import '../WebSocket.dart';
 
 import 'package:redux/redux.dart';
 
 class AppStoreData {
   AppStoreData(this.store, this.name, {this.syncSocket = false});
+
+  BuildContext? _ctx;
+
+  void setCtx(BuildContext value) {
+    _ctx = value;
+  }
+
+  BuildContext? getCtx() => _ctx;
 
   bool syncSocket;
   final Store store;

@@ -195,11 +195,30 @@ class FlutterType {
 
   static dynamic pInkWell(parsedJson, DynamicPage context) {
     return InkWell(
-      customBorder: DynamicUI.def(parsedJson, 'customBorder', null, context),
-      splashColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'splashColor', null, context)),
-      highlightColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'highlightColor', null, context)),
-      child: DynamicUI.def(parsedJson, 'child', null, context),
-    );
+        customBorder: DynamicUI.def(parsedJson, 'customBorder', null, context),
+        splashColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'splashColor', null, context)),
+        highlightColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'highlightColor', null, context)),
+        child: DynamicUI.def(parsedJson, 'child', null, context),
+        onTap: () {
+          List<String> exp = parsedJson['onTap'].toString().split("):");
+          List<dynamic> args = [];
+          args.add(context);
+          try {
+            List<String> exp2 = exp[0].split("(");
+            if (exp2.length > 1 && parsedJson.containsKey(exp2[1])) {
+              args.add(parsedJson[exp2[1]]);
+            }
+          }catch(e){
+            print(e);
+          }
+          if(args.length == 1){
+            args.add(null);
+          }
+          Function? x = DynamicUI.def(parsedJson, 'onTap', null, context);
+          if (x != null) {
+            Function.apply(x, args);
+          }
+        });
   }
 
   static dynamic pRoundedRectangleBorder(parsedJson, DynamicPage context) {
