@@ -230,7 +230,7 @@ class FlutterType {
 
   static dynamic pTextField(parsedJson, DynamicPage context) {
     var key = DynamicUI.def(parsedJson, 'name', '-', context);
-    var appStore = AppStore().getByName(context.dataUID);
+    var appStore = AppStore().getByDataUID(context.dataUID);
     return TextField(
       controller: appStore?.getTextController(DynamicUI.def(parsedJson, 'name', '-', context), DynamicUI.def(parsedJson, 'data', '', context)),
       obscureText: DynamicUI.def(parsedJson, 'obscureText', false, context),

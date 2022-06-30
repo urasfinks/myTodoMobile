@@ -3,7 +3,6 @@ class TextEditRowJsonObject {
     return {
       "Separated": false,
       "WidgetData":{
-        "title": "Ohoq",
         "wrapPage":{
           "flutterType": "Container",
           "color": "white",
@@ -19,9 +18,9 @@ class TextEditRowJsonObject {
             "border": {
               "flutterType": "UnderlineInputBorder"
             },
-            "labelText": "wefwe"
+            "labelText": "Имя Отчество"
           },
-          "data": "Ho-ho-"
+          "data": ""
         }
       ]
     };

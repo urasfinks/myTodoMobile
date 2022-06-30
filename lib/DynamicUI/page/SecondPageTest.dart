@@ -20,7 +20,7 @@ class _SecondPageTest extends State<SecondPageTest> {
   @override
   Widget build(BuildContext context) {
     WebSocket().subscribe(widget.title);
-    final AppStoreData? store = AppStore.getStore(context, widget.title);
+    final AppStoreData? store = AppStore.getStore(context);
     store?.setOnIndexRevisionError(() {
       print("Reload page");
     });

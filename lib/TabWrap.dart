@@ -9,6 +9,7 @@ import 'DynamicPage/DynamicPage.dart';
 
 class TabWrap extends StatefulWidget {
   final BuildContext context;
+
   const TabWrap(this.context, {Key? key}) : super(key: key);
 
   @override
@@ -16,11 +17,27 @@ class TabWrap extends StatefulWidget {
 }
 
 class _TabWrapState extends State<TabWrap> {
+  final List<Widget> _pages = [
+    const AccountPage(title: 'Аккаунт'),
+    const FailPage(title: 'Opa 2'),
+    DynamicPage.fromJson(
+      {
+        "title": 'Аккаунт',
+        "url": 'project/system/account',
+        "parentState": "",
+        //dataUID: AppStore.personKey,
+        "backgroundColor": "blue.600",
+        "pullToRefreshBackgroundColor": "blue.600",
+        "progressIndicatorBackgroundColor": "#ffffff",
+        "root": true,
+      },
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     //WebSocket().subscribe("TabPage");
-    AppStore.getStore(context, "TabPage");
+    //AppStore.getStore(context);
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         currentIndex: 2,
@@ -35,13 +52,12 @@ class _TabWrapState extends State<TabWrap> {
               shape: BadgeShape.square,
               borderRadius: BorderRadius.circular(10),
               badgeContent: AppStore.connect(
-                "",
-                (store, def) => Text(
-                  store != null ? store.get("cart", '0') : def,
-                  style: const TextStyle(color: Colors.white, fontSize: 8),
-                ),
-                defaultValue: '0'
-              ),
+                  "",
+                  (store, def) => Text(
+                        store != null ? store.get("cart", '0') : def,
+                        style: const TextStyle(color: Colors.white, fontSize: 8),
+                      ),
+                  defaultValue: '0'),
               child: const Icon(Icons.business),
             ),
             label: 'Организация',
@@ -53,37 +69,11 @@ class _TabWrapState extends State<TabWrap> {
         ],
       ),
       tabBuilder: (context, index) {
-        switch (index) {
-          case 0:
-            return CupertinoTabView(
-              builder: (context) => const CupertinoPageScaffold(
-                child: AccountPage(title: 'Аккаунт'),
-              ),
-            );
-          case 1:
-            return CupertinoTabView(
-              builder: (context) => const CupertinoPageScaffold(
-                child: FailPage(title: 'Opa 2'),
-              ),
-            );
-          case 2:
-            return CupertinoTabView(
-              builder: (context) => CupertinoPageScaffold(
-                child: DynamicPage(
-                  title: 'Аккаунт',
-                  url: 'project/system/account',
-                  parentState: "",
-                  dataUID: AppStore.personKey,
-                  backgroundColor: "blue.600",
-                  pullToRefreshBackgroundColor: "blue.600",
-                  progressIndicatorBackgroundColor: "#ffffff",
-                  root: true,
-                ),
-              ),
-            );
-          default:
-            return const CupertinoTabView();
-        }
+        return CupertinoTabView(
+          builder: (context) {
+            return _pages[index];
+          },
+        );
       },
     );
   }

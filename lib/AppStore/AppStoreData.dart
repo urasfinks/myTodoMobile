@@ -6,13 +6,23 @@ import '../WebSocket.dart';
 import 'package:redux/redux.dart';
 
 class AppStoreData {
-  AppStoreData(this.store, this.name, {this.syncSocket = false});
+
+  bool syncSocket;
+  final Store store;
+  final Map<String, dynamic> _map = {};
+  int _indexRevision = 0;
+
+  AppStoreData(this.store, {this.syncSocket = false});
 
   BuildContext? _ctx;
   Map<String, TextEditingController> listController = {};
   State? pageState;
 
   Map<String, dynamic> widgetData = {};
+
+  void setName(String dataUID){
+    addWidgetData("dataUID", dataUID);
+  }
 
   void addWidgetDataByMap(Map<String, dynamic> obj){
     for (var item in widgetData.entries) {
@@ -23,22 +33,25 @@ class AppStoreData {
   }
 
   void addWidgetDataByPage(DynamicPage widget){
-    if(widgetData.isEmpty){
-      addWidgetData("title", widget.title);
-      addWidgetData("root", widget.root);
-      addWidgetData("url", widget.url);
-      addWidgetData("parentState", widget.parentState);
-      addWidgetData("dataUID", widget.dataUID);
-      addWidgetData("wrapPage", widget.wrapPage);
-      addWidgetData("pullToRefreshBackgroundColor", widget.pullToRefreshBackgroundColor);
-      addWidgetData("appBarBackgroundColor", widget.appBarBackgroundColor);
-      addWidgetData("backgroundColor", widget.backgroundColor);
-      addWidgetData("progressIndicatorBackgroundColor", widget.progressIndicatorBackgroundColor);
-    }
+    addWidgetData("title", widget.title);
+    addWidgetData("root", widget.root);
+    addWidgetData("url", widget.url);
+    addWidgetData("parentState", widget.parentState);
+    addWidgetData("dataUID", widget.dataUID);
+    addWidgetData("wrapPage", widget.wrapPage);
+    addWidgetData("pullToRefreshBackgroundColor", widget.pullToRefreshBackgroundColor);
+    addWidgetData("appBarBackgroundColor", widget.appBarBackgroundColor);
+    addWidgetData("backgroundColor", widget.backgroundColor);
+    addWidgetData("progressIndicatorBackgroundColor", widget.progressIndicatorBackgroundColor);
   }
 
   void addWidgetData(String key, dynamic value){
+    //print("addWidgetData(${key}) = ${value}");
     widgetData[key] = value;
+  }
+
+  Map<String, dynamic> getWidgetDates(){
+    return widgetData;
   }
 
   dynamic getWidgetData(String key){
@@ -89,12 +102,6 @@ class AppStoreData {
   }
 
   BuildContext? getCtx() => _ctx;
-
-  bool syncSocket;
-  final Store store;
-  final String name;
-  final Map<String, dynamic> _map = {};
-  int _indexRevision = 0;
 
   void setSyncSocket(bool syncSocket){
     this.syncSocket = syncSocket;
@@ -181,7 +188,7 @@ class AppStoreData {
 
   void onChange(String key) {
     if (syncSocket) {
-      WebSocket().send(name, "UPDATE_STATE", data: {"key": key, "value": _map[key]});
+      WebSocket().send(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
     }
   }
 
@@ -191,7 +198,7 @@ class AppStoreData {
 
   void destroy(){
     if (syncSocket) {
-      WebSocket().unsubscribe(name);
+      WebSocket().unsubscribe(getWidgetData("dataUID"));
     }
   }
 

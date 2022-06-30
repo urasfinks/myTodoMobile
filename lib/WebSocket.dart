@@ -58,13 +58,13 @@ class WebSocket {
         print("Recive: $message");
         Map<String, dynamic> jsonDecoded = json.decode(message);
         if(check(jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null})){
-          AppStore().getByName(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
+          AppStore().getByDataUID(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
         }
         if(check(jsonDecoded, {"Action": "RELOAD_PAGE", "DataUID": null})){
-          AppStore().getByName(jsonDecoded["DataUID"])?.onIndexRevisionError();
+          AppStore().getByDataUID(jsonDecoded["DataUID"])?.onIndexRevisionError();
         }
         if(check(jsonDecoded, {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null})){
-          AppStoreData? storeData = AppStore().getByName(jsonDecoded["DataUID"]);
+          AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
           if(storeData != null){
             if(check(jsonDecoded["Data"], {"key": null, "value": null})){
               storeData.set(jsonDecoded["Data"]["key"], jsonDecoded["Data"]["value"], notify: false);

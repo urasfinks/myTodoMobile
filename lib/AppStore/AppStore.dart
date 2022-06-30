@@ -20,22 +20,19 @@ class AppStore {
     initialState: AppStore(),
   );
 
-  static AppStoreData? getStore(BuildContext context, String? name, {bool syncSocket = false}) {
-    if (name == null || name == "") {
-      return null;
-    }
-    return StoreProvider.of<AppStore>(context).state.get(context, name, {syncSocket: syncSocket});
+  static AppStoreData getStore(BuildContext context, {bool syncSocket = false}) {
+    return StoreProvider.of<AppStore>(context).state.get(context, {syncSocket: syncSocket});
   }
 
   static AppStoreData? getStoreByName(BuildContext context, String name) {
-    return StoreProvider.of<AppStore>(context).state.getByName(name);
+    return StoreProvider.of<AppStore>(context).state.getByDataUID(name);
   }
 
   static dynamic connect(String dataUID, Widget Function(AppStoreData? store, dynamic defaultValue) builder, {syncSocket = false, defaultValue = ""}) {
-    AppStoreData? byName = store.state.getByName(dataUID);
+    AppStoreData? byName = store.state.getByDataUID(dataUID);
     if (byName != null) {
       return StoreConnector<AppStore, AppStoreData>(
-        converter: (store) => store.state.getByName(dataUID)!,
+        converter: (store) => store.state.getByDataUID(dataUID)!,
         builder: (context, state) {
           return Function.apply(builder, [state, defaultValue]);
         },
@@ -47,37 +44,32 @@ class AppStore {
 
   final Map<BuildContext, AppStoreData> _map = {};
 
-  AppStoreData? get(BuildContext key, String? name, Map map, {bool syncSocket = false}) {
-    if (name != null && name != "" && _map[key] == null) {
-      _map[key] = AppStoreData(AppStore.store, name);
-      return _map[key];
+  AppStoreData get(BuildContext key, Map map, {bool syncSocket = false}) {
+    if(!_map.containsKey(key)){
+      _map[key] = AppStoreData(AppStore.store);
     }
-    if (_map[key] != null) {
-      return _map[key];
-    }
-    return null;
+    return _map[key]!;
   }
 
-  AppStoreData? getByName(String name) {
+  AppStoreData? getByDataUID(String dataUID) {
     for (var item in _map.entries) {
-      if (item.value.name == name) {
+      if (item.value.getWidgetData("dataUID") == dataUID) {
         return item.value;
       }
     }
     return null;
   }
 
-  void removeByName(String name) {
+  void removeByDataUID(String dataUID) {
     BuildContext? key;
     for (var item in _map.entries) {
-      if (item.value.name == name) {
+      if (item.value.getWidgetData("dataUID") == dataUID) {
         key = item.key;
         break;
       }
     }
-
     if (key != null) {
-      //_map[key]?.destroy();
+      _map[key]?.destroy();
       _map.remove(key);
     }
   }

@@ -9,6 +9,7 @@ import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
 
 class DynamicPage extends StatefulWidget {
+
   final String title;
   final bool root;
   final String url;
@@ -34,7 +35,8 @@ class DynamicPage extends StatefulWidget {
         }
       }
     }
-    return DynamicPage(
+
+    DynamicPage ret = DynamicPage(
       title: def['title'],
       url: def['url'],
       parentState: def['parentState'],
@@ -46,62 +48,70 @@ class DynamicPage extends StatefulWidget {
       root: def['root'],
       appBarBackgroundColor: def['appBarBackgroundColor'],
     );
+    return ret;
   }
+
+  void refresh(BuildContext context){
+    //DynamicPageUtil.loadDataTest(this);
+    DynamicPageUtil.loadData(this, context);
+  }
+
 }
 
 class _DynamicPageState extends State<DynamicPage> {
-  AppStoreData? appStoreData;
-
-  refresh(){
-    //DynamicPageUtil.loadDataTest(widget);
-    DynamicPageUtil.loadData(widget);
-  }
-
-  @override
-  void initState() {
-    refresh();
-
-    super.initState();
-  }
 
   @override
   void dispose() {
-    AppStore().removeByName(widget.dataUID);
+    print("Dispose");
+    AppStore().removeByDataUID(widget.dataUID);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    AppStoreData? s = AppStore.getStore(context, widget.dataUID);
-    s?.addWidgetDataByPage(widget);
-    if (s != null) {
-      s.setCtx(context);
-      s.setPageState(this);
+    AppStoreData s = AppStore.getStore(context);
+    //print("Context: ${context.hashCode}");
+    if(s.getWidgetDates().isEmpty){ //Only first initialization
+      s.addWidgetDataByPage(widget);
+      widget.refresh(context);
     }
-    print("_DynamicPageState.build() Store: $s; ${widget.url}; ${widget.dataUID}");
+    s.addWidgetData("dataUID", widget.dataUID);
+    //print("HCC:${context.hashCode}; HCS:${s.hashCode}; ${s?.getWidgetDates()}");
+    s.setCtx(context);
+    s.setPageState(this);
+
+    //print("_DynamicPageState.build() Store: $s; ${widget.url}; ${widget.dataUID}; WidgetData: ${s.getWidgetDates()}");
+    dynamic wrapPage = const Text("Undefined WrapPage in Templates");
+    if (
+      s.getServerResponse().containsKey("Template")
+      && s.getWidgetData("wrapPage").isNotEmpty
+      && (s.getServerResponse()["Template"] as Map).containsKey(s.getWidgetData("wrapPage"))
+    ) {
+      wrapPage = DynamicUI.main((s.getServerResponse()["Template"] as Map)[s.getWidgetData("wrapPage")], widget);
+    }
 
     return Scaffold(
-      backgroundColor: FlutterTypeConstant.parseToMaterialColor(s?.getWidgetData("backgroundColor")), //s?.getWidgetData("")
+      backgroundColor: FlutterTypeConstant.parseToMaterialColor(s.getWidgetData("backgroundColor")), //s?.getWidgetData("")
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: FlutterTypeConstant.parseToMaterialColor(s?.getWidgetData("appBarBackgroundColor")),
+        backgroundColor: FlutterTypeConstant.parseToMaterialColor(s.getWidgetData("appBarBackgroundColor")),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // Status bar
         ),
-        title: Text(s?.getWidgetData("title")),
+        title: Text(s.getWidgetData("title")),
       ),
       body: Center(
         child: LiquidPullToRefresh(
-          color: FlutterTypeConstant.parseToMaterialColor(s?.getWidgetData("pullToRefreshBackgroundColor")),
+          color: FlutterTypeConstant.parseToMaterialColor(s.getWidgetData("pullToRefreshBackgroundColor")),
           showChildOpacityTransition: false,
           springAnimationDurationInMilliseconds: 500,
           animSpeedFactor: 2,
           height: 90,
           onRefresh: () async {
-            AppStore().getByName(widget.dataUID)?.clearState();
-            refresh();
+            AppStore().getByDataUID(widget.dataUID)?.clearState();
+            widget.refresh(context);
           },
-          child: s?.getWidgetData("wrapPage").isNotEmpty ? DynamicUI.mainJson(s?.getWidgetData("wrapPage"), widget) : DynamicPageUtil.getFutureBuilder(widget),
+          child: s.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicPageUtil.getFutureBuilder(widget),
         ),
       ),
     );
