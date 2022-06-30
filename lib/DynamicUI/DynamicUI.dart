@@ -46,7 +46,11 @@ class DynamicUI {
       "ButtonStyle": FlutterType.pButtonStyle,
       "Material": FlutterType.pMaterial,
       "InkWell": FlutterType.pInkWell,
-      "RoundedRectangleBorder": FlutterType.pRoundedRectangleBorder
+      "RoundedRectangleBorder": FlutterType.pRoundedRectangleBorder,
+      "TextField": FlutterType.pTextField,
+      "InputDecoration": FlutterType.pInputDecoration,
+      "UnderlineInputBorder": FlutterType.pUnderlineInputBorder,
+      "BorderSize": FlutterType.pBorderSize
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, context]) : def;
   }

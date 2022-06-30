@@ -52,13 +52,27 @@ class DynamicPage extends StatefulWidget {
 class _DynamicPageState extends State<DynamicPage> {
   AppStoreData? appStoreData;
 
+
+  @override
+  void initState() {
+    DynamicPageUtil.loadData(widget);
+  }
+
+
+  @override
+  void dispose() {
+    AppStore().removeByName(widget.dataUID);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     AppStoreData? s = AppStore.getStore(context, widget.dataUID);
     if (s != null) {
       s.setCtx(context);
+      s.setPageState(this);
     }
-    print("Store: $s; ${widget.url}; ${widget.dataUID}");
+    print("_DynamicPageState.build() Store: $s; ${widget.url}; ${widget.dataUID}");
 
     return Scaffold(
       backgroundColor: FlutterTypeConstant.parseToMaterialColor(widget.backgroundColor),
@@ -78,7 +92,7 @@ class _DynamicPageState extends State<DynamicPage> {
           animSpeedFactor: 2,
           height: 90,
           onRefresh: () async {
-            setState(() {});
+            DynamicPageUtil.loadData(widget);
           },
           child: widget.wrapPage.isNotEmpty ? DynamicUI.main(widget.wrapPage, widget) : DynamicPageUtil.getFutureBuilder(widget),
         ),

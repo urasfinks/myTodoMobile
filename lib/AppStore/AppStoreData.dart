@@ -8,9 +8,45 @@ class AppStoreData {
   AppStoreData(this.store, this.name, {this.syncSocket = false});
 
   BuildContext? _ctx;
+  Map<String, TextEditingController> listController = {};
+  State? pageState;
+
+  void setPageState(State x){
+    pageState = x;
+  }
+
+  State? getPageState(){
+    return pageState;
+  }
 
   void setCtx(BuildContext value) {
     _ctx = value;
+  }
+
+  Map<String, dynamic> serverResponse = {};
+
+  void setServerResponse(Map<String, dynamic> input){
+    serverResponse = input;
+  }
+
+  Map<String, dynamic> getServerResponse(){
+    return serverResponse;
+  }
+
+  TextEditingController? getTextController(String key, String def){
+    if(!listController.containsKey(key)){
+      TextEditingController textController = TextEditingController();
+      if(_map.containsKey(key)){
+        print("YES DATA: ${_map[key]}");
+        textController.text = _map[key];
+      }else{
+        textController.text = def;
+      }
+      listController[key] = textController;
+      return textController;
+    }else{
+      return listController[key];
+    }
   }
 
   BuildContext? getCtx() => _ctx;
@@ -113,4 +149,11 @@ class AppStoreData {
   void apply() {
     store.dispatch(null);
   }
+
+  void destroy(){
+    if (syncSocket) {
+      WebSocket().unsubscribe(name);
+    }
+  }
+
 }

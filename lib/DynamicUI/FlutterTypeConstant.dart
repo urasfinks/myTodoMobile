@@ -215,4 +215,35 @@ class FlutterTypeConstant {
     return null;
   }
 
+  static TextInputType? parseToTextInputType(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextInputType> map = {
+      'none': TextInputType.none,
+      'url': TextInputType.url,
+      'name': TextInputType.name,
+      'datetime': TextInputType.datetime,
+      'emailAddress': TextInputType.emailAddress,
+      'multiline': TextInputType.multiline,
+      'number': TextInputType.number,
+      'phone': TextInputType.phone,
+      'streetAddress': TextInputType.streetAddress,
+      'text': TextInputType.text,
+      'visiblePassword': TextInputType.visiblePassword
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static BorderStyle? parseToBorderStyle(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, BorderStyle> map = {
+      'solid': BorderStyle.solid,
+      'none': BorderStyle.none,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
 }

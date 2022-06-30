@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test3/AppStore/AppStore.dart';
 import '../DynamicPage/DynamicPage.dart';
 import 'DynamicUI.dart';
 import 'FlutterTypeConstant.dart';
@@ -208,10 +209,10 @@ class FlutterType {
             if (exp2.length > 1 && parsedJson.containsKey(exp2[1])) {
               args.add(parsedJson[exp2[1]]);
             }
-          }catch(e){
+          } catch (e) {
             print(e);
           }
-          if(args.length == 1){
+          if (args.length == 1) {
             args.add(null);
           }
           Function? x = DynamicUI.def(parsedJson, 'onTap', null, context);
@@ -225,5 +226,50 @@ class FlutterType {
     return RoundedRectangleBorder(
       borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', 0, context))!,
     );
+  }
+
+  static dynamic pTextField(parsedJson, DynamicPage context) {
+    /*return TextField(
+      obscureText: DynamicUI.def(parsedJson, 'obscureText', false, context),
+      keyboardType: FlutterTypeConstant.parseToTextInputType(DynamicUI.def(parsedJson, 'keyboardType', 'text', context))!,
+      decoration: DynamicUI.def(parsedJson, 'decoration', null, context),
+    );*/
+    var key = DynamicUI.def(parsedJson, 'name', '-', context);
+    var appStore = AppStore().getByName(context.dataUID);
+    return TextField(
+      controller: appStore?.getTextController(DynamicUI.def(parsedJson, 'name', '-', context), DynamicUI.def(parsedJson, 'data', '', context)),
+      obscureText: DynamicUI.def(parsedJson, 'obscureText', false, context),
+      obscuringCharacter: DynamicUI.def(parsedJson, 'obscureText', '*', context),
+      keyboardType: FlutterTypeConstant.parseToTextInputType(DynamicUI.def(parsedJson, 'keyboardType', 'text', context))!,
+      decoration: DynamicUI.def(parsedJson, 'decoration', null, context),
+      style: DynamicUI.def(parsedJson, 'style', null, context),
+      onChanged: (value){
+        appStore?.set(key, value);
+      },
+    );
+  }
+
+  static dynamic pInputDecoration(parsedJson, DynamicPage context) {
+    return InputDecoration(
+      border: DynamicUI.def(parsedJson, 'border', null, context),
+      labelText: DynamicUI.def(parsedJson, 'labelText', '', context),
+    );
+  }
+
+  static dynamic pUnderlineInputBorder(parsedJson, DynamicPage context) {
+    return UnderlineInputBorder(
+        borderSide: DynamicUI.def(parsedJson, 'borderSide', const BorderSide(), context),
+        borderRadius: DynamicUI.def(
+            parsedJson,
+            'borderRadius',
+            const BorderRadius.only(
+              topLeft: Radius.circular(4.0),
+              topRight: Radius.circular(4.0),
+            ),
+            context));
+  }
+
+  static dynamic pBorderSize(parsedJson, DynamicPage context) {
+    return BorderSide(color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', '#f5f5f5', context))!, width: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'width', 1, context))!, style: FlutterTypeConstant.parseToBorderStyle(DynamicUI.def(parsedJson, 'style', BorderStyle.solid, context))!);
   }
 }
