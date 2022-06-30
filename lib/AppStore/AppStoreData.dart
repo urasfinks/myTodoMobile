@@ -33,6 +33,11 @@ class AppStoreData {
     return serverResponse;
   }
 
+  void clearState(){
+    _map.clear();
+    listController.clear();
+  }
+
   TextEditingController? getTextController(String key, String def){
     if(!listController.containsKey(key)){
       TextEditingController textController = TextEditingController();

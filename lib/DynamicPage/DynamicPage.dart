@@ -55,7 +55,8 @@ class _DynamicPageState extends State<DynamicPage> {
 
   @override
   void initState() {
-    DynamicPageUtil.loadData(widget);
+    DynamicPageUtil.loadDataTest(widget);
+    //DynamicPageUtil.loadData(widget);
   }
 
 
@@ -92,7 +93,8 @@ class _DynamicPageState extends State<DynamicPage> {
           animSpeedFactor: 2,
           height: 90,
           onRefresh: () async {
-            DynamicPageUtil.loadData(widget);
+            AppStore().getByName(widget.dataUID)?.clearState();
+            initState();
           },
           child: widget.wrapPage.isNotEmpty ? DynamicUI.main(widget.wrapPage, widget) : DynamicPageUtil.getFutureBuilder(widget),
         ),

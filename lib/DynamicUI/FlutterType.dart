@@ -229,11 +229,6 @@ class FlutterType {
   }
 
   static dynamic pTextField(parsedJson, DynamicPage context) {
-    /*return TextField(
-      obscureText: DynamicUI.def(parsedJson, 'obscureText', false, context),
-      keyboardType: FlutterTypeConstant.parseToTextInputType(DynamicUI.def(parsedJson, 'keyboardType', 'text', context))!,
-      decoration: DynamicUI.def(parsedJson, 'decoration', null, context),
-    );*/
     var key = DynamicUI.def(parsedJson, 'name', '-', context);
     var appStore = AppStore().getByName(context.dataUID);
     return TextField(
@@ -243,7 +238,7 @@ class FlutterType {
       keyboardType: FlutterTypeConstant.parseToTextInputType(DynamicUI.def(parsedJson, 'keyboardType', 'text', context))!,
       decoration: DynamicUI.def(parsedJson, 'decoration', null, context),
       style: DynamicUI.def(parsedJson, 'style', null, context),
-      onChanged: (value){
+      onChanged: (value) {
         appStore?.set(key, value);
       },
     );
@@ -258,18 +253,21 @@ class FlutterType {
 
   static dynamic pUnderlineInputBorder(parsedJson, DynamicPage context) {
     return UnderlineInputBorder(
-        borderSide: DynamicUI.def(parsedJson, 'borderSide', const BorderSide(), context),
-        borderRadius: DynamicUI.def(
-            parsedJson,
-            'borderRadius',
-            const BorderRadius.only(
-              topLeft: Radius.circular(4.0),
-              topRight: Radius.circular(4.0),
-            ),
-            context));
+      borderSide: DynamicUI.def(parsedJson, 'borderSide', const BorderSide(), context),
+      borderRadius: DynamicUI.def(
+        parsedJson,
+        'borderRadius',
+        const BorderRadius.only(
+          topLeft: Radius.circular(4.0),
+          topRight: Radius.circular(4.0),
+        ),
+        context,
+      ),
+    );
   }
 
   static dynamic pBorderSize(parsedJson, DynamicPage context) {
     return BorderSide(color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', '#f5f5f5', context))!, width: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'width', 1, context))!, style: FlutterTypeConstant.parseToBorderStyle(DynamicUI.def(parsedJson, 'style', BorderStyle.solid, context))!);
   }
+
 }
