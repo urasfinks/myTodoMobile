@@ -18,9 +18,44 @@ class DynamicPageUtil{
 
   static Future<void> loadDataTest(DynamicPage widget) async {
     await Future.delayed(const Duration(milliseconds: 350), () {});
-    var appStoreData = AppStore().getByName(widget.dataUID);
-    appStoreData?.setServerResponse(TextEditRowJsonObject.getPage());
-    appStoreData?.getPageState()?.setState(() {});
+    dataUpdate(TextEditRowJsonObject.getPage(), AppStore().getByName(widget.dataUID));
+  }
+
+  static dataUpdate(Map<String, dynamic> data, AppStoreData? store){
+
+    bool isUpdate = false;
+    if (data['WidgetData'] != null && data['WidgetData'] != "" && store != null) {
+      store.addWidgetDataByMap(data['WidgetData']);
+    }
+
+    if (data['State'] != null && data['State'] != "" && store != null) {
+      Map<String, dynamic> map = data['State'];
+      for (var item in map.entries) {
+        store.set(item.key, item.value, notify: false);
+      }
+      isUpdate = true;
+    }
+
+    if (data['SyncSocket'] != null && data['SyncSocket'] == true && store != null) {
+      store.setSyncSocket(true);
+      WebSocket().subscribe(store.getWidgetData("dataUID"));
+      isUpdate = true;
+    }
+    if (isUpdate == true && store != null) {
+      store.apply();
+    }
+
+    if(data.containsKey("Data")){
+      List list = [];
+      for (dynamic d in data['Data']) {
+        String ret = Util.template(d['data'], data['Template'][d['template']]);
+        list.add(jsonDecode(ret));
+      }
+      data['list'] = list;
+    }
+
+    store?.setServerResponse(data);
+    store?.getPageState()?.setState(() {});
   }
 
   static Future<void> loadData(DynamicPage widget) async {
@@ -36,39 +71,7 @@ class DynamicPageUtil{
       print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        AppStoreData? store = AppStore().getByName(widget.dataUID);
-        bool isUpdate = false;
-        if (data['Title'] != null && data['Title'] != "" && store != null) {
-          store.set("title", data['Title'], notify: false);
-          isUpdate = true;
-        }
-
-        if (data['State'] != null && data['State'] != "" && store != null) {
-          Map<String, dynamic> map = data['State'];
-          for (var item in map.entries) {
-            store.set(item.key, item.value, notify: false);
-          }
-          isUpdate = true;
-        }
-
-        if (data['SyncSocket'] != null && data['SyncSocket'] == true && store != null) {
-          store.setSyncSocket(true);
-          WebSocket().subscribe(widget.dataUID);
-          isUpdate = true;
-        }
-        if (isUpdate == true && store != null) {
-          store.apply();
-        }
-
-        List list = [];
-        for (dynamic d in data['Data']) {
-          String ret = Util.template(d['data'], data['Template'][d['template']]);
-          list.add(jsonDecode(ret));
-        }
-        data['list'] = list;
-        var appStoreData = AppStore().getByName(widget.dataUID);
-        appStoreData?.setServerResponse(data);
-        appStoreData?.getPageState()?.setState(() {});
+        dataUpdate(data, AppStore().getByName(widget.dataUID));
       } else {
         AppStore().getByName(widget.dataUID)?.setServerResponse(ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body));
       }

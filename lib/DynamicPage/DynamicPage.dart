@@ -20,14 +20,14 @@ class DynamicPage extends StatefulWidget {
   final String backgroundColor;
   final String progressIndicatorBackgroundColor;
 
-  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = "", this.wrapPage = "", this.appBarBackgroundColor = "blue.600", this.pullToRefreshBackgroundColor = "#ffffff", this.backgroundColor = "#ffffff", this.progressIndicatorBackgroundColor = "blue.600"}) : super(key: key);
+  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = "", this.wrapPage = "", this.appBarBackgroundColor = "blue.600", this.pullToRefreshBackgroundColor = "blue.600", this.backgroundColor = "#ffffff", this.progressIndicatorBackgroundColor = "blue.600"}) : super(key: key);
 
   @override
   State<DynamicPage> createState() => _DynamicPageState();
 
-  static fromJson(Map<String, dynamic> data) {
-    Map<String, dynamic> def = {'title': '', 'root': false, 'url': '', 'parentState': '', 'dataUID': const Uuid().v4(), 'wrapPage': '', 'pullToRefreshBackgroundColor': '#ffffff', 'appBarBackgroundColor': 'blue.600', 'backgroundColor': '#ffffff', 'progressIndicatorBackgroundColor': 'blue.600'};
-    if(data != null && data.isNotEmpty){
+  static fromJson(Map<String, dynamic>? data) {
+    Map<String, dynamic> def = {'title': '', 'root': false, 'url': '', 'parentState': '', 'dataUID': const Uuid().v4(), 'wrapPage': '', 'pullToRefreshBackgroundColor': 'blue.600', 'appBarBackgroundColor': 'blue.600', 'backgroundColor': '#ffffff', 'progressIndicatorBackgroundColor': 'blue.600'};
+    if (data != null && data.isNotEmpty) {
       for (var item in data.entries) {
         if (def.containsKey(item.key)) {
           def[item.key] = item.value;
@@ -52,13 +52,17 @@ class DynamicPage extends StatefulWidget {
 class _DynamicPageState extends State<DynamicPage> {
   AppStoreData? appStoreData;
 
+  refresh(){
+    //DynamicPageUtil.loadDataTest(widget);
+    DynamicPageUtil.loadData(widget);
+  }
 
   @override
   void initState() {
-    DynamicPageUtil.loadDataTest(widget);
-    //DynamicPageUtil.loadData(widget);
-  }
+    refresh();
 
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -69,6 +73,7 @@ class _DynamicPageState extends State<DynamicPage> {
   @override
   Widget build(BuildContext context) {
     AppStoreData? s = AppStore.getStore(context, widget.dataUID);
+    s?.addWidgetDataByPage(widget);
     if (s != null) {
       s.setCtx(context);
       s.setPageState(this);
@@ -76,27 +81,27 @@ class _DynamicPageState extends State<DynamicPage> {
     print("_DynamicPageState.build() Store: $s; ${widget.url}; ${widget.dataUID}");
 
     return Scaffold(
-      backgroundColor: FlutterTypeConstant.parseToMaterialColor(widget.backgroundColor),
+      backgroundColor: FlutterTypeConstant.parseToMaterialColor(s?.getWidgetData("backgroundColor")), //s?.getWidgetData("")
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: FlutterTypeConstant.parseToMaterialColor(widget.appBarBackgroundColor),
+        backgroundColor: FlutterTypeConstant.parseToMaterialColor(s?.getWidgetData("appBarBackgroundColor")),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // Status bar
         ),
-        title: AppStore.connect(widget.dataUID, (store, def) => Text(store != null ? store.get("title", def) : def), defaultValue: widget.title),
+        title: Text(s?.getWidgetData("title")),
       ),
       body: Center(
         child: LiquidPullToRefresh(
-          color: FlutterTypeConstant.parseToMaterialColor(widget.pullToRefreshBackgroundColor),
+          color: FlutterTypeConstant.parseToMaterialColor(s?.getWidgetData("pullToRefreshBackgroundColor")),
           showChildOpacityTransition: false,
           springAnimationDurationInMilliseconds: 500,
           animSpeedFactor: 2,
           height: 90,
           onRefresh: () async {
             AppStore().getByName(widget.dataUID)?.clearState();
-            initState();
+            refresh();
           },
-          child: widget.wrapPage.isNotEmpty ? DynamicUI.main(widget.wrapPage, widget) : DynamicPageUtil.getFutureBuilder(widget),
+          child: s?.getWidgetData("wrapPage").isNotEmpty ? DynamicUI.mainJson(s?.getWidgetData("wrapPage"), widget) : DynamicPageUtil.getFutureBuilder(widget),
         ),
       ),
     );

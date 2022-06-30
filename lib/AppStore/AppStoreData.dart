@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:test3/DynamicPage/DynamicPage.dart';
 
 import '../WebSocket.dart';
 
@@ -10,6 +11,39 @@ class AppStoreData {
   BuildContext? _ctx;
   Map<String, TextEditingController> listController = {};
   State? pageState;
+
+  Map<String, dynamic> widgetData = {};
+
+  void addWidgetDataByMap(Map<String, dynamic> obj){
+    for (var item in widgetData.entries) {
+      if(obj.containsKey(item.key)){
+        addWidgetData(item.key, obj[item.key]);
+      }
+    }
+  }
+
+  void addWidgetDataByPage(DynamicPage widget){
+    if(widgetData.isEmpty){
+      addWidgetData("title", widget.title);
+      addWidgetData("root", widget.root);
+      addWidgetData("url", widget.url);
+      addWidgetData("parentState", widget.parentState);
+      addWidgetData("dataUID", widget.dataUID);
+      addWidgetData("wrapPage", widget.wrapPage);
+      addWidgetData("pullToRefreshBackgroundColor", widget.pullToRefreshBackgroundColor);
+      addWidgetData("appBarBackgroundColor", widget.appBarBackgroundColor);
+      addWidgetData("backgroundColor", widget.backgroundColor);
+      addWidgetData("progressIndicatorBackgroundColor", widget.progressIndicatorBackgroundColor);
+    }
+  }
+
+  void addWidgetData(String key, dynamic value){
+    widgetData[key] = value;
+  }
+
+  dynamic getWidgetData(String key){
+    return widgetData[key];
+  }
 
   void setPageState(State x){
     pageState = x;
