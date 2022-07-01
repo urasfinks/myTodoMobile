@@ -94,7 +94,6 @@ class AppStoreData {
     if(!listController.containsKey(key)){
       TextEditingController textController = TextEditingController();
       if(_map.containsKey(key)){
-        print("YES DATA: ${_map[key]}");
         textController.text = _map[key];
       }else{
         textController.text = def;
