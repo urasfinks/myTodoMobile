@@ -24,10 +24,6 @@ class AppStore {
     return StoreProvider.of<AppStore>(context).state.get(context, {syncSocket: syncSocket});
   }
 
-  static AppStoreData? getStoreByName(BuildContext context, String name) {
-    return StoreProvider.of<AppStore>(context).state.getByDataUID(name);
-  }
-
   static dynamic connect(String dataUID, Widget Function(AppStoreData? store, dynamic defaultValue) builder, {syncSocket = false, defaultValue = ""}) {
     AppStoreData? byName = store.state.getByDataUID(dataUID);
     if (byName != null) {
@@ -52,9 +48,11 @@ class AppStore {
   }
 
   AppStoreData? getByDataUID(String dataUID) {
-    for (var item in _map.entries) {
-      if (item.value.getWidgetData("dataUID") == dataUID) {
-        return item.value;
+    if(dataUID.isNotEmpty){
+      for (var item in _map.entries) {
+        if (item.value.getWidgetData("dataUID") == dataUID) {
+          return item.value;
+        }
       }
     }
     return null;

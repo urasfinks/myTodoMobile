@@ -20,11 +20,13 @@ class WebSocket {
   final List<String> _subscribeListDataUID = [];
 
   void subscribe(String dataUID){
-    print("Subscribe: $dataUID");
-    if(!_subscribeListDataUID.contains(dataUID)){
-      _subscribeListDataUID.add(dataUID);
-      _onListen();
-      send(dataUID, "SUBSCRIBE");
+    if(dataUID.isNotEmpty){
+      print("Subscribe: $dataUID");
+      if(!_subscribeListDataUID.contains(dataUID)){
+        _subscribeListDataUID.add(dataUID);
+        _onListen();
+        send(dataUID, "SUBSCRIBE");
+      }
     }
   }
 

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicPage/DynamicPageUtil.dart';
-import 'package:uuid/uuid.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
@@ -24,10 +23,10 @@ class DynamicPage extends StatefulWidget {
   const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = "", this.wrapPage = "", this.appBarBackgroundColor = "blue.600", this.pullToRefreshBackgroundColor = "blue.600", this.backgroundColor = "#ffffff", this.progressIndicatorBackgroundColor = "blue.600"}) : super(key: key);
 
   @override
-  State<DynamicPage> createState() => _DynamicPageState();
+  State<DynamicPage> createState() => DynamicPageState();
 
-  static fromJson(Map<String, dynamic>? data) {
-    Map<String, dynamic> def = {'title': '', 'root': false, 'url': '', 'parentState': '', 'dataUID': const Uuid().v4(), 'wrapPage': '', 'pullToRefreshBackgroundColor': 'blue.600', 'appBarBackgroundColor': 'blue.600', 'backgroundColor': '#ffffff', 'progressIndicatorBackgroundColor': 'blue.600'};
+  static fromMap(Map<String, dynamic>? data) {
+    Map<String, dynamic> def = {'title': '', 'root': false, 'url': '', 'parentState': '', 'dataUID': "", 'wrapPage': '', 'pullToRefreshBackgroundColor': 'blue.600', 'appBarBackgroundColor': 'blue.600', 'backgroundColor': '#ffffff', 'progressIndicatorBackgroundColor': 'blue.600'};
     if (data != null && data.isNotEmpty) {
       for (var item in data.entries) {
         if (def.containsKey(item.key)) {
@@ -51,67 +50,69 @@ class DynamicPage extends StatefulWidget {
     return ret;
   }
 
-  void refresh(BuildContext context){
+  void refresh(AppStoreData appStoreData){
     //DynamicPageUtil.loadDataTest(this);
-    DynamicPageUtil.loadData(this, context);
+    DynamicPageUtil.loadData(this, appStoreData);
   }
 
 }
 
-class _DynamicPageState extends State<DynamicPage> {
+class DynamicPageState extends State<DynamicPage> {
 
   @override
   void dispose() {
     print("Dispose");
-    AppStore().removeByDataUID(widget.dataUID);
+    if(widget.dataUID.isNotEmpty){
+      AppStore().removeByDataUID(widget.dataUID);
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    AppStoreData s = AppStore.getStore(context);
-    //print("Context: ${context.hashCode}");
-    if(s.getWidgetDates().isEmpty){ //Only first initialization
-      s.addWidgetDataByPage(widget);
-      widget.refresh(context);
+    AppStoreData appStoreData = AppStore.getStore(context);
+    appStoreData.setOnIndexRevisionError(() {
+      widget.refresh(appStoreData);
+    });
+    if(appStoreData.getWidgetDates().isEmpty){ //Only first initialization
+      appStoreData.addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
+      widget.refresh(appStoreData);
     }
-    s.addWidgetData("dataUID", widget.dataUID);
-    //print("HCC:${context.hashCode}; HCS:${s.hashCode}; ${s?.getWidgetDates()}");
-    s.setCtx(context);
-    s.setPageState(this);
+    print("Build CTX: ${context.hashCode}; WidgetData: ${appStoreData.getWidgetDates()}");
+    appStoreData.setCtx(context);
+    appStoreData.setPageState(this);
 
-    //print("_DynamicPageState.build() Store: $s; ${widget.url}; ${widget.dataUID}; WidgetData: ${s.getWidgetDates()}");
     dynamic wrapPage = const Text("Undefined WrapPage in Templates");
     if (
-      s.getServerResponse().containsKey("Template")
-      && s.getWidgetData("wrapPage").isNotEmpty
-      && (s.getServerResponse()["Template"] as Map).containsKey(s.getWidgetData("wrapPage"))
+      appStoreData.getServerResponse().containsKey("Template")
+      && appStoreData.getWidgetData("wrapPage").isNotEmpty
+      && (appStoreData.getServerResponse()["Template"] as Map).containsKey(appStoreData.getWidgetData("wrapPage"))
     ) {
-      wrapPage = DynamicUI.main((s.getServerResponse()["Template"] as Map)[s.getWidgetData("wrapPage")], widget);
+      wrapPage = DynamicUI.main((appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")], appStoreData);
     }
 
     return Scaffold(
-      backgroundColor: FlutterTypeConstant.parseToMaterialColor(s.getWidgetData("backgroundColor")), //s?.getWidgetData("")
+      backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("backgroundColor")), //s?.getWidgetData("")
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: FlutterTypeConstant.parseToMaterialColor(s.getWidgetData("appBarBackgroundColor")),
+        backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("appBarBackgroundColor")),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // Status bar
         ),
-        title: Text(s.getWidgetData("title")),
+        title: Text(appStoreData.getWidgetData("title")),
       ),
       body: Center(
         child: LiquidPullToRefresh(
-          color: FlutterTypeConstant.parseToMaterialColor(s.getWidgetData("pullToRefreshBackgroundColor")),
+          color: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("pullToRefreshBackgroundColor")),
           showChildOpacityTransition: false,
           springAnimationDurationInMilliseconds: 500,
           animSpeedFactor: 2,
           height: 90,
           onRefresh: () async {
-            AppStore().getByDataUID(widget.dataUID)?.clearState();
-            widget.refresh(context);
+            AppStore.getStore(context).clearState();
+            widget.refresh(appStoreData);
           },
-          child: s.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicPageUtil.getFutureBuilder(widget),
+          child: appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicPageUtil.getFutureBuilder(appStoreData),
         ),
       ),
     );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:test3/DynamicPage/DynamicPage.dart';
 
@@ -20,13 +22,16 @@ class AppStoreData {
 
   Map<String, dynamic> widgetData = {};
 
-  void setName(String dataUID){
-    addWidgetData("dataUID", dataUID);
+  String getStringStoreState(){
+    if(_map.isNotEmpty){
+      return jsonEncode(_map);
+    }
+    return "";
   }
 
   void addWidgetDataByMap(Map<String, dynamic> obj){
     for (var item in widgetData.entries) {
-      if(obj.containsKey(item.key)){
+      if(obj.containsKey(item.key) && item.key != "dataUID"){ //dataUID final by addWidgetDataByPage
         addWidgetData(item.key, obj[item.key]);
       }
     }

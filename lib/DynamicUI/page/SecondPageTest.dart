@@ -24,8 +24,7 @@ class _SecondPageTest extends State<SecondPageTest> {
     store?.setOnIndexRevisionError(() {
       print("Reload page");
     });
-    final AppStoreData? storeTabPage =
-        AppStore.getStoreByName(context, "TabPage");
+    //final AppStoreData? storeTabPage = AppStore.getStoreByDataUID(context, "TabPage");
 
     return Scaffold(
       appBar: AppBar(
@@ -54,10 +53,10 @@ class _SecondPageTest extends State<SecondPageTest> {
                 store?.inc('x1');
                 store?.apply();
 
-                if (storeTabPage != null) {
+                /*if (storeTabPage != null) {
                   storeTabPage.set("cart", "${store?.get('x1', 0)}");
                   storeTabPage.apply();
-                }
+                }*/
                 //Navigator.of(context).pop();
               },
               child: AppStore.connect(

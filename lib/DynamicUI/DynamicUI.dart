@@ -1,12 +1,12 @@
 import 'dart:core';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:test3/DynamicPage/DynamicPage.dart';
+import 'package:test3/AppStore/AppStoreData.dart';
 import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 import 'FlutterType.dart';
 
 class DynamicUI {
-  static Widget main(String jsonData, DynamicPage context) {
+  static Widget main(String jsonData, AppStoreData context) {
     if (jsonData.isEmpty) {
       return FlutterType.defaultWidget;
     }
@@ -14,7 +14,7 @@ class DynamicUI {
     return def(parsedJson, null, FlutterType.defaultWidget, context);
   }
 
-  static dynamic mainJson(Map<String, dynamic> jsonData, DynamicPage context) {
+  static dynamic mainJson(Map<String, dynamic> jsonData, AppStoreData context) {
     //print("Type: ${jsonData.runtimeType.toString()}");
     if (jsonData.isEmpty) {
       return FlutterType.defaultWidget;
@@ -22,7 +22,7 @@ class DynamicUI {
     return def(jsonData, null, FlutterType.defaultWidget, context);
   }
 
-  static dynamic getByType(String containsKey, map, dynamic def, DynamicPage context) {
+  static dynamic getByType(String containsKey, map, dynamic def, AppStoreData context) {
     Map<String, Function> map1 = {
       "Text": FlutterType.pText,
       "TextStyle": FlutterType.pTextStyle,
@@ -55,10 +55,7 @@ class DynamicUI {
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, context]) : def;
   }
 
-  static dynamic parseFunction(map, key, def, DynamicPage context) {
-
-  }
-  static dynamic def(map, key, def, DynamicPage context) {
+  static dynamic def(map, key, def, AppStoreData widget) {
     dynamic ret;
     if (key != null) {
       ret = map.containsKey(key) ? map[key] : def;
@@ -66,7 +63,7 @@ class DynamicUI {
       ret = map;
     }
     if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
-      return DynamicUI.getByType(ret['flutterType'] as String, ret, def, context);
+      return DynamicUI.getByType(ret['flutterType'] as String, ret, def, widget);
     }
     if (ret.runtimeType.toString() == "String" && ret.toString().contains("):")) { //Return reference function
       List<String> exp = ret.toString().split("):");
@@ -75,7 +72,7 @@ class DynamicUI {
     if (ret.runtimeType.toString() == "String" && ret.toString().contains(")=>")) { //Return execute function
       List<String> exp = ret.toString().split(")=>");
       List<dynamic> args = [];
-      args.add(context);
+      args.add(widget);
       List<String> exp2 = exp[0].split("(");
       if(exp2.length > 1 && map.containsKey(exp2[1])){
         args.add(map[exp2[1]]);
@@ -85,7 +82,7 @@ class DynamicUI {
     return ret;
   }
 
-  static List<Widget> defList(parsedJson, String key, DynamicPage context) {
+  static List<Widget> defList(parsedJson, String key, AppStoreData context) {
     List<Widget> list = [];
     List l2 = def(parsedJson, key, [], context);
     for (int i = 0; i < l2.length; i++) {

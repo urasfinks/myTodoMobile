@@ -20,7 +20,7 @@ class _TabWrapState extends State<TabWrap> {
   final List<Widget> _pages = [
     const AccountPage(title: 'Аккаунт'),
     const FailPage(title: 'Opa 2'),
-    DynamicPage.fromJson(
+    DynamicPage.fromMap(
       {
         "title": 'Аккаунт',
         "url": 'project/system/account',
