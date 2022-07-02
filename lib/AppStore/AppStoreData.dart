@@ -48,6 +48,8 @@ class AppStoreData {
     addWidgetData("appBarBackgroundColor", widget.appBarBackgroundColor);
     addWidgetData("backgroundColor", widget.backgroundColor);
     addWidgetData("progressIndicatorBackgroundColor", widget.progressIndicatorBackgroundColor);
+    addWidgetData("dialog", widget.dialog);
+    addWidgetData("separated", widget.separated);
   }
 
   void addWidgetData(String key, dynamic value){

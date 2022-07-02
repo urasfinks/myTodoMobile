@@ -8,11 +8,11 @@ class Invoke{
   final List<String> extra;
   Invoke(this.fn, this.arg, this.extra);
 
-  static void apply(AppStoreData store, String jsonControl){
+  static void apply(AppStoreData appStoreData, String jsonControl){
     Map<String, Invoke> map = {
-      "inc": Invoke(store.inc, ["key"], ["step", "min", "max", "fixed"]),
-      "dec": Invoke(store.dec, ["key"], ["step", "min", "max", "fixed"]),
-      "set": Invoke(store.set, ["key", "value"], []),
+      "inc": Invoke(appStoreData.inc, ["key"], ["step", "min", "max", "fixed"]),
+      "dec": Invoke(appStoreData.dec, ["key"], ["step", "min", "max", "fixed"]),
+      "set": Invoke(appStoreData.set, ["key", "value"], []),
     };
     final parsedJson = jsonDecode(jsonControl);
     List<dynamic> args = [];
@@ -30,6 +30,6 @@ class Invoke{
       }
     }
     Function.apply(map[parsedJson!['fn']]!.fn, args, extra);
-    store.apply();
+    appStoreData.apply();
   }
 }

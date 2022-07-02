@@ -47,8 +47,9 @@ class FlutterTypeConstant {
         if (x != null) {
           return x[parseToInt(l[1])!];
         }
-      } catch (e) {
+      } catch (e, stacktrace) {
         print(e);
+        print(stacktrace);
       }
       return null;
     } else {
@@ -208,6 +209,9 @@ class FlutterTypeConstant {
       "getFutureBuilder": DynamicPageUtil.getFutureBuilder,
       "test": DynamicPageUtil.test,
       "openWindow": DynamicPageUtil.openWindow,
+      "closeWindow": DynamicPageUtil.closeWindow,
+      "reloadPageByUrl": DynamicPageUtil.reloadPageByUrl,
+      "openDialog": DynamicPageUtil.openDialog,
     };
     if(map.containsKey(value)){
       return map[value];

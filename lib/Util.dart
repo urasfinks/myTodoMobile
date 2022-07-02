@@ -26,7 +26,7 @@ class Util {
         cur = cur[key];
       }
     }
-    return cur != null ? cur.toString() : "null";
+    return cur != null ? cur.toString().replaceAll("\\", "\\\\").replaceAll("\"", "\\\"") : "null";
   }
 
   static String template(dynamic data, String template) {

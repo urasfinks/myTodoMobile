@@ -77,6 +77,9 @@ class DynamicUI {
       if(exp2.length > 1 && map.containsKey(exp2[1])){
         args.add(map[exp2[1]]);
       }
+      if (args.length == 1) {
+        args.add(null);
+      }
       return Function.apply(FlutterTypeConstant.parseUtilFunction(exp[1]), args);
     }
     return ret;

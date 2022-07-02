@@ -208,8 +208,9 @@ class FlutterType {
             if (exp2.length > 1 && parsedJson.containsKey(exp2[1])) {
               args.add(parsedJson[exp2[1]]);
             }
-          } catch (e) {
+          } catch (e, stacktrace) {
             print(e);
+            print(stacktrace);
           }
           if (args.length == 1) {
             args.add(null);
