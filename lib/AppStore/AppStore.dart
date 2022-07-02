@@ -48,14 +48,20 @@ class AppStore {
   }
 
   AppStoreData? getByDataUID(String dataUID) {
-    if(dataUID.isNotEmpty){
+    List<AppStoreData> list = getByKey("dataUID", dataUID);
+    return list.isNotEmpty ? list[0] : null;
+  }
+
+  List<AppStoreData> getByKey(String key, String value) {
+    List<AppStoreData> ret = [];
+    if(value.isNotEmpty){
       for (var item in _map.entries) {
-        if (item.value.getWidgetData("dataUID") == dataUID) {
-          return item.value;
+        if (value.isNotEmpty && item.value.getWidgetData(key) == value) {
+          ret.add(item.value);
         }
       }
     }
-    return null;
+    return ret;
   }
 
   void removeByDataUID(String dataUID) {

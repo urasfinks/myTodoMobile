@@ -62,6 +62,11 @@ class DynamicPageUtil {
   }
 
   static dataUpdate(Map<String, dynamic> data, AppStoreData store) {
+
+    if (data['Actions'] != null && data['Actions'] != "") {
+
+    }
+
     if (data['WidgetData'] != null && data['WidgetData'] != "") {
       //print("SET NEW WIDGET DATA(${data['WidgetData']})");
       store.addWidgetDataByMap(data['WidgetData']);
@@ -99,14 +104,14 @@ class DynamicPageUtil {
     store.getPageState()?.setState(() {});
   }
 
-  static dynamic openWindow(AppStoreData context, dynamic data) {
-    String st = context.getStringStoreState();
+  static dynamic openWindow(AppStoreData appStoreData, dynamic data) {
+    String st = appStoreData.getStringStoreState();
     if (st.isNotEmpty) {
       data["parentState"] = st;
     }
     print("openWindow: ${data}");
     Navigator.push(
-      context.getCtx()!,
+      appStoreData.getCtx()!,
       CupertinoPageRoute(
         builder: (context) => DynamicPage.fromMap(data),
       ),
@@ -114,7 +119,7 @@ class DynamicPageUtil {
     return null;
   }
 
-  static Widget test(AppStoreData context) {
+  static Widget test(AppStoreData appStoreData) {
     print("YHOOO");
     return Text("Hoho");
   }
