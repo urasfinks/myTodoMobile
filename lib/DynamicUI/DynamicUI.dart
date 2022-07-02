@@ -6,23 +6,23 @@ import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 import 'FlutterType.dart';
 
 class DynamicUI {
-  static Widget main(String jsonData, AppStoreData appStoreData) {
+  static Widget main(String jsonData, AppStoreData appStoreData, int index) {
     if (jsonData.isEmpty) {
       return FlutterType.defaultWidget;
     }
     final parsedJson = jsonDecode(jsonData);
-    return def(parsedJson, null, FlutterType.defaultWidget, appStoreData);
+    return def(parsedJson, null, FlutterType.defaultWidget, appStoreData, index);
   }
 
-  static dynamic mainJson(Map<String, dynamic> jsonData, AppStoreData appStoreData) {
+  static dynamic mainJson(Map<String, dynamic> jsonData, AppStoreData appStoreData, int index) {
     //print("Type: ${jsonData.runtimeType.toString()}");
     if (jsonData.isEmpty) {
       return FlutterType.defaultWidget;
     }
-    return def(jsonData, null, FlutterType.defaultWidget, appStoreData);
+    return def(jsonData, null, FlutterType.defaultWidget, appStoreData, index);
   }
 
-  static dynamic getByType(String containsKey, map, dynamic def, AppStoreData appStoreData) {
+  static dynamic getByType(String containsKey, map, dynamic def, AppStoreData appStoreData, int index) {
     Map<String, Function> map1 = {
       "Text": FlutterType.pText,
       "TextStyle": FlutterType.pTextStyle,
@@ -52,10 +52,10 @@ class DynamicUI {
       "UnderlineInputBorder": FlutterType.pUnderlineInputBorder,
       "BorderSize": FlutterType.pBorderSize
     };
-    return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData]) : def;
+    return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index]) : def;
   }
 
-  static dynamic def(map, key, def, AppStoreData appStoreData) {
+  static dynamic def(map, key, def, AppStoreData appStoreData, int index) {
     dynamic ret;
     if (key != null) {
       ret = map.containsKey(key) ? map[key] : def;
@@ -63,7 +63,7 @@ class DynamicUI {
       ret = map;
     }
     if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
-      return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData);
+      return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData, index);
     }
     if (ret.runtimeType.toString() == "String" && ret.toString().contains("):")) { //Return reference function
       List<String> exp = ret.toString().split("):");
@@ -85,11 +85,11 @@ class DynamicUI {
     return ret;
   }
 
-  static List<Widget> defList(parsedJson, String key, AppStoreData appStoreData) {
+  static List<Widget> defList(parsedJson, String key, AppStoreData appStoreData, int index) {
     List<Widget> list = [];
-    List l2 = def(parsedJson, key, [], appStoreData);
+    List l2 = def(parsedJson, key, [], appStoreData, index);
     for (int i = 0; i < l2.length; i++) {
-      list.add(def(l2[i], null, FlutterType.defaultWidget, appStoreData));
+      list.add(def(l2[i], null, FlutterType.defaultWidget, appStoreData, index));
     }
     return list;
   }

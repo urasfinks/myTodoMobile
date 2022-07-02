@@ -48,6 +48,7 @@ class AppStoreData {
     addWidgetData("appBarBackgroundColor", widget.appBarBackgroundColor);
     addWidgetData("backgroundColor", widget.backgroundColor);
     addWidgetData("progressIndicatorBackgroundColor", widget.progressIndicatorBackgroundColor);
+    addWidgetData("progressIndicatorColor", widget.progressIndicatorColor);
     addWidgetData("dialog", widget.dialog);
     addWidgetData("separated", widget.separated);
   }

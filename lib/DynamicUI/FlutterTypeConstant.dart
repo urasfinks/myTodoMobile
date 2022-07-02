@@ -27,7 +27,7 @@ class FlutterTypeConstant {
     if (value == null || value.toString().trim() == '') {
       return null;
     }
-    return int.parse(value.toString());
+    return int.parse(value.toString().replaceAll(".0", ""));
   }
 
   static Color? parseToMaterialColor(String? value) {
@@ -89,18 +89,22 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static EdgeInsetsGeometry? parseEdgeInsetsGeometry(String? value) {
+  static EdgeInsets? parseEdgeInsetsGeometry(String? value) {
     //left,top,right,bottom
     if (value == null || value.trim() == '') {
       return null;
     }
     var values = value.split(",");
-    return EdgeInsets.only(
-      left: double.parse(values[0]),
-      top: double.parse(values[1]),
-      right: double.parse(values[2]),
-      bottom: double.parse(values[3]),
-    );
+    if(values.length > 1){
+      return EdgeInsets.only(
+        left: double.parse(values[0]),
+        top: double.parse(values[1]),
+        right: double.parse(values[2]),
+        bottom: double.parse(values[3]),
+      );
+    }else{
+      return EdgeInsets.all(parseToDouble(value)!);
+    }
   }
 
   static BoxFit? parseBoxFit(String? value) {

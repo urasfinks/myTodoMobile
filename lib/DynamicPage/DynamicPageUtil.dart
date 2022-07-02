@@ -53,12 +53,13 @@ class DynamicPageUtil {
         const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         snapshot['list'].length,
         (BuildContext context, int index) {
-          return DynamicUI.mainJson(snapshot['list'][index], appStoreData);
+          return DynamicUI.mainJson(snapshot['list'][index], appStoreData, index);
         },
       );
     }
     return CircularProgressIndicator(
       backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
+      color: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("progressIndicatorColor")),
     );
   }
 
@@ -66,7 +67,7 @@ class DynamicPageUtil {
     List<dynamic>? action = data['Actions'];
     if (action != null && action.isNotEmpty) {
       for (Map item in action) {
-        DynamicUI.def(item, "method", null, appStoreData);
+        DynamicUI.def(item, "method", null, appStoreData, 0);
       }
     }
 
@@ -110,6 +111,7 @@ class DynamicPageUtil {
   }
 
   static dynamic closeWindow(AppStoreData appStoreData, dynamic data) {
+    print("DATA: ${data}");
     if(data != null && data["delay"] != null){
       Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseToInt(data["delay"]) ?? delay), () {
         Navigator.pop(appStoreData.getCtx()!);
@@ -151,6 +153,11 @@ class DynamicPageUtil {
 
   static dynamic openDialog(AppStoreData appStoreData, dynamic data) {
     data["dialog"] = true;
+    String st = appStoreData.getStringStoreState();
+    if (st.isNotEmpty) {
+      data["parentState"] = st;
+    }
+    print("openDialog: ${data}");
     showDialog(
       context: appStoreData.getCtx()!,
       builder: (context) => DynamicPage.fromMap(data),
