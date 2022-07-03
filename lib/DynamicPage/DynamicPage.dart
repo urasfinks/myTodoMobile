@@ -100,6 +100,7 @@ class DynamicPageState extends State<DynamicPage> {
           backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("appBarBackgroundColor")),
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent, // Status bar
+            statusBarBrightness: Brightness.dark
           ),
           title: Text(appStoreData.getWidgetData("title")),
         ),

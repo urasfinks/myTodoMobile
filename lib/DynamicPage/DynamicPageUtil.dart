@@ -178,6 +178,7 @@ class DynamicPageUtil {
     var image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 600);
     if (image != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
+        aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -186,6 +187,11 @@ class DynamicPageUtil {
           AndroidUiSettings(toolbarTitle: 'Редактировать', toolbarColor: Colors.blue[600], toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.square, lockAspectRatio: true, hideBottomControls: true),
           IOSUiSettings(
             title: 'Редактировать',
+            hidesNavigationBar: true,
+            aspectRatioPickerButtonHidden: true,
+            rotateButtonsHidden: true,
+            rotateClockwiseButtonHidden: true,
+            resetAspectRatioEnabled: false
           ),
         ],
       );
