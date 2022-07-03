@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'AppStore/AppStore.dart';
 import 'TabWrap.dart';
@@ -32,6 +33,10 @@ class RouterPage extends StatelessWidget {
     return StoreProvider(
       store: AppStore.store,
       child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (RouteSettings settings) {
           return CupertinoPageRoute(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:test3/AppStore/AppStoreData.dart';
 import 'DynamicUI.dart';
 import 'FlutterTypeConstant.dart';
@@ -242,22 +243,52 @@ class FlutterType {
 
   static dynamic pTextField(parsedJson, AppStoreData appStoreData, int index) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index);
-    appStoreData.set(key, DynamicUI.def(parsedJson, 'data', '', appStoreData, index));
+    String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index);
+    String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index);
+    bool readOnly = type == "datetime" ? true : false;
+    TextEditingController? textController = appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index), defData);
+    appStoreData.set(key, textController?.text);
     return TextField(
-      controller: appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index), DynamicUI.def(parsedJson, 'data', '', appStoreData, index)),
+      readOnly: readOnly,
+      controller: textController,
       obscureText: DynamicUI.def(parsedJson, 'obscureText', false, appStoreData, index),
       obscuringCharacter: DynamicUI.def(parsedJson, 'obscureText', '*', appStoreData, index),
-      keyboardType: FlutterTypeConstant.parseToTextInputType(DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index))!,
+      keyboardType: FlutterTypeConstant.parseToTextInputType(type)!,
       decoration: DynamicUI.def(parsedJson, 'decoration', null, appStoreData, index),
       style: DynamicUI.def(parsedJson, 'style', null, appStoreData, index),
       onChanged: (value) {
         appStoreData.set(key, value);
       },
+      onTap: (type == "datetime") ? () async {
+        DateTime? pickedDate = await showDatePicker(
+            locale : const Locale('ru', 'ru_Ru'),
+            context: appStoreData.getCtx()!,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+            lastDate: DateTime(2101)
+        );
+
+        if(pickedDate != null ){
+          //print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+          String formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
+          print(formattedDate); //formatted date output using intl package =>  2021-03-16
+          appStoreData.set(key, formattedDate);
+          textController?.text = formattedDate;
+          //you can implement different kind of Date Format here according to your requirement
+
+          /*setState(() {
+            dateinput.text = formattedDate; //set output date to TextField value.
+          });*/
+        }else{
+          print("Date is not selected");
+        }
+      } : (){},
     );
   }
 
   static dynamic pInputDecoration(parsedJson, AppStoreData appStoreData, int index) {
     return InputDecoration(
+      icon: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index),
       border: DynamicUI.def(parsedJson, 'border', null, appStoreData, index),
       labelText: DynamicUI.def(parsedJson, 'labelText', '', appStoreData, index),
     );
