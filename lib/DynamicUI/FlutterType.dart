@@ -248,6 +248,7 @@ class FlutterType {
     bool readOnly = type == "datetime" ? true : false;
     TextEditingController? textController = appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index), defData);
     appStoreData.set(key, textController?.text);
+
     return TextField(
       readOnly: readOnly,
       controller: textController,
@@ -264,23 +265,15 @@ class FlutterType {
             locale : const Locale('ru', 'ru_Ru'),
             context: appStoreData.getCtx()!,
             initialDate: DateTime.now(),
-            firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
-            lastDate: DateTime(2101)
+            firstDate: DateTime(1931), //DateTime.now() - not to allow to choose before today.
+            lastDate: DateTime(2101),
         );
-
         if(pickedDate != null ){
           //print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
           String formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
-          print(formattedDate); //formatted date output using intl package =>  2021-03-16
+          //print(formattedDate); //formatted date output using intl package =>  2021-03-16
           appStoreData.set(key, formattedDate);
           textController?.text = formattedDate;
-          //you can implement different kind of Date Format here according to your requirement
-
-          /*setState(() {
-            dateinput.text = formattedDate; //set output date to TextField value.
-          });*/
-        }else{
-          print("Date is not selected");
         }
       } : (){},
     );

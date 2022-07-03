@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
@@ -13,6 +15,7 @@ import '../WebSocket.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io';
 
 class DynamicPageUtil {
   static int delay = 350;
@@ -112,11 +115,11 @@ class DynamicPageUtil {
 
   static dynamic closeWindow(AppStoreData appStoreData, dynamic data) {
     print("DATA: ${data}");
-    if(data != null && data["delay"] != null){
+    if (data != null && data["delay"] != null) {
       Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseToInt(data["delay"]) ?? delay), () {
         Navigator.pop(appStoreData.getCtx()!);
       });
-    }else{
+    } else {
       Navigator.pop(appStoreData.getCtx()!);
     }
   }
@@ -167,5 +170,29 @@ class DynamicPageUtil {
   static dynamic test(AppStoreData appStoreData, dynamic data) {
     print("YHOOO");
     return Text("Hoho");
+  }
+
+  static dynamic openGallery(AppStoreData appStoreData, dynamic data) async {
+    //print("OPEN GALLERY");
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 600);
+    if (image != null) {
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: image.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+        ],
+        uiSettings: [
+          AndroidUiSettings(toolbarTitle: 'Редактировать', toolbarColor: Colors.blue[600], toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.square, lockAspectRatio: true, hideBottomControls: true),
+          IOSUiSettings(
+            title: 'Редактировать',
+          ),
+        ],
+      );
+      if(croppedFile != null){
+        await Util.uploadImage(File(croppedFile.path), "${AppStore.host}${data["url"]}");
+        appStoreData.onIndexRevisionError();
+      }
+    }
+    //print("IMAGE: ${image}");
   }
 }

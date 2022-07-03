@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:test3/AppStore/AppStore.dart';
 
 class Util {
   static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, IndexedWidgetBuilder itemBuilder) {
@@ -46,6 +50,20 @@ class Util {
     return template;
   }
 
-
+  static Future uploadImage(File image, String url) async {
+    var stream  = http.ByteStream(image.openRead());
+    var length = await image.length();
+    var request = http.MultipartRequest("POST", Uri.parse(url));
+    request.fields["personKey"] = AppStore.personKey;
+    request.files.add(http.MultipartFile('avatar', stream, length, filename: basename(image.path)));
+    return await request.send().then((response) async {
+      //print("RESPONSE: ${response}");
+      /*response.stream.transform(utf8.decoder).listen((value) {
+        print("VALUE: ${value}");
+      });*/
+    }).catchError((e) {
+      print(e);
+    });
+  }
 
 }
