@@ -56,7 +56,7 @@ class DynamicPage extends StatefulWidget {
   }
 
   void refresh(AppStoreData appStoreData) {
-    print("Load data: ${appStoreData.getWidgetDates()}");
+    //print("Load data: ${appStoreData.getWidgetDates()}");
     //DynamicPageUtil.loadDataTest(this);
     DynamicPageUtil.loadData(this, appStoreData);
   }
@@ -65,7 +65,7 @@ class DynamicPage extends StatefulWidget {
 class DynamicPageState extends State<DynamicPage> {
   @override
   void dispose() {
-    print("Dispose");
+    //print("Dispose");
     if (widget.dataUID.isNotEmpty) {
       AppStore().removeByDataUID(widget.dataUID);
     }
@@ -83,7 +83,7 @@ class DynamicPageState extends State<DynamicPage> {
       appStoreData.addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
       widget.refresh(appStoreData);
     }
-    print("Build CTX: ${context.hashCode}; WidgetData: ${appStoreData.getWidgetDates()}");
+    //print("Build CTX: ${context.hashCode}; WidgetData: ${appStoreData.getWidgetDates()}");
     appStoreData.setCtx(context);
     appStoreData.setPageState(this);
 
@@ -91,7 +91,7 @@ class DynamicPageState extends State<DynamicPage> {
     if (appStoreData.getServerResponse().containsKey("Template") && appStoreData.getWidgetData("wrapPage").isNotEmpty && (appStoreData.getServerResponse()["Template"] as Map).containsKey(appStoreData.getWidgetData("wrapPage"))) {
       wrapPage = DynamicUI.main((appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")], appStoreData, 0);
     }
-    print("DEIALOG: ${appStoreData.getWidgetData("dialog")}");
+    //print("DEIALOG: ${appStoreData.getWidgetData("dialog")}");
     if (appStoreData.getWidgetData("dialog") == false) {
       return Scaffold(
         backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("backgroundColor")), //s?.getWidgetData("")

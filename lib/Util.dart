@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'dart:io';
@@ -22,7 +24,24 @@ class Util {
     }
   }
 
+  static String path2(dynamic data, String path) {
+
+    List<String> exp = path.split(".");
+    dynamic cur = data;
+    for (String key in exp) {
+      if (cur != null && cur[key] != null) {
+        cur = cur[key];
+      }
+    }
+    if(cur.runtimeType.toString() == "String"){
+      return cur != null ? cur.toString().replaceAll("\\", "\\\\").replaceAll("\"", "\\\"") : "null";
+    }else{
+      return jsonEncode(cur);
+    }
+  }
+
   static String path(dynamic data, String path) {
+    //print("PATH: '${path}'");
     List<String> exp = path.split(".");
     dynamic cur = data;
     for (String key in exp) {
@@ -45,7 +64,7 @@ class Util {
         continue;
       }
       String name = exp2[0];
-      template = template.replaceAll("\${$name}", path(data, name));
+      template = template.replaceAll("\${$name}", path2(data, name));
     }
     return template;
   }

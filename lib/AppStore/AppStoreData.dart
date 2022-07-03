@@ -146,7 +146,7 @@ class AppStoreData {
   }
 
   void set(String key, dynamic value, {bool notify = true}) {
-    print("Set: $key = $value");
+    //print("Set: $key = $value");
     _map[key] = value;
     if (notify == true) {
       onChange(key);

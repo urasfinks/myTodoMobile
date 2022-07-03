@@ -35,7 +35,7 @@ class DynamicPageUtil {
 
       final response = await http.post(Uri.parse("${AppStore.host}${widget.url}"), headers: requestHeaders, body: widget.parentState);
 
-      print(response.body);
+      //print(response.body);
       if (response.statusCode == 200) {
         dataUpdate(jsonDecode(response.body), appStoreData);
       } else {
@@ -104,6 +104,7 @@ class DynamicPageUtil {
         } else {
           ret = jsonEncode({"flutterType": "Text", "data": "Undefined Template: ${d['template']}"});
         }
+        //print(ret);
         list.add(jsonDecode(ret));
       }
       data['list'] = list;
@@ -114,7 +115,7 @@ class DynamicPageUtil {
   }
 
   static dynamic closeWindow(AppStoreData appStoreData, dynamic data) {
-    print("DATA: ${data}");
+    //print("DATA: ${data}");
     if (data != null && data["delay"] != null) {
       Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseToInt(data["delay"]) ?? delay), () {
         Navigator.pop(appStoreData.getCtx()!);
@@ -144,7 +145,7 @@ class DynamicPageUtil {
     if (st.isNotEmpty) {
       data["parentState"] = st;
     }
-    print("openWindow: ${data}");
+    //print("openWindow: ${data}");
     Navigator.push(
       appStoreData.getCtx()!,
       CupertinoPageRoute(
@@ -160,7 +161,7 @@ class DynamicPageUtil {
     if (st.isNotEmpty) {
       data["parentState"] = st;
     }
-    print("openDialog: ${data}");
+    //print("openDialog: ${data}");
     showDialog(
       context: appStoreData.getCtx()!,
       builder: (context) => DynamicPage.fromMap(data),

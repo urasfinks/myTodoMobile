@@ -16,7 +16,7 @@ Future<void> loadPref() async {
     await prefs.setString('key', AppStore.personKey);
   }
   AppStore.personKey = prefs.getString('key')!;
-  print("Person key: ${AppStore.personKey}");
+  //print("Person key: ${AppStore.personKey}");
 }
 
 void main() async {
