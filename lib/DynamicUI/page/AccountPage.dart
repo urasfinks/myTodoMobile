@@ -16,7 +16,7 @@ class _AccountPage extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: FlutterTypeConstant.parseToMaterialColor("#f9fafa"),
+      backgroundColor: FlutterTypeConstant.parseColor("#f9fafa"),
       appBar: AppBar(
         title: Text(widget.title),
         elevation: 0,
@@ -34,7 +34,7 @@ class _AccountPage extends State<AccountPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: FlutterTypeConstant.parseEdgeInsetsGeometry("0,0,30,0"),
+              padding: FlutterTypeConstant.parseEdgeInsets("0,0,30,0"),
               alignment: Alignment.topRight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -43,7 +43,7 @@ class _AccountPage extends State<AccountPage> {
                     child: Icon(
                       Icons.notifications_active,
                       size: 24,
-                      color: FlutterTypeConstant.parseToMaterialColor("#ffffff"),
+                      color: FlutterTypeConstant.parseColor("#ffffff"),
                     ),
                     onTap: (){
                       print("Halom");
@@ -52,14 +52,14 @@ class _AccountPage extends State<AccountPage> {
                   ,
                   Text(
                     " 3",
-                    style: TextStyle(fontSize: 17, color: FlutterTypeConstant.parseToMaterialColor("#ffffff")),
+                    style: TextStyle(fontSize: 17, color: FlutterTypeConstant.parseColor("#ffffff")),
                   )
                 ],
               ),
             ), //,
             CircleAvatar(
               radius: 82,
-              backgroundColor: FlutterTypeConstant.parseToMaterialColor("rgba:255,255,255,0.1"),
+              backgroundColor: FlutterTypeConstant.parseColor("rgba:255,255,255,0.1"),
               child: const CircleAvatar(
                 backgroundImage: NetworkImage("http://jamsys.ru:8081/404.jpg"),
                 radius: 70,
@@ -68,18 +68,18 @@ class _AccountPage extends State<AccountPage> {
             const SizedBox(height: 10),
             Text(
               "Юрий Сергеевич М.",
-              style: TextStyle(fontSize: 24, color: FlutterTypeConstant.parseToMaterialColor("#ffffff")),
+              style: TextStyle(fontSize: 24, color: FlutterTypeConstant.parseColor("#ffffff")),
             ),
             const SizedBox(height: 10),
             Text(
               "Последний раз были: 24.06.2022 15:06",
-              style: TextStyle(fontSize: 14, color: FlutterTypeConstant.parseToMaterialColor("rgba:255,255,255,0.5")),
+              style: TextStyle(fontSize: 14, color: FlutterTypeConstant.parseColor("rgba:255,255,255,0.5")),
             ),
             const SizedBox(height: 20),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: FlutterTypeConstant.parseToMaterialColor("#f5f5f5"),
+                  color: FlutterTypeConstant.parseColor("#f5f5f5"),
                   borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                 ),
                 child: Column(
@@ -88,13 +88,13 @@ class _AccountPage extends State<AccountPage> {
                     Container(
                       width: double.infinity,
                       height: 100,
-                      margin: FlutterTypeConstant.parseEdgeInsetsGeometry("10,0,10,0"),
+                      margin: FlutterTypeConstant.parseEdgeInsets("10,0,10,0"),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(begin: Alignment.topRight, colors: [FlutterTypeConstant.parseToMaterialColor("rgba:255,255,255,0.5")!, FlutterTypeConstant.parseToMaterialColor("#f5f5f5")!]),
+                        gradient: LinearGradient(begin: Alignment.topRight, colors: [FlutterTypeConstant.parseColor("rgba:255,255,255,0.5")!, FlutterTypeConstant.parseColor("#f5f5f5")!]),
                         borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                       ),
                       child: Container(
-                        padding: FlutterTypeConstant.parseEdgeInsetsGeometry("20,20,20,0"),
+                        padding: FlutterTypeConstant.parseEdgeInsets("20,20,20,0"),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -111,7 +111,7 @@ class _AccountPage extends State<AccountPage> {
                                   print("Tap");
                                 },
                                 child: Container(
-                                  padding: FlutterTypeConstant.parseEdgeInsetsGeometry("5,12,5,0"),
+                                  padding: FlutterTypeConstant.parseEdgeInsets("5,12,5,0"),
                                   width: 100,
                                   height: 70,
                                   decoration: const BoxDecoration(
@@ -134,12 +134,12 @@ class _AccountPage extends State<AccountPage> {
                               ),
                             ),
                             Container(
-                              padding: FlutterTypeConstant.parseEdgeInsetsGeometry("5,12,5,0"),
+                              padding: FlutterTypeConstant.parseEdgeInsets("5,12,5,0"),
                               width: 100,
                               height: 70,
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                                color: FlutterTypeConstant.parseToMaterialColor("#ffffff"),
+                                color: FlutterTypeConstant.parseColor("#ffffff"),
                               ),
                               alignment: Alignment.center,
                               child: Column(
@@ -153,12 +153,12 @@ class _AccountPage extends State<AccountPage> {
                               ),
                             ),
                             Container(
-                              padding: FlutterTypeConstant.parseEdgeInsetsGeometry("5,12,5,0"),
+                              padding: FlutterTypeConstant.parseEdgeInsets("5,12,5,0"),
                               width: 100,
                               height: 70,
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                                color: FlutterTypeConstant.parseToMaterialColor("#ffffff"),
+                                color: FlutterTypeConstant.parseColor("#ffffff"),
                               ),
                               alignment: Alignment.center,
                               child: Column(
@@ -179,10 +179,10 @@ class _AccountPage extends State<AccountPage> {
                     Container(
                       height: 43,
                       width: double.infinity,
-                      padding: FlutterTypeConstant.parseEdgeInsetsGeometry("0,0,7,0"),
-                      margin: FlutterTypeConstant.parseEdgeInsetsGeometry("32,0,32,0"),
+                      padding: FlutterTypeConstant.parseEdgeInsets("0,0,7,0"),
+                      margin: FlutterTypeConstant.parseEdgeInsets("32,0,32,0"),
                       decoration: BoxDecoration(
-                        color: FlutterTypeConstant.parseToMaterialColor("#ffffff"),
+                        color: FlutterTypeConstant.parseColor("#ffffff"),
                         borderRadius: const BorderRadius.all(Radius.circular(20)),
                       ),
                       child: Row(
@@ -190,7 +190,7 @@ class _AccountPage extends State<AccountPage> {
                         children: [
                           Expanded(
                             child: Container(
-                              padding: FlutterTypeConstant.parseEdgeInsetsGeometry("10,8,10,0"),
+                              padding: FlutterTypeConstant.parseEdgeInsets("10,8,10,0"),
                               decoration: BoxDecoration(
                                 color: Colors.blue[600],
                                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(0), bottomLeft: Radius.circular(20)),
@@ -255,7 +255,7 @@ class _AccountPage extends State<AccountPage> {
                     ),
                     const SizedBox(height: 20),
                     Container(
-                      margin: FlutterTypeConstant.parseEdgeInsetsGeometry("32,0,32,0"),
+                      margin: FlutterTypeConstant.parseEdgeInsets("32,0,32,0"),
                       alignment: Alignment.topLeft,
                       width: double.infinity,
                       child: Column(
@@ -263,23 +263,23 @@ class _AccountPage extends State<AccountPage> {
                         children: [
                           Text(
                             "     Группы:",
-                            style: TextStyle(fontWeight: FontWeight.bold, color: FlutterTypeConstant.parseToMaterialColor("#999999")),
+                            style: TextStyle(fontWeight: FontWeight.bold, color: FlutterTypeConstant.parseColor("#999999")),
                           ),
                           const SizedBox(height: 10),
                           Container(
-                            padding: FlutterTypeConstant.parseEdgeInsetsGeometry("0,10,0,10"),
+                            padding: FlutterTypeConstant.parseEdgeInsets("0,10,0,10"),
                             width: double.infinity,
-                            decoration: BoxDecoration(color: FlutterTypeConstant.parseToMaterialColor("#ffffff"), borderRadius: BorderRadius.all(Radius.circular(20))),
+                            decoration: BoxDecoration(color: FlutterTypeConstant.parseColor("#ffffff"), borderRadius: BorderRadius.all(Radius.circular(20))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  padding: FlutterTypeConstant.parseEdgeInsetsGeometry("15,10,10,10"),
+                                  padding: FlutterTypeConstant.parseEdgeInsets("15,10,10,10"),
                                   child: const Text("Основная"),
                                 ),
-                                Divider(thickness: 1, color: FlutterTypeConstant.parseToMaterialColor("#f5f5f5"),),
+                                Divider(thickness: 1, color: FlutterTypeConstant.parseColor("#f5f5f5"),),
                                 Container(
-                                  padding: FlutterTypeConstant.parseEdgeInsetsGeometry("15,10,10,10"),
+                                  padding: FlutterTypeConstant.parseEdgeInsets("15,10,10,10"),
                                   child: const Text("Вторичная"),
                                 ),
                               ],
@@ -290,7 +290,7 @@ class _AccountPage extends State<AccountPage> {
                     ),
                     const SizedBox(height: 20),
                     Container(
-                      margin: FlutterTypeConstant.parseEdgeInsetsGeometry("32,0,32,0"),
+                      margin: FlutterTypeConstant.parseEdgeInsets("32,0,32,0"),
                       child: SizedBox(
                         width: double.infinity,
                         height: 43,

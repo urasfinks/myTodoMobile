@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:test3/DynamicPage/DynamicPageUtil.dart';
 
 class FlutterTypeConstant {
-  static dynamic parseToFontStyle(String? value) {
+
+  static dynamic parseFontStyle(String? value) {
     if (value == null || value.trim() == '') {
       return null;
     }
@@ -13,7 +14,7 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static double? parseToDouble(dynamic value) {
+  static double? parseDouble(dynamic value) {
     if (value == null || value.toString().trim() == '') {
       return null;
     }
@@ -23,21 +24,39 @@ class FlutterTypeConstant {
     return double.parse(value.toString());
   }
 
-  static int? parseToInt(dynamic value) {
+  static int? parseInt(dynamic value) {
     if (value == null || value.toString().trim() == '') {
       return null;
     }
     return int.parse(value.toString().replaceAll(".0", ""));
   }
 
-  static Color? parseToMaterialColor(String? value) {
+  static Color? parseColor(String? value) {
     if (value == null || value.trim() == '') {
       return null;
     }
-    Map<String, Color> map = {"grey": Colors.grey, "blue": Colors.blue, "red": Colors.red, "transparent": Colors.transparent, "amber": Colors.amber, "black": Colors.black, "white": Colors.white, "yellow": Colors.yellow, "brown": Colors.brown, "cyan": Colors.cyan, "green": Colors.green, "indigo": Colors.indigo, "orange": Colors.orange, "lime": Colors.lime, "pink": Colors.pink, "purple": Colors.purple, "teal": Colors.teal};
+    Map<String, Color> map = {
+      "grey": Colors.grey,
+      "blue": Colors.blue,
+      "red": Colors.red,
+      "transparent": Colors.transparent,
+      "amber": Colors.amber,
+      "black": Colors.black,
+      "white": Colors.white,
+      "yellow": Colors.yellow,
+      "brown": Colors.brown,
+      "cyan": Colors.cyan,
+      "green": Colors.green,
+      "indigo": Colors.indigo,
+      "orange": Colors.orange,
+      "lime": Colors.lime,
+      "pink": Colors.pink,
+      "purple": Colors.purple,
+      "teal": Colors.teal
+    };
     if (value.startsWith("rgba:")) {
       List<String> l = value.split("rgba:")[1].split(",");
-      return Color.fromRGBO(parseToInt(l[0])!, parseToInt(l[1])!, parseToInt(l[2])!, parseToDouble(l[3])!);
+      return Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!, parseDouble(l[3])!);
     } else if (value.startsWith("#")) {
       return _parseHexColor(value);
     } else if (value.contains(".")) {
@@ -45,7 +64,7 @@ class FlutterTypeConstant {
         List<String> l = value.split(".");
         MaterialColor? x = (map.containsKey(l[0]) ? map[l[0]] : null) as MaterialColor?;
         if (x != null) {
-          return x[parseToInt(l[1])!];
+          return x[parseInt(l[1])!];
         }
       } catch (e, stacktrace) {
         print(e);
@@ -89,21 +108,21 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static EdgeInsets? parseEdgeInsetsGeometry(String? value) {
+  static EdgeInsets? parseEdgeInsets(String? value) {
     //left,top,right,bottom
     if (value == null || value.trim() == '') {
       return null;
     }
     var values = value.split(",");
-    if(values.length > 1){
+    if (values.length > 1) {
       return EdgeInsets.only(
         left: double.parse(values[0]),
         top: double.parse(values[1]),
         right: double.parse(values[2]),
         bottom: double.parse(values[3]),
       );
-    }else{
-      return EdgeInsets.all(parseToDouble(value)!);
+    } else {
+      return EdgeInsets.all(parseDouble(value)!);
     }
   }
 
@@ -127,11 +146,16 @@ class FlutterTypeConstant {
     if (value == null || value.trim() == '') {
       return null;
     }
-    Map<String, ImageRepeat> map = {"noRepeat": ImageRepeat.noRepeat, "repeat": ImageRepeat.repeat, "repeatX": ImageRepeat.repeatX, "repeatY": ImageRepeat.repeatY};
+    Map<String, ImageRepeat> map = {
+      "noRepeat": ImageRepeat.noRepeat,
+      "repeat": ImageRepeat.repeat,
+      "repeatX": ImageRepeat.repeatX,
+      "repeatY": ImageRepeat.repeatY
+    };
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static Alignment? parseAlignmentGeometry(String? value) {
+  static Alignment? parseAlignment(String? value) {
     if (value == null || value.trim() == '') {
       return null;
     }
@@ -153,7 +177,7 @@ class FlutterTypeConstant {
     List<Color> ret = [];
     if (parsedJson != null) {
       for (String color in parsedJson) {
-        Color? x = parseToMaterialColor(color);
+        Color? x = parseColor(color);
         if (x != null) {
           ret.add(x);
         }
@@ -162,7 +186,7 @@ class FlutterTypeConstant {
     return ret;
   }
 
-  static MainAxisAlignment? parseToMainAxisAlignment(String? value) {
+  static MainAxisAlignment? parseMainAxisAlignment(String? value) {
     if (value == null || value.trim() == '') {
       return null;
     }
@@ -177,7 +201,7 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static CrossAxisAlignment? parseToCrossAxisAlignment(String? value) {
+  static CrossAxisAlignment? parseCrossAxisAlignment(String? value) {
     if (value == null || value.trim() == '') {
       return null;
     }
@@ -191,24 +215,24 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static BorderRadiusGeometry? parseToBorderRadius(dynamic value) {
+  static BorderRadius? parseBorderRadius(dynamic value) {
     if (value == null || value.toString().trim() == '') {
       return null;
     }
     if (value.toString().contains(",")) {
       List<String> l = value.toString().split(",");
       return BorderRadius.only(
-        topLeft: Radius.circular(parseToDouble(l[0])!),
-        topRight: Radius.circular(parseToDouble(l[1])!),
-        bottomRight: Radius.circular(parseToDouble(l[2])!),
-        bottomLeft: Radius.circular(parseToDouble(l[3])!),
+        topLeft: Radius.circular(parseDouble(l[0])!),
+        topRight: Radius.circular(parseDouble(l[1])!),
+        bottomRight: Radius.circular(parseDouble(l[2])!),
+        bottomLeft: Radius.circular(parseDouble(l[3])!),
       );
     } else {
-      return BorderRadius.all(Radius.circular(parseToDouble(value.toString())!));
+      return BorderRadius.all(Radius.circular(parseDouble(value.toString())!));
     }
   }
 
-  static dynamic parseUtilFunction(String value){
+  static dynamic parseUtilFunction(String value) {
     Map<String, Function> map = {
       "getFutureBuilder": DynamicPageUtil.getFutureBuilder,
       "test": DynamicPageUtil.test,
@@ -218,13 +242,13 @@ class FlutterTypeConstant {
       "openDialog": DynamicPageUtil.openDialog,
       "openGallery": DynamicPageUtil.openGallery,
     };
-    if(map.containsKey(value)){
+    if (map.containsKey(value)) {
       return map[value];
     }
     return null;
   }
 
-  static TextInputType? parseToTextInputType(String? value) {
+  static TextInputType? parseTextInputType(String? value) {
     if (value == null || value.trim() == '') {
       return null;
     }
@@ -244,13 +268,24 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static BorderStyle? parseToBorderStyle(String? value) {
+  static BorderStyle? parseBorderStyle(String? value) {
     if (value == null || value.trim() == '') {
       return null;
     }
     Map<String, BorderStyle> map = {
       'solid': BorderStyle.solid,
       'none': BorderStyle.none,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static Axis? parseAxis(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, Axis> map = {
+      'vertical': Axis.vertical,
+      'horizontal': Axis.horizontal,
     };
     return map.containsKey(value) ? map[value] : null;
   }

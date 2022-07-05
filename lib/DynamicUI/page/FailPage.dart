@@ -20,7 +20,7 @@ class _FailPage extends State<FailPage> {
     String descriptionError = "ProjectName: system; ProjectUrl: account; Extra: []";
 
     return Scaffold(
-      backgroundColor: FlutterTypeConstant.parseToMaterialColor("#f9fafa"),
+      backgroundColor: FlutterTypeConstant.parseColor("#f9fafa"),
       appBar: AppBar(
         title: Text(widget.title),
         elevation: 0,
@@ -43,9 +43,9 @@ class _FailPage extends State<FailPage> {
             const SizedBox(height: 100, width: 300,),
             Text(
               code,
-              style: TextStyle(fontStyle: FontStyle.normal, fontSize: 100, color: FlutterTypeConstant.parseToMaterialColor("#434a54"), fontWeight: FontWeight.bold),
+              style: TextStyle(fontStyle: FontStyle.normal, fontSize: 100, color: FlutterTypeConstant.parseColor("#434a54"), fontWeight: FontWeight.bold),
             ),
-            Text(titleError, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16, color: FlutterTypeConstant.parseToMaterialColor("#6c7787"))),
+            Text(titleError, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16, color: FlutterTypeConstant.parseColor("#6c7787"))),
             const SizedBox(
               height: 16,
             ),

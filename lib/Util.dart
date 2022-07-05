@@ -7,9 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:test3/AppStore/AppStore.dart';
 
 class Util {
-  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, IndexedWidgetBuilder itemBuilder) {
+  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, IndexedWidgetBuilder itemBuilder, {bool reverse = false}) {
     if (separated == true) {
       return ListView.separated(
+        reverse: reverse,
         physics: physics,
         itemCount: itemCount,
         itemBuilder: itemBuilder,
@@ -17,6 +18,7 @@ class Util {
       );
     } else {
       return ListView.builder(
+        reverse: reverse,
         physics: physics,
         itemCount: itemCount,
         itemBuilder: itemBuilder,
@@ -25,7 +27,6 @@ class Util {
   }
 
   static String path2(dynamic data, String path) {
-
     List<String> exp = path.split(".");
     dynamic cur = data;
     for (String key in exp) {
@@ -33,9 +34,9 @@ class Util {
         cur = cur[key];
       }
     }
-    if(cur.runtimeType.toString() == "String"){
+    if (cur.runtimeType.toString() == "String") {
       return cur != null ? cur.toString().replaceAll("\\", "\\\\").replaceAll("\"", "\\\"") : "null";
-    }else{
+    } else {
       return jsonEncode(cur);
     }
   }
@@ -70,7 +71,7 @@ class Util {
   }
 
   static Future uploadImage(File image, String url) async {
-    var stream  = http.ByteStream(image.openRead());
+    var stream = http.ByteStream(image.openRead());
     var length = await image.length();
     var request = http.MultipartRequest("POST", Uri.parse(url));
     request.fields["personKey"] = AppStore.personKey;
@@ -84,5 +85,4 @@ class Util {
       print(e);
     });
   }
-
 }

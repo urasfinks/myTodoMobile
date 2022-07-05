@@ -17,31 +17,32 @@ class FlutterType {
 
   static dynamic pTextStyle(parsedJson, AppStoreData appStoreData, int index) {
     return TextStyle(
-      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
-      fontSize: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'fontSize', null, appStoreData, index)),
-      fontStyle: FlutterTypeConstant.parseToFontStyle(DynamicUI.def(parsedJson, 'fontStyle', null, appStoreData, index)),
-      fontWeight: FlutterTypeConstant.parseFontWeight(DynamicUI.def(parsedJson, 'fontWeight', null, appStoreData, index)),
+      color: FlutterTypeConstant.parseColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
+      fontSize: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'fontSize', null, appStoreData, index)),
+      fontStyle: FlutterTypeConstant.parseFontStyle(DynamicUI.def(parsedJson, 'fontStyle', null, appStoreData, index)),
+      fontWeight:
+          FlutterTypeConstant.parseFontWeight(DynamicUI.def(parsedJson, 'fontWeight', null, appStoreData, index)),
     );
   }
 
   static dynamic pColumn(parsedJson, AppStoreData appStoreData, int index) {
     return Column(
-      crossAxisAlignment: FlutterTypeConstant.parseToCrossAxisAlignment(
-        DynamicUI.def(
-          parsedJson,
-          'crossAxisAlignment',
-          'center',
-          appStoreData,
-          index
-        ),
+      crossAxisAlignment: FlutterTypeConstant.parseCrossAxisAlignment(
+        DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center', appStoreData, index),
       )!,
-      mainAxisAlignment: FlutterTypeConstant.parseToMainAxisAlignment(DynamicUI.def(parsedJson, 'mainAxisAlignment', 'start', appStoreData, index))!,
+      mainAxisAlignment: FlutterTypeConstant.parseMainAxisAlignment(
+          DynamicUI.def(parsedJson, 'mainAxisAlignment', 'start', appStoreData, index))!,
       children: DynamicUI.defList(parsedJson, 'children', appStoreData, index),
     );
   }
 
   static dynamic pRow(parsedJson, AppStoreData appStoreData, int index) {
-    return Row(crossAxisAlignment: FlutterTypeConstant.parseToCrossAxisAlignment(DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center', appStoreData, index))!, mainAxisAlignment: FlutterTypeConstant.parseToMainAxisAlignment(DynamicUI.def(parsedJson, 'mainAxisAlignment', 'start', appStoreData, index))!, children: DynamicUI.defList(parsedJson, 'children', appStoreData, index));
+    return Row(
+        crossAxisAlignment: FlutterTypeConstant.parseCrossAxisAlignment(
+            DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center', appStoreData, index))!,
+        mainAxisAlignment: FlutterTypeConstant.parseMainAxisAlignment(
+            DynamicUI.def(parsedJson, 'mainAxisAlignment', 'start', appStoreData, index))!,
+        children: DynamicUI.defList(parsedJson, 'children', appStoreData, index));
   }
 
   static dynamic pExpanded(parsedJson, AppStoreData appStoreData, int index) {
@@ -52,29 +53,29 @@ class FlutterType {
 
   static dynamic pPadding(parsedJson, AppStoreData appStoreData, int index) {
     return Padding(
-      padding: FlutterTypeConstant.parseEdgeInsetsGeometry(DynamicUI.def(parsedJson, 'padding', null, appStoreData, index))!,
+      padding: FlutterTypeConstant.parseEdgeInsets(DynamicUI.def(parsedJson, 'padding', null, appStoreData, index))!,
       child: DynamicUI.def(parsedJson, 'child', defaultWidget, appStoreData, index),
     );
   }
 
   static dynamic pSizedBox(parsedJson, AppStoreData appStoreData, int index) {
     return SizedBox(
-      width: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'width', null, appStoreData, index)),
-      height: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'height', null, appStoreData, index)),
+      width: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'width', null, appStoreData, index)),
+      height: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'height', null, appStoreData, index)),
       child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index),
     );
   }
 
   static dynamic pContainer(parsedJson, AppStoreData appStoreData, int index) {
     return Container(
-      margin: FlutterTypeConstant.parseEdgeInsetsGeometry(DynamicUI.def(parsedJson, 'margin', null, appStoreData, index)),
-      padding: FlutterTypeConstant.parseEdgeInsetsGeometry(DynamicUI.def(parsedJson, 'padding', null, appStoreData, index)),
-      width: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'width', null, appStoreData, index)),
-      height: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'height', null, appStoreData, index)),
+      margin: FlutterTypeConstant.parseEdgeInsets(DynamicUI.def(parsedJson, 'margin', null, appStoreData, index)),
+      padding: FlutterTypeConstant.parseEdgeInsets(DynamicUI.def(parsedJson, 'padding', null, appStoreData, index)),
+      width: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'width', null, appStoreData, index)),
+      height: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'height', null, appStoreData, index)),
       child: DynamicUI.def(parsedJson, 'child', defaultWidget, appStoreData, index),
       decoration: DynamicUI.def(parsedJson, 'decoration', null, appStoreData, index),
-      alignment: FlutterTypeConstant.parseAlignmentGeometry(DynamicUI.def(parsedJson, 'alignment', null, appStoreData, index)),
-      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
+      alignment: FlutterTypeConstant.parseAlignment(DynamicUI.def(parsedJson, 'alignment', null, appStoreData, index)),
+      color: FlutterTypeConstant.parseColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
     );
   }
 
@@ -91,8 +92,9 @@ class FlutterType {
   static dynamic pCircleAvatar(parsedJson, AppStoreData appStoreData, int index) {
     return CircleAvatar(
       backgroundImage: DynamicUI.def(parsedJson, 'backgroundImage', null, appStoreData, index),
-      backgroundColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'backgroundColor', null, appStoreData, index)),
-      radius: FlutterTypeConstant.parseToDouble(
+      backgroundColor:
+          FlutterTypeConstant.parseColor(DynamicUI.def(parsedJson, 'backgroundColor', null, appStoreData, index)),
+      radius: FlutterTypeConstant.parseDouble(
         DynamicUI.def(parsedJson, 'radius', null, appStoreData, index),
       ),
       child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index),
@@ -102,8 +104,8 @@ class FlutterType {
   static dynamic pIcon(parsedJson, AppStoreData appStoreData, int index) {
     return Icon(
       iconsMap[DynamicUI.def(parsedJson, 'src', null, appStoreData, index)],
-      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
-      size: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'size', null, appStoreData, index)),
+      color: FlutterTypeConstant.parseColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
+      size: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'size', null, appStoreData, index)),
     );
   }
 
@@ -115,22 +117,25 @@ class FlutterType {
     return DecorationImage(
       image: DynamicUI.def(parsedJson, 'image', null, appStoreData, index),
       fit: FlutterTypeConstant.parseBoxFit(DynamicUI.def(parsedJson, 'fit', null, appStoreData, index)),
-      scale: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index))!,
-      opacity: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index))!,
-      repeat: FlutterTypeConstant.parseImageRepeat(DynamicUI.def(parsedJson, 'scale', "noRepeat", appStoreData, index))!,
+      scale: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index))!,
+      opacity: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index))!,
+      repeat:
+          FlutterTypeConstant.parseImageRepeat(DynamicUI.def(parsedJson, 'scale', "noRepeat", appStoreData, index))!,
       filterQuality: FilterQuality.high,
-      alignment: FlutterTypeConstant.parseAlignmentGeometry(DynamicUI.def(parsedJson, 'alignment', "center", appStoreData, index))!,
+      alignment:
+          FlutterTypeConstant.parseAlignment(DynamicUI.def(parsedJson, 'alignment', "center", appStoreData, index))!,
       matchTextDirection: DynamicUI.def(parsedJson, 'matchTextDirection', false, appStoreData, index),
     );
   }
 
   static dynamic pBoxDecoration(parsedJson, AppStoreData appStoreData, int index) {
     return BoxDecoration(
-      color: FlutterTypeConstant.parseToMaterialColor(
+      color: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'color', null, appStoreData, index),
       ),
       image: DynamicUI.def(parsedJson, 'image', null, appStoreData, index),
-      borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', null, appStoreData, index)),
+      borderRadius:
+          FlutterTypeConstant.parseBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', null, appStoreData, index)),
       gradient: DynamicUI.def(parsedJson, 'gradient', null, appStoreData, index),
     );
   }
@@ -141,7 +146,7 @@ class FlutterType {
 
   static dynamic pLinearGradient(parsedJson, AppStoreData appStoreData, int index) {
     return LinearGradient(
-      begin: FlutterTypeConstant.parseAlignmentGeometry(
+      begin: FlutterTypeConstant.parseAlignment(
         DynamicUI.def(parsedJson, 'begin', 'centerLeft', appStoreData, index),
       )!,
       colors: FlutterTypeConstant.parseListColor(
@@ -152,27 +157,28 @@ class FlutterType {
 
   static dynamic pDivider(parsedJson, AppStoreData appStoreData, int index) {
     return Divider(
-      height: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'height', null, appStoreData, index)),
-      thickness: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'thickness', null, appStoreData, index)),
-      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
+      height: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'height', null, appStoreData, index)),
+      thickness: FlutterTypeConstant.parseDouble(DynamicUI.def(parsedJson, 'thickness', null, appStoreData, index)),
+      color: FlutterTypeConstant.parseColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
     );
   }
 
   static dynamic pButtonStyle(parsedJson, AppStoreData appStoreData, int index) {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.all(
-        FlutterTypeConstant.parseToMaterialColor(
+        FlutterTypeConstant.parseColor(
           DynamicUI.def(parsedJson, 'backgroundColor', null, appStoreData, index),
         ),
       ),
       shadowColor: MaterialStateProperty.all(
-        FlutterTypeConstant.parseToMaterialColor(
+        FlutterTypeConstant.parseColor(
           DynamicUI.def(parsedJson, 'shadowColor', 'transparent', appStoreData, index),
         ),
       ),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
-          borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', null, appStoreData, index))!,
+          borderRadius: FlutterTypeConstant.parseBorderRadius(
+              DynamicUI.def(parsedJson, 'borderRadius', null, appStoreData, index))!,
         ),
       ),
     );
@@ -180,13 +186,14 @@ class FlutterType {
 
   static dynamic pMaterial(parsedJson, AppStoreData appStoreData, int index) {
     return Material(
-      color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
-      borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', null, appStoreData, index)),
+      color: FlutterTypeConstant.parseColor(DynamicUI.def(parsedJson, 'color', null, appStoreData, index)),
+      borderRadius:
+          FlutterTypeConstant.parseBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', null, appStoreData, index)),
       child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index),
     );
   }
 
-  static void dynamicFunction(parsedJson, AppStoreData appStoreData, String key, int index){
+  static void dynamicFunction(parsedJson, AppStoreData appStoreData, String key, int index) {
     Map<String, dynamic> originData = appStoreData.getServerResponse()["Data"][index]["data"];
     List<String> exp = parsedJson[key].toString().split("):");
     List<dynamic> args = [];
@@ -227,8 +234,10 @@ class FlutterType {
   static dynamic pInkWell(parsedJson, AppStoreData appStoreData, int index) {
     return InkWell(
         customBorder: DynamicUI.def(parsedJson, 'customBorder', null, appStoreData, index),
-        splashColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'splashColor', null, appStoreData, index)),
-        highlightColor: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'highlightColor', null, appStoreData, index)),
+        splashColor:
+            FlutterTypeConstant.parseColor(DynamicUI.def(parsedJson, 'splashColor', null, appStoreData, index)),
+        highlightColor:
+            FlutterTypeConstant.parseColor(DynamicUI.def(parsedJson, 'highlightColor', null, appStoreData, index)),
         child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index),
         onTap: () {
           dynamicFunction(parsedJson, appStoreData, 'onTap', index);
@@ -237,7 +246,8 @@ class FlutterType {
 
   static dynamic pRoundedRectangleBorder(parsedJson, AppStoreData appStoreData, int index) {
     return RoundedRectangleBorder(
-      borderRadius: FlutterTypeConstant.parseToBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', 0, appStoreData, index))!,
+      borderRadius:
+          FlutterTypeConstant.parseBorderRadius(DynamicUI.def(parsedJson, 'borderRadius', 0, appStoreData, index))!,
     );
   }
 
@@ -246,36 +256,42 @@ class FlutterType {
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index);
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index);
     bool readOnly = type == "datetime" ? true : false;
-    TextEditingController? textController = appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index), defData);
+    TextEditingController? textController =
+        appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index), defData);
     appStoreData.set(key, textController?.text);
 
     return TextField(
+      minLines: FlutterTypeConstant.parseInt(DynamicUI.def(parsedJson, 'minLines', 1, appStoreData, index)),
+      maxLength: FlutterTypeConstant.parseInt(DynamicUI.def(parsedJson, 'maxLength', 1, appStoreData, index)),
       readOnly: readOnly,
       controller: textController,
       obscureText: DynamicUI.def(parsedJson, 'obscureText', false, appStoreData, index),
       obscuringCharacter: DynamicUI.def(parsedJson, 'obscureText', '*', appStoreData, index),
-      keyboardType: FlutterTypeConstant.parseToTextInputType(type)!,
+      keyboardType: FlutterTypeConstant.parseTextInputType(type)!,
       decoration: DynamicUI.def(parsedJson, 'decoration', null, appStoreData, index),
       style: DynamicUI.def(parsedJson, 'style', null, appStoreData, index),
       onChanged: (value) {
         appStoreData.set(key, value);
       },
-      onTap: (type == "datetime") ? () async {
-        DateTime? pickedDate = await showDatePicker(
-            locale : const Locale('ru', 'ru_Ru'),
-            context: appStoreData.getCtx()!,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(1931), //DateTime.now() - not to allow to choose before today.
-            lastDate: DateTime(2101),
-        );
-        if(pickedDate != null ){
-          //print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
-          String formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
-          //print(formattedDate); //formatted date output using intl package =>  2021-03-16
-          appStoreData.set(key, formattedDate);
-          textController?.text = formattedDate;
-        }
-      } : (){},
+      onTap: (type == "datetime")
+          ? () async {
+              DateTime? pickedDate = await showDatePicker(
+                locale: const Locale('ru', 'ru_Ru'),
+                context: appStoreData.getCtx()!,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1931),
+                //DateTime.now() - not to allow to choose before today.
+                lastDate: DateTime(2101),
+              );
+              if (pickedDate != null) {
+                //print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+                String formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
+                //print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                appStoreData.set(key, formattedDate);
+                textController?.text = formattedDate;
+              }
+            }
+          : () {},
     );
   }
 
@@ -304,7 +320,81 @@ class FlutterType {
   }
 
   static dynamic pBorderSize(parsedJson, AppStoreData appStoreData, int index) {
-    return BorderSide(color: FlutterTypeConstant.parseToMaterialColor(DynamicUI.def(parsedJson, 'color', '#f5f5f5', appStoreData, index))!, width: FlutterTypeConstant.parseToDouble(DynamicUI.def(parsedJson, 'width', 1, appStoreData, index))!, style: FlutterTypeConstant.parseToBorderStyle(DynamicUI.def(parsedJson, 'style', BorderStyle.solid, appStoreData, index))!);
+    return BorderSide(
+      color: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'color', '#f5f5f5', appStoreData, index),
+      )!,
+      width: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'width', 1, appStoreData, index),
+      )!,
+      style: FlutterTypeConstant.parseBorderStyle(
+        DynamicUI.def(parsedJson, 'style', BorderStyle.solid, appStoreData, index),
+      )!,
+    );
   }
 
+  static dynamic pGridView(parsedJson, AppStoreData appStoreData, int index) {
+    return GridView.count(
+      crossAxisCount: FlutterTypeConstant.parseInt(
+        DynamicUI.def(parsedJson, 'crossAxisCount', 0, appStoreData, index),
+      )!,
+      mainAxisSpacing: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'mainAxisSpacing', 0.0, appStoreData, index),
+      )!,
+      crossAxisSpacing: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'crossAxisSpacing', 0.0, appStoreData, index),
+      )!,
+      childAspectRatio: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'childAspectRatio', 1.0, appStoreData, index),
+      )!,
+      reverse: DynamicUI.def(parsedJson, 'reverse', false, appStoreData, index),
+      scrollDirection: FlutterTypeConstant.parseAxis(
+        DynamicUI.def(parsedJson, 'scrollDirection', 'vertical', appStoreData, index)!,
+      )!,
+      shrinkWrap: DynamicUI.def(parsedJson, 'shrinkWrap', false, appStoreData, index),
+      padding: FlutterTypeConstant.parseEdgeInsets(
+        DynamicUI.def(parsedJson, 'padding', null, appStoreData, index),
+      )!,
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index),
+    );
+  }
+
+  static dynamic pListView(parsedJson, AppStoreData appStoreData, int parentIndex) {
+    bool separated = DynamicUI.def(parsedJson, 'separated', false, appStoreData, parentIndex);
+    if (separated) {
+      return ListView.separated(
+        scrollDirection: FlutterTypeConstant.parseAxis(
+          DynamicUI.def(parsedJson, 'scrollDirection', 'vertical', appStoreData, parentIndex)!,
+        )!,
+        padding: FlutterTypeConstant.parseEdgeInsets(
+          DynamicUI.def(parsedJson, 'padding', null, appStoreData, parentIndex),
+        )!,
+        shrinkWrap: DynamicUI.def(parsedJson, 'shrinkWrap', false, appStoreData, parentIndex),
+        reverse: DynamicUI.def(parsedJson, 'reverse', false, appStoreData, parentIndex),
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        itemCount: FlutterTypeConstant.parseInt(DynamicUI.def(parsedJson, 'itemCount', 0, appStoreData, parentIndex))!,
+        itemBuilder: (BuildContext context, int index) {
+          return DynamicUI.mainJson(parsedJson["children"][index], appStoreData, index);
+        },
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
+      );
+    } else {
+      return ListView.builder(
+        scrollDirection: FlutterTypeConstant.parseAxis(
+          DynamicUI.def(parsedJson, 'scrollDirection', 'vertical', appStoreData, parentIndex)!,
+        )!,
+        padding: FlutterTypeConstant.parseEdgeInsets(
+          DynamicUI.def(parsedJson, 'padding', null, appStoreData, parentIndex),
+        )!,
+        shrinkWrap: DynamicUI.def(parsedJson, 'shrinkWrap', false, appStoreData, parentIndex),
+        reverse: DynamicUI.def(parsedJson, 'reverse', false, appStoreData, parentIndex),
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        itemCount: FlutterTypeConstant.parseInt(DynamicUI.def(parsedJson, 'itemCount', 0, appStoreData, parentIndex))!,
+        itemBuilder: (BuildContext context, int index) {
+          return DynamicUI.mainJson(parsedJson["children"][index], appStoreData, index);
+        },
+      );
+    }
+  }
 }

@@ -94,10 +94,10 @@ class DynamicPageState extends State<DynamicPage> {
     //print("DEIALOG: ${appStoreData.getWidgetData("dialog")}");
     if (appStoreData.getWidgetData("dialog") == false) {
       return Scaffold(
-        backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("backgroundColor")), //s?.getWidgetData("")
+        backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("backgroundColor")), //s?.getWidgetData("")
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("appBarBackgroundColor")),
+          backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("appBarBackgroundColor")),
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent, // Status bar
             statusBarBrightness: Brightness.dark
@@ -106,7 +106,7 @@ class DynamicPageState extends State<DynamicPage> {
         ),
         body: Center(
           child: LiquidPullToRefresh(
-            color: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("pullToRefreshBackgroundColor")),
+            color: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("pullToRefreshBackgroundColor")),
             showChildOpacityTransition: false,
             springAnimationDurationInMilliseconds: 500,
             animSpeedFactor: 2,
@@ -122,9 +122,9 @@ class DynamicPageState extends State<DynamicPage> {
     } else {
       //
       return Dialog(
-        backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("backgroundColor")),
+        backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("backgroundColor")),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        insetPadding: FlutterTypeConstant.parseEdgeInsetsGeometry("160")!,
+        insetPadding: FlutterTypeConstant.parseEdgeInsets("160")!,
         elevation: 0,
         child: SizedBox(
           height: 70,

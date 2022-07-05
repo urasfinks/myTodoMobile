@@ -50,7 +50,9 @@ class DynamicUI {
       "TextField": FlutterType.pTextField,
       "InputDecoration": FlutterType.pInputDecoration,
       "UnderlineInputBorder": FlutterType.pUnderlineInputBorder,
-      "BorderSize": FlutterType.pBorderSize
+      "BorderSize": FlutterType.pBorderSize,
+      "GridView": FlutterType.pGridView,
+      "ListView": FlutterType.pListView,
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index]) : def;
   }

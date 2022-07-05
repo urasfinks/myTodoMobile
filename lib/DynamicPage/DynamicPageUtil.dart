@@ -61,8 +61,8 @@ class DynamicPageUtil {
       );
     }
     return CircularProgressIndicator(
-      backgroundColor: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
-      color: FlutterTypeConstant.parseToMaterialColor(appStoreData.getWidgetData("progressIndicatorColor")),
+      backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
+      color: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorColor")),
     );
   }
 
@@ -117,7 +117,7 @@ class DynamicPageUtil {
   static dynamic closeWindow(AppStoreData appStoreData, dynamic data) {
     //print("DATA: ${data}");
     if (data != null && data["delay"] != null) {
-      Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseToInt(data["delay"]) ?? delay), () {
+      Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {
         Navigator.pop(appStoreData.getCtx()!);
       });
     } else {
