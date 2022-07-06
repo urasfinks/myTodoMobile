@@ -290,4 +290,46 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
+  static Clip? parseClip(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, Clip> map = {
+      'antiAlias': Clip.antiAlias,
+      'antiAliasWithSaveLayer': Clip.antiAliasWithSaveLayer,
+      'hardEdge': Clip.hardEdge,
+      'none': Clip.none,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static TextBaseline? parseTextBaseline(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextBaseline> map = {
+      'alphabetic': TextBaseline.alphabetic,
+      'ideographic': TextBaseline.ideographic,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static AlignmentDirectional? parseAlignmentDirectional(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, AlignmentDirectional> map = {
+      'bottomCenter': AlignmentDirectional.bottomCenter,
+      'bottomEnd': AlignmentDirectional.bottomEnd,
+      'bottomStart': AlignmentDirectional.bottomStart,
+      'center': AlignmentDirectional.center,
+      'centerEnd': AlignmentDirectional.centerEnd,
+      'centerStart': AlignmentDirectional.centerStart,
+      'topCenter': AlignmentDirectional.topCenter,
+      'topEnd': AlignmentDirectional.topEnd,
+      'topStart': AlignmentDirectional.topStart,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
 }

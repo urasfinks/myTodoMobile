@@ -53,6 +53,11 @@ class DynamicUI {
       "BorderSize": FlutterType.pBorderSize,
       "GridView": FlutterType.pGridView,
       "ListView": FlutterType.pListView,
+      "PageView": FlutterType.pPageView,
+      "Align": FlutterType.pAlign,
+      "AspectRatio": FlutterType.pAspectRatio,
+      "FitBox": FlutterType.pFitBox,
+      "Baseline": FlutterType.pBaseline,
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index]) : def;
   }
