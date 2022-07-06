@@ -51,6 +51,7 @@ class AppStoreData {
     addWidgetData("progressIndicatorColor", widget.progressIndicatorColor);
     addWidgetData("dialog", widget.dialog);
     addWidgetData("separated", widget.separated);
+    addWidgetData("dialogHeight", widget.dialogHeight);
   }
 
   void addWidgetData(String key, dynamic value){

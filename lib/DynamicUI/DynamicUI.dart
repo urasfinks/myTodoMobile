@@ -24,7 +24,6 @@ class DynamicUI {
 
   static dynamic getByType(String containsKey, map, dynamic def, AppStoreData appStoreData, int index) {
     Map<String, Function> map1 = {
-      "Text": FlutterType.pText,
       "TextStyle": FlutterType.pTextStyle,
       "Column": FlutterType.pColumn,
       "Row": FlutterType.pRow,
@@ -41,12 +40,13 @@ class DynamicUI {
       "BoxDecoration": FlutterType.pBoxDecoration,
       "Spacer": FlutterType.pSpacer,
       "LinearGradient": FlutterType.pLinearGradient,
-      "Divider": FlutterType.pDivider,
       "ElevatedButtonIcon": FlutterType.pElevatedButtonIcon,
       "ButtonStyle": FlutterType.pButtonStyle,
       "Material": FlutterType.pMaterial,
       "InkWell": FlutterType.pInkWell,
       "RoundedRectangleBorder": FlutterType.pRoundedRectangleBorder,
+      "Text": FlutterType.pText,
+      "SelectableText": FlutterType.pSelectableText,
       "TextField": FlutterType.pTextField,
       "InputDecoration": FlutterType.pInputDecoration,
       "UnderlineInputBorder": FlutterType.pUnderlineInputBorder,
@@ -58,6 +58,15 @@ class DynamicUI {
       "AspectRatio": FlutterType.pAspectRatio,
       "FitBox": FlutterType.pFitBox,
       "Baseline": FlutterType.pBaseline,
+      "Stack": FlutterType.pStack,
+      "Positioned": FlutterType.pPositioned,
+      "Opacity": FlutterType.pOpacity,
+      "Wrap": FlutterType.pWrap,
+      "ClipRRect": FlutterType.pClipRRect,
+      "LimitedBox": FlutterType.pLimitedBox,
+      "OverflowBox": FlutterType.pOverflowBox,
+      "Divider": FlutterType.pDivider,
+      "RotatedBox": FlutterType.pRotatedBox,
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index]) : def;
   }

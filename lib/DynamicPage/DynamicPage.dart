@@ -21,14 +21,15 @@ class DynamicPage extends StatefulWidget {
   final String progressIndicatorColor;
   final bool dialog;
   final bool separated;
+  final double dialogHeight;
 
-  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = "", this.wrapPage = "", this.appBarBackgroundColor = "blue.600", this.pullToRefreshBackgroundColor = "blue.600", this.backgroundColor = "#ffffff", this.progressIndicatorBackgroundColor = "transparent", this.progressIndicatorColor = "blue.600", this.dialog = false, this.separated = false}) : super(key: key);
+  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = "", this.wrapPage = "", this.appBarBackgroundColor = "blue.600", this.pullToRefreshBackgroundColor = "blue.600", this.backgroundColor = "#ffffff", this.progressIndicatorBackgroundColor = "transparent", this.progressIndicatorColor = "blue.600", this.dialog = false, this.separated = false, this.dialogHeight = 70.0}) : super(key: key);
 
   @override
   State<DynamicPage> createState() => DynamicPageState();
 
   static fromMap(Map<String, dynamic>? data) {
-    Map<String, dynamic> def = {'title': '', 'root': false, 'url': '', 'parentState': '', 'dataUID': "", 'wrapPage': '', 'pullToRefreshBackgroundColor': 'blue.600', 'appBarBackgroundColor': 'blue.600', 'backgroundColor': '#ffffff', 'progressIndicatorBackgroundColor': 'transparent', 'progressIndicatorColor': 'blue.600',  'dialog': false, 'separated': false};
+    Map<String, dynamic> def = {'title': '', 'root': false, 'url': '', 'parentState': '', 'dataUID': "", 'wrapPage': '', 'pullToRefreshBackgroundColor': 'blue.600', 'appBarBackgroundColor': 'blue.600', 'backgroundColor': '#ffffff', 'progressIndicatorBackgroundColor': 'transparent', 'progressIndicatorColor': 'blue.600',  'dialog': false, 'separated': false, 'dialogHeight': 70.0};
     if (data != null && data.isNotEmpty) {
       for (var item in data.entries) {
         if (def.containsKey(item.key)) {
@@ -51,6 +52,7 @@ class DynamicPage extends StatefulWidget {
       appBarBackgroundColor: def['appBarBackgroundColor'],
       dialog: def['dialog'],
       separated: def['separated'],
+      dialogHeight: def['dialogHeight'],
     );
     return ret;
   }
@@ -104,30 +106,33 @@ class DynamicPageState extends State<DynamicPage> {
           ),
           title: Text(appStoreData.getWidgetData("title")),
         ),
-        body: Center(
-          child: LiquidPullToRefresh(
-            color: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("pullToRefreshBackgroundColor")),
-            showChildOpacityTransition: false,
-            springAnimationDurationInMilliseconds: 500,
-            animSpeedFactor: 2,
-            height: 90,
-            onRefresh: () async {
-              AppStore.getStore(context).clearState();
-              widget.refresh(appStoreData);
-            },
-            child: appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicPageUtil.getFutureBuilder(appStoreData, null),
+        body: SafeArea(
+          child: Center(
+            child: LiquidPullToRefresh(
+              color: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("pullToRefreshBackgroundColor")),
+              showChildOpacityTransition: false,
+              springAnimationDurationInMilliseconds: 500,
+              animSpeedFactor: 2,
+              height: 90,
+              onRefresh: () async {
+                AppStore.getStore(context).clearState();
+                widget.refresh(appStoreData);
+              },
+              child: appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicPageUtil.getFutureBuilder(appStoreData, null),
+            ),
           ),
-        ),
+        )
       );
     } else {
       //
+      print("HEIGHT: ${appStoreData.getWidgetData("dialogHeight")}");
       return Dialog(
         backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("backgroundColor")),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         insetPadding: FlutterTypeConstant.parseEdgeInsets("160")!,
         elevation: 0,
         child: SizedBox(
-          height: 70,
+          height: appStoreData.getWidgetData("dialogHeight"),
           child: Center(
             child: appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicPageUtil.getFutureBuilder(appStoreData, null),
           ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:test3/DynamicPage/DynamicPageUtil.dart';
 
 class FlutterTypeConstant {
-
   static dynamic parseFontStyle(String? value) {
     if (value == null || value.trim() == '') {
       return null;
@@ -331,5 +330,132 @@ class FlutterTypeConstant {
     };
     return map.containsKey(value) ? map[value] : null;
   }
+
+  static TextDecoration? parseTextDecoration(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextDecoration> map = {
+      'none': TextDecoration.none,
+      'underline': TextDecoration.underline,
+      'overline': TextDecoration.overline,
+      'lineThrough': TextDecoration.lineThrough,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static TextDirection? parseTextDirection(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextDirection> map = {
+      'ltr': TextDirection.ltr,
+      'rtl': TextDirection.rtl,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static StackFit? parseStackFit(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, StackFit> map = {
+      'expand': StackFit.expand,
+      'loose': StackFit.loose,
+      'passthrough': StackFit.passthrough,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static TextAlign? parseTextAlign(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextAlign> map = {
+      'left': TextAlign.left,
+      'start': TextAlign.start,
+      'center': TextAlign.center,
+      'end': TextAlign.end,
+      'justify': TextAlign.justify,
+      'right': TextAlign.right,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static TextAlignVertical? parseTextAlignVertical(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextAlignVertical> map = {
+      'center': TextAlignVertical.center,
+      'bottom': TextAlignVertical.bottom,
+      'top': TextAlignVertical.top,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static TextOverflow? parseTextOverflow(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextOverflow> map = {
+      'clip': TextOverflow.clip,
+      'ellipsis': TextOverflow.ellipsis,
+      'fade': TextOverflow.fade,
+      'visible': TextOverflow.visible,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static TextWidthBasis? parseTextWidthBasis(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextWidthBasis> map = {
+      'longestLine': TextWidthBasis.longestLine,
+      'parent': TextWidthBasis.parent,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static WrapAlignment? parseWrapAlignment(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, WrapAlignment> map = {
+      'end': WrapAlignment.end,
+      'center': WrapAlignment.center,
+      'start': WrapAlignment.start,
+      'spaceAround': WrapAlignment.spaceAround,
+      'spaceBetween': WrapAlignment.spaceBetween,
+      'spaceEvenly': WrapAlignment.spaceEvenly,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static WrapCrossAlignment? parseWrapCrossAlignment(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, WrapCrossAlignment> map = {
+      'end': WrapCrossAlignment.end,
+      'center': WrapCrossAlignment.center,
+      'start': WrapCrossAlignment.start,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static VerticalDirection? parseVerticalDirection(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, VerticalDirection> map = {
+      'down': VerticalDirection.down,
+      'up': VerticalDirection.up,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+
 
 }
