@@ -8,6 +8,7 @@ import 'package:test3/AppStore/AppStore.dart';
 
 class Util {
   static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, IndexedWidgetBuilder itemBuilder, {bool reverse = false}) {
+    print("SEPARATED: ${separated}");
     if (separated == true) {
       return ListView.separated(
         reverse: reverse,

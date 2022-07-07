@@ -125,7 +125,6 @@ class DynamicPageState extends State<DynamicPage> {
       );
     } else {
       //
-      print("HEIGHT: ${appStoreData.getWidgetData("dialogHeight")}");
       return Dialog(
         backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("backgroundColor")),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

@@ -103,9 +103,11 @@ class DynamicUI {
 
   static List<Widget> defList(parsedJson, String key, AppStoreData appStoreData, int index) {
     List<Widget> list = [];
-    List l2 = def(parsedJson, key, [], appStoreData, index);
-    for (int i = 0; i < l2.length; i++) {
-      list.add(def(l2[i], null, FlutterType.defaultWidget, appStoreData, index));
+    dynamic l2 = def(parsedJson, key, [], appStoreData, index);
+    if(l2 != null && l2.runtimeType.toString().contains("List")){
+      for (int i = 0; i < l2.length; i++) {
+        list.add(def(l2[i], null, FlutterType.defaultWidget, appStoreData, index));
+      }
     }
     return list;
   }

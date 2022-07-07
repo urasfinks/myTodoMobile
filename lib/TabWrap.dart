@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test3/AppStore/AppStore.dart';
+import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 import 'package:test3/DynamicUI/page/AccountPage.dart';
 import 'package:test3/DynamicUI/page/FailPage.dart';
 import 'DynamicPage/DynamicPage.dart';
@@ -18,8 +19,19 @@ class TabWrap extends StatefulWidget {
 
 class _TabWrapState extends State<TabWrap> {
   final List<Widget> _pages = [
-    const AccountPage(title: 'Аккаунт'),
-    const FailPage(title: 'Opa 2'),
+    DynamicPage.fromMap(
+      {
+        "title": 'Аккаунт',
+        "url": 'project/system',
+        "parentState": "",
+        //dataUID: AppStore.personKey,
+        "backgroundColor": "blue.600",
+        "pullToRefreshBackgroundColor": "blue.600",
+        "progressIndicatorBackgroundColor": "#ffffff",
+        "root": true,
+      },
+    ),
+    //const FailPage(title: 'Opa 2'),
     DynamicPage.fromMap(
       {
         "title": 'Аккаунт',
@@ -40,13 +52,16 @@ class _TabWrapState extends State<TabWrap> {
     //AppStore.getStore(context);
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        currentIndex: 2,
-        items: [
-          const BottomNavigationBarItem(
+        backgroundColor: FlutterTypeConstant.parseColor("#fafafa"),
+        activeColor: Colors.blue[600],
+        border: const Border(),
+        currentIndex: 0,
+        items: const [
+          BottomNavigationBarItem(
             label: 'Главная',
             icon: Icon(Icons.home),
           ),
-          BottomNavigationBarItem(
+          /*BottomNavigationBarItem(
             icon: Badge(
               position: BadgePosition.topEnd(top: 0, end: -22),
               shape: BadgeShape.square,
@@ -61,8 +76,8 @@ class _TabWrapState extends State<TabWrap> {
               child: const Icon(Icons.business),
             ),
             label: 'Организация',
-          ),
-          const BottomNavigationBarItem(
+          ),*/
+          BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Аккаунт',
           ),
