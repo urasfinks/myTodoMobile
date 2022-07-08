@@ -240,6 +240,7 @@ class FlutterTypeConstant {
       "reloadPageByUrl": DynamicPageUtil.reloadPageByUrl,
       "openDialog": DynamicPageUtil.openDialog,
       "openGallery": DynamicPageUtil.openGallery,
+      "alert": DynamicPageUtil.alert,
     };
     if (map.containsKey(value)) {
       return map[value];

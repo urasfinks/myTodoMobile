@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:test3/DynamicUI/FlutterType.dart';
 
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
@@ -25,21 +26,23 @@ class DynamicPageUtil {
     dataUpdate(TextEditRowJsonObject.getPage(), appStoreData);
   }
 
-  static Future<void> loadData(DynamicPage widget, AppStoreData appStoreData) async {
-    if (!widget.root) {
+  static Future<void> loadData(AppStoreData appStoreData) async {
+    if (!appStoreData.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
     }
-    print('Load data');
+    print('Load data: ${appStoreData.getWidgetDates()}');
     try {
       Map<String, String> requestHeaders = {'Authorization': AppStore.personKey};
 
-      final response = await http.post(Uri.parse("${AppStore.host}${widget.url}"), headers: requestHeaders, body: widget.parentState);
+      final response = await http.post(Uri.parse("${AppStore.host}${appStoreData.getWidgetData('url')}"),
+          headers: requestHeaders, body: appStoreData.getWidgetData('parentState'));
 
       //print(response.body);
       if (response.statusCode == 200) {
         dataUpdate(jsonDecode(response.body), appStoreData);
       } else {
-        dataUpdate(ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
+        dataUpdate(
+            ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
       }
     } catch (e, stacktrace) {
       print(e);
@@ -48,15 +51,32 @@ class DynamicPageUtil {
     }
   }
 
+  static List<Widget>? getListAppBarActions(AppStoreData appStoreData) {
+    List<Widget> list = [];
+    try {
+      Map<String, dynamic> response = appStoreData.getServerResponse();
+      List<dynamic>? listAppBarActions = response['actions'];
+      if (listAppBarActions != null && listAppBarActions.isNotEmpty) {
+        for (dynamic act in listAppBarActions) {
+          list.add(DynamicUI.mainJson(act, appStoreData, 0, "AppBarActions"));
+        }
+      }
+    } catch (e, stacktrace) {
+      print(e);
+      print(stacktrace);
+    }
+    return list.isNotEmpty ? list : null;
+  }
+
   static Widget getFutureBuilder(AppStoreData appStoreData, dynamic data) {
     if (appStoreData.getServerResponse().isNotEmpty) {
-      Map<String, dynamic> snapshot = appStoreData.getServerResponse();
+      Map<String, dynamic> response = appStoreData.getServerResponse();
       return Util.getListView(
         appStoreData.getWidgetData("separated"),
         const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        snapshot['list'].length,
+        response['list'].length,
         (BuildContext context, int index) {
-          return DynamicUI.mainJson(snapshot['list'][index], appStoreData, index);
+          return DynamicUI.mainJson(response['list'][index], appStoreData, index, 'Data');
         },
       );
     }
@@ -66,11 +86,31 @@ class DynamicPageUtil {
     );
   }
 
+  static void parseTemplate(Map<String, dynamic> data, String key, String ret) {
+    if (data.containsKey(key)) {
+      List<dynamic> list = [];
+      Map<String, dynamic> template = data['Template'];
+      for (dynamic d in data[key]) {
+        String ret;
+        if (template.containsKey(d['template'])) {
+          //print(data['Template'][d['template']]);
+          ret = Util.template(d['data'], data['Template'][d['template']]);
+          //print(ret);
+        } else {
+          ret = jsonEncode({"flutterType": "Text", "data": "Undefined Template: ${d['template']}"});
+        }
+        //print(ret);
+        list.add(jsonDecode(ret));
+      }
+      data[ret] = list;
+    }
+  }
+
   static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData) {
     List<dynamic>? action = data['Actions'];
     if (action != null && action.isNotEmpty) {
       for (Map item in action) {
-        DynamicUI.def(item, "method", null, appStoreData, 0);
+        DynamicUI.def(item, "method", null, appStoreData, 0, "Data");
       }
     }
 
@@ -87,28 +127,15 @@ class DynamicPageUtil {
       appStoreData.apply(); //Maybe setState refresh Data on UI?
     }
 
-    if (data['SyncSocket'] != null && data['SyncSocket'] == true && (appStoreData.getWidgetData("dataUID") as String).isNotEmpty) {
+    if (data['SyncSocket'] != null &&
+        data['SyncSocket'] == true &&
+        (appStoreData.getWidgetData("dataUID") as String).isNotEmpty) {
       appStoreData.setSyncSocket(true);
       WebSocket().subscribe(appStoreData.getWidgetData("dataUID"));
     }
 
-    if (data.containsKey("Data")) {
-      List list = [];
-      Map<String, dynamic> template = data['Template'];
-      for (dynamic d in data['Data']) {
-        String ret;
-        if (template.containsKey(d['template'])) {
-          //print(data['Template'][d['template']]);
-          ret = Util.template(d['data'], data['Template'][d['template']]);
-          //print(ret);
-        } else {
-          ret = jsonEncode({"flutterType": "Text", "data": "Undefined Template: ${d['template']}"});
-        }
-        //print(ret);
-        list.add(jsonDecode(ret));
-      }
-      data['list'] = list;
-    }
+    parseTemplate(data, "Data", "list");
+    parseTemplate(data, "AppBarActions", "actions");
     //print(data);
     appStoreData.setServerResponse(data);
     appStoreData.getPageState()?.setState(() {});
@@ -173,6 +200,15 @@ class DynamicPageUtil {
     return Text("Hoho");
   }
 
+  static dynamic alert(AppStoreData appStoreData, dynamic data) async {
+    print(data);
+    ScaffoldMessenger.of(appStoreData.getCtx()!).showSnackBar(
+      SnackBar(
+        content: Text(data["data"]),
+      ),
+    );
+  }
+
   static dynamic openGallery(AppStoreData appStoreData, dynamic data) async {
     //print("OPEN GALLERY");
     var image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 600);
@@ -184,18 +220,23 @@ class DynamicPageUtil {
           CropAspectRatioPreset.square,
         ],
         uiSettings: [
-          AndroidUiSettings(toolbarTitle: 'Редактировать', toolbarColor: Colors.blue[600], toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.square, lockAspectRatio: true, hideBottomControls: true),
+          AndroidUiSettings(
+              toolbarTitle: 'Редактировать',
+              toolbarColor: Colors.blue[600],
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.square,
+              lockAspectRatio: true,
+              hideBottomControls: true),
           IOSUiSettings(
-            title: 'Редактировать',
-            hidesNavigationBar: true,
-            aspectRatioPickerButtonHidden: true,
-            rotateButtonsHidden: true,
-            rotateClockwiseButtonHidden: true,
-            resetAspectRatioEnabled: false
-          ),
+              title: 'Редактировать',
+              hidesNavigationBar: true,
+              aspectRatioPickerButtonHidden: true,
+              rotateButtonsHidden: true,
+              rotateClockwiseButtonHidden: true,
+              resetAspectRatioEnabled: false),
         ],
       );
-      if(croppedFile != null){
+      if (croppedFile != null) {
         await Util.uploadImage(File(croppedFile.path), "${AppStore.host}${data["url"]}");
         appStoreData.onIndexRevisionError();
       }

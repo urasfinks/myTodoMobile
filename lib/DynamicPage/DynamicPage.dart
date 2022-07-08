@@ -13,7 +13,8 @@ class DynamicPage extends StatefulWidget {
   final String url;
   final String parentState;
   final String dataUID;
-  final String wrapPage; //{"flutterType": "Container", "color": "red.600", "padding": "20,0,10,0", "child": "()=>getFutureBuilder"}
+  final String
+      wrapPage; //{"flutterType": "Container", "color": "red.600", "padding": "20,0,10,0", "child": "()=>getFutureBuilder"}
   final String pullToRefreshBackgroundColor;
   final String appBarBackgroundColor;
   final String backgroundColor;
@@ -23,13 +24,44 @@ class DynamicPage extends StatefulWidget {
   final bool separated;
   final double dialogHeight;
 
-  const DynamicPage({Key? key, required this.title, required this.url, required this.parentState, this.root = false, this.dataUID = "", this.wrapPage = "", this.appBarBackgroundColor = "blue.600", this.pullToRefreshBackgroundColor = "blue.600", this.backgroundColor = "#ffffff", this.progressIndicatorBackgroundColor = "transparent", this.progressIndicatorColor = "blue.600", this.dialog = false, this.separated = false, this.dialogHeight = 70.0}) : super(key: key);
+  const DynamicPage(
+      {Key? key,
+      required this.title,
+      required this.url,
+      required this.parentState,
+      this.root = false,
+      this.dataUID = "",
+      this.wrapPage = "",
+      this.appBarBackgroundColor = "blue.600",
+      this.pullToRefreshBackgroundColor = "blue.600",
+      this.backgroundColor = "#ffffff",
+      this.progressIndicatorBackgroundColor = "transparent",
+      this.progressIndicatorColor = "blue.600",
+      this.dialog = false,
+      this.separated = false,
+      this.dialogHeight = 70.0})
+      : super(key: key);
 
   @override
   State<DynamicPage> createState() => DynamicPageState();
 
   static fromMap(Map<String, dynamic>? data) {
-    Map<String, dynamic> def = {'title': '', 'root': false, 'url': '', 'parentState': '', 'dataUID': "", 'wrapPage': '', 'pullToRefreshBackgroundColor': 'blue.600', 'appBarBackgroundColor': 'blue.600', 'backgroundColor': '#ffffff', 'progressIndicatorBackgroundColor': 'transparent', 'progressIndicatorColor': 'blue.600',  'dialog': false, 'separated': false, 'dialogHeight': 70.0};
+    Map<String, dynamic> def = {
+      'title': '',
+      'root': false,
+      'url': '',
+      'parentState': '',
+      'dataUID': "",
+      'wrapPage': '',
+      'pullToRefreshBackgroundColor': 'blue.600',
+      'appBarBackgroundColor': 'blue.600',
+      'backgroundColor': '#ffffff',
+      'progressIndicatorBackgroundColor': 'transparent',
+      'progressIndicatorColor': 'blue.600',
+      'dialog': false,
+      'separated': false,
+      'dialogHeight': 70.0
+    };
     if (data != null && data.isNotEmpty) {
       for (var item in data.entries) {
         if (def.containsKey(item.key)) {
@@ -60,7 +92,7 @@ class DynamicPage extends StatefulWidget {
   void refresh(AppStoreData appStoreData) {
     //print("Load data: ${appStoreData.getWidgetDates()}");
     //DynamicPageUtil.loadDataTest(this);
-    DynamicPageUtil.loadData(this, appStoreData);
+    DynamicPageUtil.loadData(appStoreData);
   }
 }
 
@@ -90,50 +122,70 @@ class DynamicPageState extends State<DynamicPage> {
     appStoreData.setPageState(this);
 
     dynamic wrapPage = const Text("Undefined WrapPage in Templates");
-    if (appStoreData.getServerResponse().containsKey("Template") && appStoreData.getWidgetData("wrapPage").isNotEmpty && (appStoreData.getServerResponse()["Template"] as Map).containsKey(appStoreData.getWidgetData("wrapPage"))) {
-      wrapPage = DynamicUI.main((appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")], appStoreData, 0);
+    if (appStoreData.getServerResponse().containsKey("Template") &&
+        appStoreData.getWidgetData("wrapPage").isNotEmpty &&
+        (appStoreData.getServerResponse()["Template"] as Map).containsKey(appStoreData.getWidgetData("wrapPage"))
+    ) {
+      wrapPage = DynamicUI.main(
+          (appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")],
+          appStoreData,
+          0, null);
     }
-    //print("DEIALOG: ${appStoreData.getWidgetData("dialog")}");
     if (appStoreData.getWidgetData("dialog") == false) {
       return Scaffold(
-        backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("backgroundColor")), //s?.getWidgetData("")
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("appBarBackgroundColor")),
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent, // Status bar
-            statusBarBrightness: Brightness.dark
+          backgroundColor: FlutterTypeConstant.parseColor(
+            appStoreData.getWidgetData("backgroundColor"),
           ),
-          title: Text(appStoreData.getWidgetData("title")),
-        ),
-        body: SafeArea(
-          child: Center(
-            child: LiquidPullToRefresh(
-              color: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("pullToRefreshBackgroundColor")),
-              showChildOpacityTransition: false,
-              springAnimationDurationInMilliseconds: 500,
-              animSpeedFactor: 2,
-              height: 90,
-              onRefresh: () async {
-                AppStore.getStore(context).clearState();
-                widget.refresh(appStoreData);
-              },
-              child: appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicPageUtil.getFutureBuilder(appStoreData, null),
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: FlutterTypeConstant.parseColor(
+              appStoreData.getWidgetData("appBarBackgroundColor"),
             ),
+            systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent, // Status bar
+                statusBarBrightness: Brightness.dark),
+            title: Text(
+              appStoreData.getWidgetData("title"),
+            ),
+            actions: DynamicPageUtil.getListAppBarActions(appStoreData),
           ),
-        )
-      );
+          body: SafeArea(
+            child: Center(
+              child: LiquidPullToRefresh(
+                color: FlutterTypeConstant.parseColor(
+                  appStoreData.getWidgetData("pullToRefreshBackgroundColor"),
+                ),
+                showChildOpacityTransition: false,
+                springAnimationDurationInMilliseconds: 500,
+                animSpeedFactor: 2,
+                height: 90,
+                onRefresh: () async {
+                  AppStore.getStore(context).clearState();
+                  widget.refresh(appStoreData);
+                },
+                child: appStoreData.getWidgetData("wrapPage").isNotEmpty
+                    ? wrapPage
+                    : DynamicPageUtil.getFutureBuilder(appStoreData, null),
+              ),
+            ),
+          ));
     } else {
       //
       return Dialog(
-        backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("backgroundColor")),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: FlutterTypeConstant.parseColor(
+          appStoreData.getWidgetData("backgroundColor"),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
         insetPadding: FlutterTypeConstant.parseEdgeInsets("160")!,
         elevation: 0,
         child: SizedBox(
           height: appStoreData.getWidgetData("dialogHeight"),
           child: Center(
-            child: appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicPageUtil.getFutureBuilder(appStoreData, null),
+            child: appStoreData.getWidgetData("wrapPage").isNotEmpty
+                ? wrapPage
+                : DynamicPageUtil.getFutureBuilder(appStoreData, null),
           ),
         ),
       );
