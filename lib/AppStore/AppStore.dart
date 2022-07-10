@@ -5,7 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:uuid/uuid.dart';
 
 class AppStore {
-  static String host = "http://jamsys.ru:8081/";
+  static String host = "http://jamsys.ru:8081";
   static String personKey = const Uuid().v4();
   static final AppStore _singleton = AppStore._internal();
   static int selectedTabIndex = 0;

@@ -1,6 +1,9 @@
 class ErrorPageJsonObject{
   static dynamic getPage(String status, String errorSide, String error){
     return {
+      "WidgetData": {
+        "backgroundColor": "#fafafa"
+      },
       "list": [
         {
           "flutterType": "Container",

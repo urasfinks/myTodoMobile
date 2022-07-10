@@ -26,8 +26,7 @@ class TabScope{ // singleton class
       DynamicPage.fromMap(
         {
           "title": 'Аккаунт',
-          "url": 'project/system',
-          "parentState": "",
+          "url": '/project/system',
           "backgroundColor": "blue.600",
           "pullToRefreshBackgroundColor": "blue.600",
           "progressIndicatorBackgroundColor": "#ffffff",
@@ -39,8 +38,7 @@ class TabScope{ // singleton class
       DynamicPage.fromMap(
         {
           "title": 'Аккаунт',
-          "url": 'project/system/account',
-          "parentState": "",
+          "url": '/project/system/account',
           "backgroundColor": "blue.600",
           "pullToRefreshBackgroundColor": "blue.600",
           "progressIndicatorBackgroundColor": "#ffffff",

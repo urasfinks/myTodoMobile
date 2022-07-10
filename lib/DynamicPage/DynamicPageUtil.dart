@@ -14,7 +14,7 @@ import '../DynamicUI/page/TextEditRowJsonObject.dart';
 import '../DynamicUI/page/ErrorPageJsonObject.dart';
 import '../WebSocket.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'dart:convert' show utf8, base64, jsonEncode, jsonDecode;
 import 'dart:async';
 import 'dart:io';
 
@@ -32,7 +32,8 @@ class DynamicPageUtil {
     }
     print('Load data: ${appStoreData.getWidgetDates()}');
     try {
-      Map<String, String> requestHeaders = {'Authorization': AppStore.personKey};
+      String encoded = base64.encode(utf8.encode("PersonKey:${AppStore.personKey}"));
+      Map<String, String> requestHeaders = {'Authorization': "Basic $encoded"};
 
       final response = await http.post(Uri.parse("${AppStore.host}${appStoreData.getWidgetData('url')}"),
           headers: requestHeaders, body: appStoreData.getWidgetData('parentState'));

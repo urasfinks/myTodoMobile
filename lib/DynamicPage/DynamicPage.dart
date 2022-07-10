@@ -70,6 +70,9 @@ class DynamicPage extends StatefulWidget {
         }
       }
     }
+    /*if(def['parentState'] != null && def['parentState'].runtimeType.toString().contains("HashMap")){
+      def['parentState']
+    }*/
 
     DynamicPage ret = DynamicPage(
       title: def['title'],
