@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:test3/DynamicUI/FlutterType.dart';
 
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
+import '../TabWrap.dart';
 import '../Util.dart';
 import 'DynamicPage.dart';
 import '../DynamicUI/DynamicUI.dart';
@@ -145,10 +145,12 @@ class DynamicPageUtil {
     //print("DATA: ${data}");
     if (data != null && data["delay"] != null) {
       Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {
-        Navigator.pop(appStoreData.getCtx()!);
+        //Navigator.pop(appStoreData.getCtx()!);
+        TabScope.getInstance().popHistory(data);
       });
     } else {
-      Navigator.pop(appStoreData.getCtx()!);
+      //Navigator.pop(appStoreData.getCtx()!);
+      TabScope.getInstance().popHistory(data);
     }
   }
 
@@ -172,10 +174,15 @@ class DynamicPageUtil {
     if (st.isNotEmpty) {
       data["parentState"] = st;
     }
-    //print("openWindow: ${data}");
+    print("openWindow: ${data}");
     Navigator.push(
       appStoreData.getCtx()!,
+      /*MaterialPageRoute(
+          settings: RouteSettings(name: data["url"]),
+          builder: (context) => DynamicPage.fromMap(data),
+        )*/
       CupertinoPageRoute(
+        settings: RouteSettings(name: data["url"]),
         builder: (context) => DynamicPage.fromMap(data),
       ),
     );

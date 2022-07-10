@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicPage/DynamicPageUtil.dart';
+import 'package:test3/TabWrap.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
@@ -97,11 +98,15 @@ class DynamicPage extends StatefulWidget {
 }
 
 class DynamicPageState extends State<DynamicPage> {
+
+  AppStoreData? saveStore;
+
   @override
   void dispose() {
-    //print("Dispose");
-    if (widget.dataUID.isNotEmpty) {
-      AppStore().removeByDataUID(widget.dataUID);
+    print("Dispose");
+    if(saveStore != null){
+      TabScope.getInstance().onDestroyPage(saveStore!);
+      AppStore().remove(saveStore!);
     }
     super.dispose();
   }
@@ -109,6 +114,8 @@ class DynamicPageState extends State<DynamicPage> {
   @override
   Widget build(BuildContext context) {
     AppStoreData appStoreData = AppStore.getStore(context);
+    saveStore = appStoreData;
+    TabScope.getInstance().addHistory(saveStore!);
     appStoreData.setOnIndexRevisionError(() {
       widget.refresh(appStoreData);
     });

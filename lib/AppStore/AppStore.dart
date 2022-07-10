@@ -8,6 +8,7 @@ class AppStore {
   static String host = "http://jamsys.ru:8081/";
   static String personKey = const Uuid().v4();
   static final AppStore _singleton = AppStore._internal();
+  static int selectedTabIndex = 0;
 
   factory AppStore() {
     return _singleton;
@@ -62,6 +63,19 @@ class AppStore {
       }
     }
     return ret;
+  }
+
+  void remove(AppStoreData appStoreData) {
+    BuildContext? ctx;
+    for (var item in _map.entries) {
+      if(item.value == appStoreData){
+        ctx = item.key;
+        break;
+      }
+    }
+    if(ctx != null){
+      _map.remove(ctx);
+    }
   }
 
   void removeByDataUID(String dataUID) {

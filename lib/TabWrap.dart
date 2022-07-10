@@ -5,6 +5,8 @@ import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 import 'package:test3/DynamicUI/page/AccountPage.dart';
 import 'package:test3/DynamicUI/page/FailPage.dart';
+import 'package:test3/TabPageHistory.dart';
+import 'AppStore/AppStoreData.dart';
 import 'DynamicPage/DynamicPage.dart';
 //import 'WebSocket.dart';
 
@@ -17,34 +19,85 @@ class TabWrap extends StatefulWidget {
   State<TabWrap> createState() => _TabWrapState();
 }
 
-class _TabWrapState extends State<TabWrap> {
-  final List<Widget> _pages = [
-    DynamicPage.fromMap(
-      {
-        "title": 'Аккаунт',
-        "url": 'project/system',
-        "parentState": "",
-        //dataUID: AppStore.personKey,
-        "backgroundColor": "blue.600",
-        "pullToRefreshBackgroundColor": "blue.600",
-        "progressIndicatorBackgroundColor": "#ffffff",
-        "root": true,
-      },
+class TabScope{ // singleton class
+  static TabScope? _tabScope;
+  final List<TabPageHistory> pages = [
+    TabPageHistory(
+      DynamicPage.fromMap(
+        {
+          "title": 'Аккаунт',
+          "url": 'project/system',
+          "parentState": "",
+          "backgroundColor": "blue.600",
+          "pullToRefreshBackgroundColor": "blue.600",
+          "progressIndicatorBackgroundColor": "#ffffff",
+          "root": true,
+        },
+      ),
     ),
-    //const FailPage(title: 'Opa 2'),
-    DynamicPage.fromMap(
-      {
-        "title": 'Аккаунт',
-        "url": 'project/system/account',
-        "parentState": "",
-        //dataUID: AppStore.personKey,
-        "backgroundColor": "blue.600",
-        "pullToRefreshBackgroundColor": "blue.600",
-        "progressIndicatorBackgroundColor": "#ffffff",
-        "root": true,
-      },
+    TabPageHistory(
+      DynamicPage.fromMap(
+        {
+          "title": 'Аккаунт',
+          "url": 'project/system/account',
+          "parentState": "",
+          "backgroundColor": "blue.600",
+          "pullToRefreshBackgroundColor": "blue.600",
+          "progressIndicatorBackgroundColor": "#ffffff",
+          "root": true,
+        },
+      ),
     ),
   ];
+  int tabIndex = 0;
+
+  void addHistory(AppStoreData appStoreData){
+    pages[tabIndex].history.add(appStoreData);
+  }
+
+  void onDestroyPage(AppStoreData appStoreData){
+    List<AppStoreData> list = pages[tabIndex].history;
+    if(list[list.length - 1] == appStoreData){
+      pages[tabIndex].history.removeLast();
+    }
+  }
+
+  void popHistory(dynamic data){
+    if(pages[tabIndex].history.length > 1){
+      if(data != null && data["url"] != null){
+        while(pages[tabIndex].history.length > 1){
+          if(pages[tabIndex].history.last.getWidgetData("url") == data["url"]){
+            break;
+          }
+          AppStoreData last = pages[tabIndex].history.removeLast();
+          Navigator.pop(last.getCtx()!);
+        }
+      }else if(data != null && data["count"] != null){
+          for(int i=0;i<data["count"];i++){
+            AppStoreData last = pages[tabIndex].history.removeLast();
+            Navigator.pop(last.getCtx()!);
+          }
+      }else{
+        AppStoreData last = pages[tabIndex].history.removeLast();
+        Navigator.pop(last.getCtx()!);
+      }
+    }
+  }
+
+  static TabScope getInstance(){
+    _tabScope ??= TabScope();
+    return _tabScope!;
+  }
+  void setTabIndex(int index){
+    print("SELECTED TAB: ${index}");
+    tabIndex = index;
+  }
+}
+
+class _TabWrapState extends State<TabWrap> {
+
+
+  final TabScope _tabScope = TabScope.getInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +105,36 @@ class _TabWrapState extends State<TabWrap> {
     //AppStore.getStore(context);
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+        onTap: (index) => _tabScope.setTabIndex(index),
         backgroundColor: FlutterTypeConstant.parseColor("#fafafa"),
         activeColor: Colors.blue[600],
         border: const Border(),
-        currentIndex: 0,
+        currentIndex: _tabScope.tabIndex,
         items: const [
           BottomNavigationBarItem(
             label: 'Главная',
             icon: Icon(Icons.home),
           ),
-          /*BottomNavigationBarItem(
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Аккаунт',
+
+          ),
+        ],
+      ),
+      tabBuilder: (context, index) {
+        AppStore.selectedTabIndex = index;
+        return CupertinoTabView(
+          builder: (context) {
+            return _tabScope.pages[index].page;
+          },
+        );
+      },
+    );
+  }
+}
+
+/*BottomNavigationBarItem(
             icon: Badge(
               position: BadgePosition.topEnd(top: 0, end: -22),
               shape: BadgeShape.square,
@@ -77,19 +150,3 @@ class _TabWrapState extends State<TabWrap> {
             ),
             label: 'Организация',
           ),*/
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Аккаунт',
-          ),
-        ],
-      ),
-      tabBuilder: (context, index) {
-        return CupertinoTabView(
-          builder: (context) {
-            return _pages[index];
-          },
-        );
-      },
-    );
-  }
-}
