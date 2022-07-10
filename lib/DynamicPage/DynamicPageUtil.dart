@@ -58,8 +58,9 @@ class DynamicPageUtil {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       List<dynamic>? listAppBarActions = response['actions'];
       if (listAppBarActions != null && listAppBarActions.isNotEmpty) {
+        int idx = 0;
         for (dynamic act in listAppBarActions) {
-          list.add(DynamicUI.mainJson(act, appStoreData, 0, "AppBarActions"));
+          list.add(DynamicUI.mainJson(act, appStoreData, idx++, "AppBarActions"));
         }
       }
     } catch (e, stacktrace) {
@@ -157,9 +158,10 @@ class DynamicPageUtil {
 
   static dynamic reloadPageByUrl(AppStoreData appStoreData, dynamic data) {
     try {
-      List<dynamic> urls = data;
-      for (dynamic url in urls) {
-        List<AppStoreData> list = AppStore().getByKey("url", url.toString());
+      //JavaScript - Java converter return List as Map object with key indexes view [1,2,3] => {0:1, 1:2, 2:3} WTF
+      Map urls = data;
+      for (var item in urls.entries) {
+        List<AppStoreData> list = AppStore().getByKey("url", item.value.toString());
         for (AppStoreData store in list) {
           store.onIndexRevisionError();
         }
