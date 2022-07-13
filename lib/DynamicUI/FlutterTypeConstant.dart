@@ -241,6 +241,7 @@ class FlutterTypeConstant {
       "openDialog": DynamicPageUtil.openDialog,
       "openGallery": DynamicPageUtil.openGallery,
       "alert": DynamicPageUtil.alert,
+      "getAppStore": DynamicPageUtil.getAppStore,
     };
     if (map.containsKey(value)) {
       return map[value];
@@ -453,6 +454,19 @@ class FlutterTypeConstant {
     Map<String, VerticalDirection> map = {
       'down': VerticalDirection.down,
       'up': VerticalDirection.up,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
+  static TextCapitalization? parseTextCapitalization(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, TextCapitalization> map = {
+      'none': TextCapitalization.none,
+      'characters': TextCapitalization.characters,
+      'sentences': TextCapitalization.sentences,
+      'words': TextCapitalization.words,
     };
     return map.containsKey(value) ? map[value] : null;
   }

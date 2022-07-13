@@ -206,17 +206,23 @@ class DynamicPageUtil {
   }
 
   static dynamic test(AppStoreData appStoreData, dynamic data) {
-    print("YHOOO");
-    return Text("Hoho");
+    print("test: ${data}");
+    return const Text("Hoho");
   }
 
-  static dynamic alert(AppStoreData appStoreData, dynamic data) async {
-    print(data);
+  static dynamic alert(AppStoreData appStoreData, dynamic data) {
+    print("alert: ${data}");
     ScaffoldMessenger.of(appStoreData.getCtx()!).showSnackBar(
       SnackBar(
         content: Text(data["data"]),
       ),
     );
+  }
+
+  static dynamic getAppStore(AppStoreData appStoreData, dynamic data) {
+    //print("getAppStore: ${data}");
+    //print("return getAppStore: ${appStoreData.get(data["key"], data["defaultValue"])}");
+    return appStoreData.get(data["key"], data["defaultValue"]);
   }
 
   static dynamic openGallery(AppStoreData appStoreData, dynamic data) async {

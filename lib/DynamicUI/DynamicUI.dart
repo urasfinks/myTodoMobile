@@ -67,6 +67,8 @@ class DynamicUI {
       "Divider": FlutterType.pDivider,
       "RotatedBox": FlutterType.pRotatedBox,
       "IconButton": FlutterType.pIconButton,
+      "Checkbox": FlutterType.pCheckbox,
+      "AppStore": FlutterType.pAppStore,
     };
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData]) : def;
   }
@@ -90,12 +92,15 @@ class DynamicUI {
       List<dynamic> args = [];
       args.add(appStoreData);
       List<String> exp2 = exp[0].split("(");
-      if(exp2.length > 1 && map.containsKey(exp2[1])){
-        args.add(map[exp2[1]]);
+      //print("originKeyData: $originKeyData");
+      Map<String, dynamic> originData = originKeyData == null ? map : appStoreData.getServerResponse()[originKeyData][index]["data"];
+      if(exp2.length > 1 && originData.containsKey(exp2[1])){
+        args.add(originData[exp2[1]]);
       }
       if (args.length == 1) {
         args.add(null);
       }
+      //print("=> ${FlutterTypeConstant.parseUtilFunction(exp[1])} = ${Function.apply(FlutterTypeConstant.parseUtilFunction(exp[1]), args)}");
       return Function.apply(FlutterTypeConstant.parseUtilFunction(exp[1]), args);
     }
     return ret;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:test3/AppStore/AppStoreData.dart';
+import '../AppStore/AppStore.dart';
 import 'DynamicUI.dart';
 import 'FlutterTypeConstant.dart';
 import 'icon.dart';
@@ -343,7 +344,8 @@ class FlutterType {
       cursorColor: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'cursorColor', null, appStoreData, index, originKeyData),
       ),
-      enableInteractiveSelection: DynamicUI.def(parsedJson, 'enableInteractiveSelection', true, appStoreData, index, originKeyData),
+      enableInteractiveSelection:
+          DynamicUI.def(parsedJson, 'enableInteractiveSelection', true, appStoreData, index, originKeyData),
       textWidthBasis: FlutterTypeConstant.parseTextWidthBasis(
         DynamicUI.def(parsedJson, 'textWidthBasis', null, appStoreData, index, originKeyData),
       ),
@@ -356,11 +358,14 @@ class FlutterType {
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = type == "datetime" ? true : false;
-    TextEditingController? textController =
-        appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
+    TextEditingController? textController = appStoreData.getTextController(
+        DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
     appStoreData.set(key, textController?.text);
 
     return TextField(
+      textCapitalization: FlutterTypeConstant.parseTextCapitalization(
+        DynamicUI.def(parsedJson, 'textCapitalization', 'sentences', appStoreData, index, originKeyData),
+      )!,
       minLines: FlutterTypeConstant.parseInt(
         DynamicUI.def(parsedJson, 'minLines', 1, appStoreData, index, originKeyData),
       ),
@@ -431,16 +436,15 @@ class FlutterType {
     return UnderlineInputBorder(
       borderSide: DynamicUI.def(parsedJson, 'borderSide', const BorderSide(), appStoreData, index, originKeyData),
       borderRadius: DynamicUI.def(
-        parsedJson,
-        'borderRadius',
-        const BorderRadius.only(
-          topLeft: Radius.circular(4.0),
-          topRight: Radius.circular(4.0),
-        ),
-        appStoreData,
-        index,
-        originKeyData
-      ),
+          parsedJson,
+          'borderRadius',
+          const BorderRadius.only(
+            topLeft: Radius.circular(4.0),
+            topRight: Radius.circular(4.0),
+          ),
+          appStoreData,
+          index,
+          originKeyData),
     );
   }
 
@@ -542,7 +546,8 @@ class FlutterType {
       physics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
       pageSnapping: DynamicUI.def(parsedJson, 'pageSnapping', true, appStoreData, index, originKeyData)!,
       padEnds: DynamicUI.def(parsedJson, 'padEnds', true, appStoreData, index, originKeyData)!,
-      allowImplicitScrolling: DynamicUI.def(parsedJson, 'allowImplicitScrolling', false, appStoreData, index, originKeyData)!,
+      allowImplicitScrolling:
+          DynamicUI.def(parsedJson, 'allowImplicitScrolling', false, appStoreData, index, originKeyData)!,
       clipBehavior: FlutterTypeConstant.parseClip(
         DynamicUI.def(parsedJson, 'clipBehavior', 'none', appStoreData, index, originKeyData),
       )!,
@@ -648,7 +653,8 @@ class FlutterType {
       opacity: FlutterTypeConstant.parseDouble(
         DynamicUI.def(parsedJson, 'opacity', 1.0, appStoreData, index, originKeyData),
       )!,
-      alwaysIncludeSemantics: DynamicUI.def(parsedJson, 'alwaysIncludeSemantics', false, appStoreData, index, originKeyData),
+      alwaysIncludeSemantics:
+          DynamicUI.def(parsedJson, 'alwaysIncludeSemantics', false, appStoreData, index, originKeyData),
       child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
     );
   }
@@ -799,5 +805,41 @@ class FlutterType {
         dynamicFunction(parsedJson, appStoreData, 'onPressed', index, originKeyData);
       },
     );
+  }
+
+  static dynamic pCheckbox(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    print("BUILD pCheckbox");
+    var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
+    //appStoreData.set(key, defValue);
+    return Checkbox(
+      value: DynamicUI.def(parsedJson, 'value', false, appStoreData, index, originKeyData),
+      tristate: DynamicUI.def(parsedJson, 'tristate', false, appStoreData, index, originKeyData),
+      activeColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'activeColor', null, appStoreData, index, originKeyData),
+      ),
+      focusColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'focusColor', null, appStoreData, index, originKeyData),
+      ),
+      hoverColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'hoverColor', null, appStoreData, index, originKeyData),
+      ),
+      checkColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'checkColor', null, appStoreData, index, originKeyData),
+      ),
+      autofocus: DynamicUI.def(parsedJson, 'autofocus', false, appStoreData, index, originKeyData),
+      splashRadius: DynamicUI.def(parsedJson, 'splashRadius', null, appStoreData, index, originKeyData),
+      onChanged: (bool? value) {
+        /*print("onChanged: ${defValue}");
+        defValue = !defValue;*/
+        appStoreData.set(key, value);
+        appStoreData.apply();
+      },
+    );
+  }
+
+  static dynamic pAppStore(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return AppStore.connect(appStoreData, (def) {
+      return DynamicUI.def(parsedJson, 'child', defaultWidget, appStoreData, index, originKeyData);
+    }, defaultValue: 1);
   }
 }
