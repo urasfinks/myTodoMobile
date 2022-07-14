@@ -6,7 +6,7 @@ import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 import 'FlutterType.dart';
 
 class DynamicUI {
-  static Widget main(String jsonData, AppStoreData appStoreData, int index, String? originKeyData) {
+  static Widget main(String jsonData, AppStoreData appStoreData, int index, String originKeyData) {
     if (jsonData.isEmpty) {
       return FlutterType.defaultWidget;
     }
@@ -14,7 +14,7 @@ class DynamicUI {
     return def(parsedJson, null, FlutterType.defaultWidget, appStoreData, index, originKeyData);
   }
 
-  static dynamic mainJson(Map<String, dynamic> jsonData, AppStoreData appStoreData, int index, String? originKeyData) {
+  static dynamic mainJson(Map<String, dynamic> jsonData, AppStoreData appStoreData, int index, String originKeyData) {
     if (jsonData.isEmpty) {
       return FlutterType.defaultWidget;
     }
@@ -70,10 +70,11 @@ class DynamicUI {
       "Checkbox": FlutterType.pCheckbox,
       "AppStore": FlutterType.pAppStore,
     };
+    //print("${[map, appStoreData, index, originKeyData]}");
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData]) : def;
   }
 
-  static dynamic def(map, key, def, AppStoreData appStoreData, int index, String? originKeyData) {
+  static dynamic def(map, key, def, AppStoreData appStoreData, int index, String originKeyData) {
     dynamic ret;
     if (key != null) {
       ret = map.containsKey(key) ? map[key] : def;
@@ -83,18 +84,21 @@ class DynamicUI {
     if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
       return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData, index, originKeyData);
     }
-    if (ret.runtimeType.toString() == "String" && ret.toString().contains("):")) { //Return reference function
+    if (ret.runtimeType.toString() == "String" && ret.toString().contains("):")) {
+      //Return reference function
       List<String> exp = ret.toString().split("):");
       return FlutterTypeConstant.parseUtilFunction(exp[1]); //Input arguments needs context
     }
-    if (ret.runtimeType.toString() == "String" && ret.toString().contains(")=>")) { //Return execute function
+    if (ret.runtimeType.toString() == "String" && ret.toString().contains(")=>")) {
+      //Return execute function
       List<String> exp = ret.toString().split(")=>");
       List<dynamic> args = [];
       args.add(appStoreData);
       List<String> exp2 = exp[0].split("(");
       //print("originKeyData: $originKeyData");
-      Map<String, dynamic> originData = originKeyData == null ? map : appStoreData.getServerResponse()[originKeyData][index]["data"];
-      if(exp2.length > 1 && originData.containsKey(exp2[1])){
+      Map<String, dynamic> originData = getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+
+      if (exp2.length > 1 && originData.containsKey(exp2[1])) {
         args.add(originData[exp2[1]]);
       }
       if (args.length == 1) {
@@ -106,10 +110,30 @@ class DynamicUI {
     return ret;
   }
 
+  static dynamic getChainObject(dynamic obj, List<Object> chain, dynamic def) {
+    //print("getChainObject: o: ${obj};");
+    //print("getChainObject: chain: ${chain};");
+    //print("getChainObject: def: ${def}");
+    if (obj == null || obj == '') {
+      return def;
+    }
+    for (Object item in chain) {
+      //print(">> ${item} type: ${obj.runtimeType.toString()}");
+      if (obj != null && obj[item] != null) {
+        obj = obj[item];
+      } else {
+        //print("getChainObject: return def: ${obj}");
+        return def;
+      }
+    }
+    //print("getChainObject: return: ${obj}");
+    return obj;
+  }
+
   static List<Widget> defList(parsedJson, String key, AppStoreData appStoreData, int index, String originKeyData) {
     List<Widget> list = [];
     dynamic l2 = def(parsedJson, key, [], appStoreData, index, originKeyData);
-    if(l2 != null && l2.runtimeType.toString().contains("List")){
+    if (l2 != null && l2.runtimeType.toString().contains("List")) {
       for (int i = 0; i < l2.length; i++) {
         list.add(def(l2[i], null, FlutterType.defaultWidget, appStoreData, index, originKeyData));
       }

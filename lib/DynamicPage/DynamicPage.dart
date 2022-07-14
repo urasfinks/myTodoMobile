@@ -116,6 +116,7 @@ class DynamicPageState extends State<DynamicPage> {
 
   @override
   Widget build(BuildContext context) {
+    //print("Build page");
     AppStoreData appStoreData = AppStore.getStore(context);
     saveStore = appStoreData;
     TabScope.getInstance().addHistory(saveStore!);
@@ -139,7 +140,7 @@ class DynamicPageState extends State<DynamicPage> {
       wrapPage = DynamicUI.main(
           (appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")],
           appStoreData,
-          0, null);
+          0, '');
     }
     if (appStoreData.getWidgetData("dialog") == false) {
       return Scaffold(

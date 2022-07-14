@@ -17,18 +17,21 @@ class AppStore {
   AppStore._internal();
 
   static Store<AppStore> store = Store(
-    (AppStore state, dynamic action) => state,
-    initialState: AppStore(),
+    (AppStore state, dynamic action) {return state;},
+    initialState: AppStore()
   );
 
   static AppStoreData getStore(BuildContext context, {bool syncSocket = false}) {
+    print("getStore");
     return StoreProvider.of<AppStore>(context).state.get(context, {syncSocket: syncSocket});
   }
 
   static dynamic connect(AppStoreData appStoreData, Widget Function(dynamic defaultValue) builder, {defaultValue = ""}) {
-      return StoreConnector<AppStore, AppStoreData>(
+    print("connect");
+    return StoreConnector<AppStore, AppStoreData>(
         converter: (store) => appStoreData,
         builder: (context, state) {
+          print("Build StoreConnector: ${state}");
           return Function.apply(builder, [defaultValue]);
         },
       );

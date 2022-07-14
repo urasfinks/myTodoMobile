@@ -808,7 +808,7 @@ class FlutterType {
   }
 
   static dynamic pCheckbox(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    print("BUILD pCheckbox");
+    //print("BUILD pCheckbox");
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     //appStoreData.set(key, defValue);
     return Checkbox(
