@@ -201,7 +201,7 @@ class AppStoreData {
   }
 
   void apply() {
-    print("apply");
+    //print("apply");
     store.dispatch(null);
   }
 

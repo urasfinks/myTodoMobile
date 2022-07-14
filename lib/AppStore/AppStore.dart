@@ -22,16 +22,15 @@ class AppStore {
   );
 
   static AppStoreData getStore(BuildContext context, {bool syncSocket = false}) {
-    print("getStore");
     return StoreProvider.of<AppStore>(context).state.get(context, {syncSocket: syncSocket});
   }
 
   static dynamic connect(AppStoreData appStoreData, Widget Function(dynamic defaultValue) builder, {defaultValue = ""}) {
-    print("connect");
+    //print("connect");
     return StoreConnector<AppStore, AppStoreData>(
         converter: (store) => appStoreData,
         builder: (context, state) {
-          print("Build StoreConnector: ${state}");
+          //print("Build StoreConnector: ${state}");
           return Function.apply(builder, [defaultValue]);
         },
       );
@@ -55,7 +54,9 @@ class AppStore {
     List<AppStoreData> ret = [];
     if(value.isNotEmpty){
       for (var item in _map.entries) {
-        if (value.isNotEmpty && item.value.getWidgetData(key) == value) {
+        //If url condition check only before symbol "?"
+        String v = key == "url" ? item.value.getWidgetData(key).toString().split("?")[0] : item.value.getWidgetData(key);
+        if (value.isNotEmpty && v == value) {
           ret.add(item.value);
         }
       }

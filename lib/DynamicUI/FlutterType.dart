@@ -829,8 +829,7 @@ class FlutterType {
       autofocus: DynamicUI.def(parsedJson, 'autofocus', false, appStoreData, index, originKeyData),
       splashRadius: DynamicUI.def(parsedJson, 'splashRadius', null, appStoreData, index, originKeyData),
       onChanged: (bool? value) {
-        /*print("onChanged: ${defValue}");
-        defValue = !defValue;*/
+        //print("onChanged: ${value}");
         appStoreData.set(key, value);
         appStoreData.apply();
       },

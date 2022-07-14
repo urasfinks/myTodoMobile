@@ -30,7 +30,7 @@ class DynamicPageUtil {
     if (!appStoreData.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
     }
-    print('Load data: ${appStoreData.getWidgetDates()}');
+    print('Prepare download: ${appStoreData.getWidgetDates()}');
     try {
       String encoded = base64.encode(utf8.encode("PersonKey:${AppStore.personKey}"));
       Map<String, String> requestHeaders = {'Authorization': "Basic $encoded"};
@@ -128,7 +128,6 @@ class DynamicPageUtil {
       }
       appStoreData.apply(); //Maybe setState refresh Data on UI?
     }
-
     if (data['SyncSocket'] != null &&
         data['SyncSocket'] == true &&
         (appStoreData.getWidgetData("dataUID") as String).isNotEmpty) {
