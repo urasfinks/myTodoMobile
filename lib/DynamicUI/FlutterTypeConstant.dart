@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:test3/DynamicPage/DynamicPageUtil.dart';
 
+import '../DynamicPage/DynamicFn.dart';
+
 class FlutterTypeConstant {
   static dynamic parseFontStyle(String? value) {
     if (value == null || value.trim() == '') {
@@ -231,24 +233,6 @@ class FlutterTypeConstant {
     }
   }
 
-  static dynamic parseUtilFunction(String value) {
-    Map<String, Function> map = {
-      "getFutureBuilder": DynamicPageUtil.getFutureBuilder,
-      "test": DynamicPageUtil.test,
-      "openWindow": DynamicPageUtil.openWindow,
-      "closeWindow": DynamicPageUtil.closeWindow,
-      "reloadPageByUrl": DynamicPageUtil.reloadPageByUrl,
-      "openDialog": DynamicPageUtil.openDialog,
-      "openGallery": DynamicPageUtil.openGallery,
-      "alert": DynamicPageUtil.alert,
-      "getAppStore": DynamicPageUtil.getAppStore,
-    };
-    if (map.containsKey(value)) {
-      return map[value];
-    }
-    return null;
-  }
-
   static TextInputType? parseTextInputType(String? value) {
     if (value == null || value.trim() == '') {
       return null;
@@ -470,7 +454,4 @@ class FlutterTypeConstant {
     };
     return map.containsKey(value) ? map[value] : null;
   }
-
-
-
 }

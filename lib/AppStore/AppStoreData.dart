@@ -1,14 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:test3/DynamicPage/DynamicPage.dart';
-
 import '../WebSocket.dart';
-
 import 'package:redux/redux.dart';
 
 class AppStoreData {
-
   bool syncSocket;
   final Store store;
   final Map<String, dynamic> _map = {};
@@ -16,7 +12,7 @@ class AppStoreData {
 
   AppStoreData(this.store, {this.syncSocket = false});
 
-  void setIndexRevisionWithoutReload(int index){
+  void setIndexRevisionWithoutReload(int index) {
     _indexRevision = index;
   }
 
@@ -26,22 +22,23 @@ class AppStoreData {
 
   Map<String, dynamic> widgetData = {};
 
-  String getStringStoreState(){
-    if(_map.isNotEmpty){
+  String getStringStoreState() {
+    if (_map.isNotEmpty) {
       return jsonEncode(_map);
     }
     return "";
   }
 
-  void addWidgetDataByMap(Map<String, dynamic> obj){
+  void addWidgetDataByMap(Map<String, dynamic> obj) {
     for (var item in widgetData.entries) {
-      if(obj.containsKey(item.key) && item.key != "dataUID"){ //dataUID final by addWidgetDataByPage
+      if (obj.containsKey(item.key) && item.key != "dataUID") {
+        //dataUID final by addWidgetDataByPage
         addWidgetData(item.key, obj[item.key]);
       }
     }
   }
 
-  void addWidgetDataByPage(DynamicPage widget){
+  void addWidgetDataByPage(DynamicPage widget) {
     addWidgetData("title", widget.title);
     addWidgetData("root", widget.root);
     addWidgetData("url", widget.url);
@@ -58,24 +55,24 @@ class AppStoreData {
     addWidgetData("dialogHeight", widget.dialogHeight);
   }
 
-  void addWidgetData(String key, dynamic value){
+  void addWidgetData(String key, dynamic value) {
     //print("addWidgetData(${key}) = ${value}");
     widgetData[key] = value;
   }
 
-  Map<String, dynamic> getWidgetDates(){
+  Map<String, dynamic> getWidgetDates() {
     return widgetData;
   }
 
-  dynamic getWidgetData(String key){
+  dynamic getWidgetData(String key) {
     return widgetData[key];
   }
 
-  void setPageState(State x){
+  void setPageState(State x) {
     pageState = x;
   }
 
-  State? getPageState(){
+  State? getPageState() {
     return pageState;
   }
 
@@ -85,37 +82,37 @@ class AppStoreData {
 
   Map<String, dynamic> serverResponse = {};
 
-  void setServerResponse(Map<String, dynamic> input){
+  void setServerResponse(Map<String, dynamic> input) {
     serverResponse = input;
   }
 
-  Map<String, dynamic> getServerResponse(){
+  Map<String, dynamic> getServerResponse() {
     return serverResponse;
   }
 
-  void clearState(){
+  void clearState() {
     _map.clear();
     listController.clear();
   }
 
-  TextEditingController? getTextController(String key, String def){
-    if(!listController.containsKey(key)){
+  TextEditingController? getTextController(String key, String def) {
+    if (!listController.containsKey(key)) {
       TextEditingController textController = TextEditingController();
-      if(_map.containsKey(key)){
+      if (_map.containsKey(key)) {
         textController.text = _map[key];
-      }else{
+      } else {
         textController.text = def;
       }
       listController[key] = textController;
       return textController;
-    }else{
+    } else {
       return listController[key];
     }
   }
 
   BuildContext? getCtx() => _ctx;
 
-  void setSyncSocket(bool syncSocket){
+  void setSyncSocket(bool syncSocket) {
     this.syncSocket = syncSocket;
   }
 
@@ -210,10 +207,9 @@ class AppStoreData {
     store.dispatch(null);
   }
 
-  void destroy(){
+  void destroy() {
     if (syncSocket) {
       WebSocket().unsubscribe(getWidgetData("dataUID"));
     }
   }
-
 }

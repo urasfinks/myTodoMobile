@@ -2,7 +2,7 @@ import 'dart:core';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:test3/AppStore/AppStoreData.dart';
-import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
+import 'package:test3/DynamicPage/DynamicFn.dart';
 import 'FlutterType.dart';
 
 class DynamicUI {
@@ -84,51 +84,14 @@ class DynamicUI {
     if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
       return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData, index, originKeyData);
     }
-    if (ret.runtimeType.toString() == "String" && ret.toString().contains("):")) {
-      //Return reference function
-      List<String> exp = ret.toString().split("):");
-      return FlutterTypeConstant.parseUtilFunction(exp[1]); //Input arguments needs context
-    }
-    if (ret.runtimeType.toString() == "String" && ret.toString().contains(")=>")) {
-      //Return execute function
-      List<String> exp = ret.toString().split(")=>");
-      List<dynamic> args = [];
-      args.add(appStoreData);
-      List<String> exp2 = exp[0].split("(");
-      //print("originKeyData: $originKeyData");
-      Map<String, dynamic> originData = getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
-
-      if (exp2.length > 1 && originData.containsKey(exp2[1])) {
-        args.add(originData[exp2[1]]);
-      }
-      if (args.length == 1) {
-        args.add(null);
-      }
-      //print("=> ${FlutterTypeConstant.parseUtilFunction(exp[1])} = ${Function.apply(FlutterTypeConstant.parseUtilFunction(exp[1]), args)}");
-      return Function.apply(FlutterTypeConstant.parseUtilFunction(exp[1]), args);
+    //print(ret);
+    if(DynamicFn.isTextFunction(ret)){
+      return DynamicFn.evalTextFunction(ret, map, appStoreData, index, originKeyData);
     }
     return ret;
   }
 
-  static dynamic getChainObject(dynamic obj, List<Object> chain, dynamic def) {
-    //print("getChainObject: o: ${obj};");
-    //print("getChainObject: chain: ${chain};");
-    //print("getChainObject: def: ${def}");
-    if (obj == null || obj == '') {
-      return def;
-    }
-    for (Object item in chain) {
-      //print(">> ${item} type: ${obj.runtimeType.toString()}");
-      if (obj != null && obj[item] != null) {
-        obj = obj[item];
-      } else {
-        //print("getChainObject: return def: ${obj}");
-        return def;
-      }
-    }
-    //print("getChainObject: return: ${obj}");
-    return obj;
-  }
+
 
   static List<Widget> defList(parsedJson, String key, AppStoreData appStoreData, int index, String originKeyData) {
     List<Widget> list = [];

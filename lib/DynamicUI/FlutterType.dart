@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:test3/AppStore/AppStoreData.dart';
+import 'package:test3/DynamicPage/DynamicFn.dart';
 import '../AppStore/AppStore.dart';
 import 'DynamicUI.dart';
 import 'FlutterTypeConstant.dart';
@@ -240,8 +241,6 @@ class FlutterType {
     args.add(appStoreData);
     try {
       List<String> exp2 = exp[0].split("(");
-      //print(exp2);
-      //print(parsedJson);
       if (exp2.length > 1 && originData.containsKey(exp2[1])) {
         args.add(originData[exp2[1]]);
       }
@@ -252,7 +251,6 @@ class FlutterType {
     if (args.length == 1) {
       args.add(null);
     }
-    //print("ISORIG: ${originData}");
     Function? x = DynamicUI.def(parsedJson, key, null, appStoreData, index, originKeyData);
     if (x != null) {
       Function.apply(x, args);
@@ -262,9 +260,7 @@ class FlutterType {
   static dynamic pElevatedButtonIcon(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     print(parsedJson);
     return ElevatedButton.icon(
-      onPressed: () {
-        dynamicFunction(parsedJson, appStoreData, 'onPressed', index, originKeyData);
-      },
+      onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
       style: DynamicUI.def(parsedJson, 'style', null, appStoreData, index, originKeyData),
       icon: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index, originKeyData),
       label: DynamicUI.def(parsedJson, 'label', null, appStoreData, index, originKeyData),
@@ -273,17 +269,16 @@ class FlutterType {
 
   static dynamic pInkWell(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     return InkWell(
-        customBorder: DynamicUI.def(parsedJson, 'customBorder', null, appStoreData, index, originKeyData),
-        splashColor: FlutterTypeConstant.parseColor(
-          DynamicUI.def(parsedJson, 'splashColor', null, appStoreData, index, originKeyData),
-        ),
-        highlightColor: FlutterTypeConstant.parseColor(
-          DynamicUI.def(parsedJson, 'highlightColor', null, appStoreData, index, originKeyData),
-        ),
-        child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
-        onTap: () {
-          dynamicFunction(parsedJson, appStoreData, 'onTap', index, originKeyData);
-        });
+      customBorder: DynamicUI.def(parsedJson, 'customBorder', null, appStoreData, index, originKeyData),
+      splashColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'splashColor', null, appStoreData, index, originKeyData),
+      ),
+      highlightColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'highlightColor', null, appStoreData, index, originKeyData),
+      ),
+      child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
+      onTap: DynamicFn.evalTextFunction(parsedJson['onTap'], parsedJson, appStoreData, index, originKeyData),
+    );
   }
 
   static dynamic pRoundedRectangleBorder(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
@@ -296,7 +291,7 @@ class FlutterType {
 
   static dynamic pText(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     return Text(
-      DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData),
+      DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData).toString(),
       textDirection: FlutterTypeConstant.parseTextDirection(
         DynamicUI.def(parsedJson, 'textDirection', null, appStoreData, index, originKeyData),
       ),
@@ -358,8 +353,8 @@ class FlutterType {
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = type == "datetime" ? true : false;
-    TextEditingController? textController = appStoreData.getTextController(
-        DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
+    TextEditingController? textController =
+        appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
     appStoreData.set(key, textController?.text);
 
     return TextField(
@@ -546,8 +541,7 @@ class FlutterType {
       physics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
       pageSnapping: DynamicUI.def(parsedJson, 'pageSnapping', true, appStoreData, index, originKeyData)!,
       padEnds: DynamicUI.def(parsedJson, 'padEnds', true, appStoreData, index, originKeyData)!,
-      allowImplicitScrolling:
-          DynamicUI.def(parsedJson, 'allowImplicitScrolling', false, appStoreData, index, originKeyData)!,
+      allowImplicitScrolling: DynamicUI.def(parsedJson, 'allowImplicitScrolling', false, appStoreData, index, originKeyData)!,
       clipBehavior: FlutterTypeConstant.parseClip(
         DynamicUI.def(parsedJson, 'clipBehavior', 'none', appStoreData, index, originKeyData),
       )!,
@@ -653,8 +647,7 @@ class FlutterType {
       opacity: FlutterTypeConstant.parseDouble(
         DynamicUI.def(parsedJson, 'opacity', 1.0, appStoreData, index, originKeyData),
       )!,
-      alwaysIncludeSemantics:
-          DynamicUI.def(parsedJson, 'alwaysIncludeSemantics', false, appStoreData, index, originKeyData),
+      alwaysIncludeSemantics: DynamicUI.def(parsedJson, 'alwaysIncludeSemantics', false, appStoreData, index, originKeyData),
       child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
     );
   }
@@ -801,9 +794,7 @@ class FlutterType {
       tooltip: DynamicUI.def(parsedJson, 'tooltip', null, appStoreData, index, originKeyData),
       autofocus: DynamicUI.def(parsedJson, 'autofocus', false, appStoreData, index, originKeyData),
       enableFeedback: DynamicUI.def(parsedJson, 'enableFeedback', true, appStoreData, index, originKeyData),
-      onPressed: () {
-        dynamicFunction(parsedJson, appStoreData, 'onPressed', index, originKeyData);
-      },
+      onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
     );
   }
 

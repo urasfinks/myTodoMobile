@@ -7,6 +7,7 @@ import 'package:test3/TabWrap.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
+import 'DynamicFn.dart';
 
 class DynamicPage extends StatefulWidget {
   final String title;
@@ -70,9 +71,6 @@ class DynamicPage extends StatefulWidget {
         }
       }
     }
-    /*if(def['parentState'] != null && def['parentState'].runtimeType.toString().contains("HashMap")){
-      def['parentState']
-    }*/
 
     DynamicPage ret = DynamicPage(
       title: def['title'],
@@ -101,13 +99,12 @@ class DynamicPage extends StatefulWidget {
 }
 
 class DynamicPageState extends State<DynamicPage> {
-
   AppStoreData? saveStore;
 
   @override
   void dispose() {
     print("Dispose");
-    if(saveStore != null){
+    if (saveStore != null) {
       TabScope.getInstance().onDestroyPage(saveStore!);
       AppStore().remove(saveStore!);
     }
@@ -135,12 +132,9 @@ class DynamicPageState extends State<DynamicPage> {
     dynamic wrapPage = const Text("Undefined WrapPage in Templates");
     if (appStoreData.getServerResponse().containsKey("Template") &&
         appStoreData.getWidgetData("wrapPage").isNotEmpty &&
-        (appStoreData.getServerResponse()["Template"] as Map).containsKey(appStoreData.getWidgetData("wrapPage"))
-    ) {
+        (appStoreData.getServerResponse()["Template"] as Map).containsKey(appStoreData.getWidgetData("wrapPage"))) {
       wrapPage = DynamicUI.main(
-          (appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")],
-          appStoreData,
-          0, '');
+          (appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")], appStoreData, 0, '');
     }
     if (appStoreData.getWidgetData("dialog") == false) {
       return Scaffold(
@@ -174,14 +168,12 @@ class DynamicPageState extends State<DynamicPage> {
                   AppStore.getStore(context).clearState();
                   widget.refresh(appStoreData);
                 },
-                child: appStoreData.getWidgetData("wrapPage").isNotEmpty
-                    ? wrapPage
-                    : DynamicPageUtil.getFutureBuilder(appStoreData, null),
+                child:
+                    appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicFn.getFutureBuilder(appStoreData, null),
               ),
             ),
           ));
     } else {
-      //
       return Dialog(
         backgroundColor: FlutterTypeConstant.parseColor(
           appStoreData.getWidgetData("backgroundColor"),
@@ -194,9 +186,7 @@ class DynamicPageState extends State<DynamicPage> {
         child: SizedBox(
           height: appStoreData.getWidgetData("dialogHeight"),
           child: Center(
-            child: appStoreData.getWidgetData("wrapPage").isNotEmpty
-                ? wrapPage
-                : DynamicPageUtil.getFutureBuilder(appStoreData, null),
+            child: appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicFn.getFutureBuilder(appStoreData, null),
           ),
         ),
       );

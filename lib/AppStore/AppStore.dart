@@ -16,10 +16,9 @@ class AppStore {
 
   AppStore._internal();
 
-  static Store<AppStore> store = Store(
-    (AppStore state, dynamic action) {return state;},
-    initialState: AppStore()
-  );
+  static Store<AppStore> store = Store((AppStore state, dynamic action) {
+    return state;
+  }, initialState: AppStore());
 
   static AppStoreData getStore(BuildContext context, {bool syncSocket = false}) {
     return StoreProvider.of<AppStore>(context).state.get(context, {syncSocket: syncSocket});
@@ -28,18 +27,18 @@ class AppStore {
   static dynamic connect(AppStoreData appStoreData, Widget Function(dynamic defaultValue) builder, {defaultValue = ""}) {
     //print("connect");
     return StoreConnector<AppStore, AppStoreData>(
-        converter: (store) => appStoreData,
-        builder: (context, state) {
-          //print("Build StoreConnector: ${state}");
-          return Function.apply(builder, [defaultValue]);
-        },
-      );
+      converter: (store) => appStoreData,
+      builder: (context, state) {
+        //print("Build StoreConnector: ${state}");
+        return Function.apply(builder, [defaultValue]);
+      },
+    );
   }
 
   final Map<BuildContext, AppStoreData> _map = {};
 
   AppStoreData get(BuildContext key, Map map, {bool syncSocket = false}) {
-    if(!_map.containsKey(key)){
+    if (!_map.containsKey(key)) {
       _map[key] = AppStoreData(AppStore.store);
     }
     return _map[key]!;
@@ -52,7 +51,7 @@ class AppStore {
 
   List<AppStoreData> getByKey(String key, String value) {
     List<AppStoreData> ret = [];
-    if(value.isNotEmpty){
+    if (value.isNotEmpty) {
       for (var item in _map.entries) {
         //If url condition check only before symbol "?"
         String v = key == "url" ? item.value.getWidgetData(key).toString().split("?")[0] : item.value.getWidgetData(key);
@@ -67,12 +66,12 @@ class AppStore {
   void remove(AppStoreData appStoreData) {
     BuildContext? ctx;
     for (var item in _map.entries) {
-      if(item.value == appStoreData){
+      if (item.value == appStoreData) {
         ctx = item.key;
         break;
       }
     }
-    if(ctx != null){
+    if (ctx != null) {
       _map.remove(ctx);
     }
   }
@@ -90,5 +89,4 @@ class AppStore {
       _map.remove(key);
     }
   }
-
 }
