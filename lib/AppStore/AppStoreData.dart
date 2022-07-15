@@ -16,6 +16,10 @@ class AppStoreData {
 
   AppStoreData(this.store, {this.syncSocket = false});
 
+  void setIndexRevisionWithoutReload(int index){
+    _indexRevision = index;
+  }
+
   BuildContext? _ctx;
   Map<String, TextEditingController> listController = {};
   State? pageState;
@@ -128,6 +132,7 @@ class AppStoreData {
   }
 
   void setIndexRevision(int newValue, {bool checkSequence = true}) {
+    print("setIndexRevision: ${newValue}; oldValue: ${_indexRevision}");
     if (checkSequence == true) {
       if (_indexRevision == newValue - 1) {
         _indexRevision++;

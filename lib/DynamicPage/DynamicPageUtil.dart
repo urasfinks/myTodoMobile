@@ -116,6 +116,9 @@ class DynamicPageUtil {
       }
     }
 
+    if (data['RevisionState'] != null && data['RevisionState'] != "") {
+      appStoreData.setIndexRevisionWithoutReload(data['RevisionState']);
+    }
     if (data['WidgetData'] != null && data['WidgetData'] != "") {
       //print("SET NEW WIDGET DATA(${data['WidgetData']})");
       appStoreData.addWidgetDataByMap(data['WidgetData']);
