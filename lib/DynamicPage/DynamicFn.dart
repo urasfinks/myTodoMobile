@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:test3/DynamicPage/DynamicDirective.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
@@ -27,7 +28,7 @@ class DynamicFn {
       "openGallery": openGallery,
       "alert": alert,
       "getAppStore": getAppStore,
-      "timestampToDate": timestampToDate,
+      "timestampToDate": DynamicDirective.timestampToDate,
     };
     if (map.containsKey(value)) {
       return map[value];
@@ -38,46 +39,67 @@ class DynamicFn {
   static bool isTextFunction(dynamic value) {
     if (value != null &&
         value.runtimeType.toString() == "String" &&
-        (value.toString().contains("):") || value.toString().contains(")=>"))) {
+        (value.toString().startsWith(":") || value.toString().startsWith("=>")) &&
+        value.toString().contains("(") && value.toString().contains(")")
+    ) {
       return true;
     }
     return false;
   }
 
   static dynamic evalTextFunction(String value, map, AppStoreData appStoreData, int index, String originKeyData) {
-    if (value.runtimeType.toString() == "String" && value.toString().contains("):")) {
-      //Return reference function
-      return (){
-        List<String> exp = value.toString().split("):");
-        Map<String, dynamic> originData = getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
-        print(originData);
-        Function.apply(parseUtilFunction(exp[1]), [appStoreData, originData]);
-      };
-      //return parseUtilFunction(exp[1]); //Input arguments needs context
+    if(value == null){
+      return null;
     }
-    if (value.runtimeType.toString() == "String" && value.toString().contains(")=>")) {
-      //Return execute function
-      List<String> exp = value.toString().split(")=>");
-      List<dynamic> args = [];
-      args.add(appStoreData);
-      List<String> exp2 = exp[0].split("(");
-      Map<String, dynamic> originData = getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
-
-      if (exp2.length > 1 && originData.containsKey(exp2[1])) {
-        args.add(originData[exp2[1]]);
+    //value = '=>getAppStore(getAppStoreDataTime)|timestampToDate(timestampToDateData)';
+    String del = value.toString().startsWith("=>") ? "=>" : ":";
+    localFunction() {
+      //print("evalTextFunction: ${value}");
+      List<String> exp = value.toString().split("|");
+      exp[0] = exp[0].split(del)[1];
+      List<dynamic> listFn = [];
+      for(String item in exp){
+        listFn.add(parseNameAndArguments(item));
       }
-      if (args.length == 1) {
-        args.add(null);
+      Map<String, dynamic> originData = _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+      dynamic retExec;
+      for(Map item in listFn){
+        List<dynamic> args = [appStoreData];
+        if(retExec != null){
+          args.add(retExec);
+        }
+        for(String key in item["args"]){
+          args.add(originData[key]);
+        }
+        retExec = Function.apply(parseUtilFunction(item["fn"]), args);
       }
-      return Function.apply(parseUtilFunction(exp[1]), args);
+      return retExec;
     }
+    return del == "=>" ? Function.apply(localFunction, []) : localFunction;
   }
 
-  static dynamic getChainObject(dynamic obj, List<Object> chain, dynamic def) {
+  static Map<String, dynamic> parseNameAndArguments(String value){
+    //input nameFunction(arg1,arg2,arg3)
+    //output {fn: "nameFunction", args:["arg1","arg2","arg3"]}
+    Map<String, dynamic> ret = {};
+    List<String> args = [];
+    List<String> exp1 = value.split("(");
+    ret["fn"] = exp1[0];
+    if(exp1.length > 1){
+      List<String> exp2 = exp1[1].split(")")[0].split(",");
+      for(String item in exp2){
+        args.add(item.trim());
+      }
+    }
+    ret["args"] = args;
+    return ret;
+  }
+
+  static dynamic _getChainObject(dynamic obj, List chain, dynamic def) {
     if (obj == null || obj == '') {
       return def;
     }
-    for (Object item in chain) {
+    for (dynamic item in chain) {
       if (obj != null && obj[item] != null) {
         obj = obj[item];
       } else {
@@ -202,11 +224,6 @@ class DynamicFn {
       }
     }
     //print("IMAGE: ${image}");
-  }
-
-  static dynamic timestampToDate(AppStoreData appStoreData, dynamic data) {
-    DateTime dt = DateTime.fromMicrosecondsSinceEpoch(data["timestamp"]);
-    return DateFormat(data["format"]).format(dt);
   }
 
   static Widget getFutureBuilder(AppStoreData appStoreData, dynamic data) {

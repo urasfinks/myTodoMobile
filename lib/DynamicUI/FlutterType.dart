@@ -503,7 +503,7 @@ class FlutterType {
         itemBuilder: (BuildContext context, int index) {
           return DynamicUI.mainJson(parsedJson["children"][index], appStoreData, index, originKeyData);
         },
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
+        separatorBuilder: (BuildContext context, int index) => const Divider(height: 1,),
       );
     } else {
       return ListView.builder(

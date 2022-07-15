@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:test3/AppStore/AppStore.dart';
+import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 
 class Util {
   static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, IndexedWidgetBuilder itemBuilder, {bool reverse = false}) {
@@ -15,7 +16,7 @@ class Util {
         physics: physics,
         itemCount: itemCount,
         itemBuilder: itemBuilder,
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
+        separatorBuilder: (BuildContext context, int index) => Divider(height: 1,color: FlutterTypeConstant.parseColor("#f5f5f5")!,),
       );
     } else {
       return ListView.builder(
