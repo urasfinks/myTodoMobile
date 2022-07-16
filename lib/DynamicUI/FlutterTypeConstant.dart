@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test3/DynamicPage/DynamicPageUtil.dart';
-
-import '../DynamicPage/DynamicFn.dart';
 
 class FlutterTypeConstant {
   static dynamic parseFontStyle(String? value) {
@@ -13,6 +10,20 @@ class FlutterTypeConstant {
       'italic': FontStyle.italic,
     };
     return map.containsKey(value) ? map[value] : null;
+  }
+
+  static bool? parseBool(dynamic value) {
+    if (value == null || value.toString().trim() == '') {
+      return null;
+    }
+    String c = value.toString().toLowerCase();
+    if(c == "true" || c == "1"){
+      return true;
+    }
+    if(c == "false" || c == "0"){
+      return false;
+    }
+    return null;
   }
 
   static double? parseDouble(dynamic value) {

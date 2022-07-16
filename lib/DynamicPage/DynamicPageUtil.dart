@@ -76,8 +76,12 @@ class DynamicPageUtil {
         } else {
           ret = jsonEncode({"flutterType": "Text", "data": "Undefined Template: ${d['template']}"});
         }
-        //print(ret);
-        list.add(jsonDecode(ret));
+        try {
+          list.add(jsonDecode(ret));
+        }catch(e){
+          list.add({"flutterType": "Text", "data": "Exception template: ${e}"});
+          print(ret);
+        }
       }
       data[ret] = list;
     }

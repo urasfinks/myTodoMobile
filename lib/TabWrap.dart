@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
-import 'package:test3/DynamicUI/page/AccountPage.dart';
-import 'package:test3/DynamicUI/page/FailPage.dart';
 import 'package:test3/TabPageHistory.dart';
 import 'AppStore/AppStoreData.dart';
 import 'DynamicPage/DynamicPage.dart';
@@ -27,7 +25,7 @@ class TabScope{ // singleton class
         {
           "title": 'Аккаунт',
           "url": '/project/system',
-          "backgroundColor": "blue.600",
+          "backgroundColor": "#f5f5f5",
           "pullToRefreshBackgroundColor": "blue.600",
           "progressIndicatorBackgroundColor": "#ffffff",
           "root": true,

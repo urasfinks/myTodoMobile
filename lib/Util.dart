@@ -37,7 +37,7 @@ class Util {
       }
     }
     if (cur.runtimeType.toString() == "String") {
-      return cur != null ? cur.toString().replaceAll("\\", "\\\\").replaceAll("\"", "\\\"") : "null";
+      return cur != null ? cur.toString() : "null";
     } else {
       return jsonEncode(cur);
     }
@@ -67,7 +67,7 @@ class Util {
         continue;
       }
       String name = exp2[0];
-      template = template.replaceAll("\${$name}", path2(data, name));
+      template = template.replaceAll("\${$name}", jsonStringEscape(path2(data, name)));
     }
     return template;
   }
@@ -86,5 +86,17 @@ class Util {
     }).catchError((e) {
       print(e);
     });
+  }
+
+  static String jsonStringEscape(String raw){
+    String escaped = raw;
+    escaped = escaped.replaceAll("\\", "\\\\");
+    escaped = escaped.replaceAll("\"", "\\\"");
+    escaped = escaped.replaceAll("\b", "\\b");
+    escaped = escaped.replaceAll("\f", "\\f");
+    escaped = escaped.replaceAll("\n", "\\n");
+    escaped = escaped.replaceAll("\r", "\\r");
+    escaped = escaped.replaceAll("\t", "\\t");
+    return escaped;
   }
 }
