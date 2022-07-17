@@ -72,6 +72,7 @@ class AppStore {
       }
     }
     if (ctx != null) {
+      _map[ctx]?.destroy();
       _map.remove(ctx);
     }
   }

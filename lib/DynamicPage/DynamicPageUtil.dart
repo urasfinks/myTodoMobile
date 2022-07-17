@@ -36,7 +36,8 @@ class DynamicPageUtil {
       if (response.statusCode == 200) {
         dataUpdate(jsonDecode(response.body), appStoreData);
       } else {
-        dataUpdate(ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
+        dataUpdate(
+            ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
       }
     } catch (e, stacktrace) {
       print(e);
@@ -67,6 +68,7 @@ class DynamicPageUtil {
     if (data.containsKey(key)) {
       List<dynamic> list = [];
       Map<String, dynamic> template = data['Template'];
+      bool needNextRoundBorderRadius = false;
       for (dynamic d in data[key]) {
         String ret;
         if (template.containsKey(d['template'])) {
@@ -77,8 +79,27 @@ class DynamicPageUtil {
           ret = jsonEncode({"flutterType": "Text", "data": "Undefined Template: ${d['template']}"});
         }
         try {
-          list.add(jsonDecode(ret));
-        }catch(e, stackTrace){
+          dynamic p = jsonDecode(ret);
+          if (needNextRoundBorderRadius == true) {
+            needNextRoundBorderRadius = false;
+            if (p["flutterType"] == "Material") {
+              p["borderRadius"] = "10,10,0,0";
+            }
+          }
+          if (d['template'] == "GroupBottom") {
+            if (list.last["flutterType"] == "Material") {
+              if (list.last["borderRadius"] == "10,10,0,0") {
+                list.last["borderRadius"] = "10,10,10,10";
+              } else {
+                list.last["borderRadius"] = "0,0,10,10";
+              }
+            }
+          }
+          list.add(p);
+          if (d['template'] == "GroupTop") {
+            needNextRoundBorderRadius = true;
+          }
+        } catch (e, stackTrace) {
           list.add({"flutterType": "Text", "data": "Exception template: ${e}"});
           //print(ret);
           //developer.log(ret);

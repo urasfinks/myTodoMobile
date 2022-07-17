@@ -70,6 +70,7 @@ class DynamicUI {
       "Checkbox": FlutterType.pCheckbox,
       "AppStore": FlutterType.pAppStore,
       "CachedNetworkImage": FlutterType.pCachedNetworkImage,
+      "Nothing": FlutterType.pNothing,
     };
     //print("${[map, appStoreData, index, originKeyData]}");
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData]) : def;

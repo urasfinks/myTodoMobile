@@ -23,7 +23,7 @@ class TabScope{ // singleton class
     TabPageHistory(
       DynamicPage.fromMap(
         {
-          "title": 'Сервисы',
+          "title": 'Доступные сервисы',
           "url": '/project/system',
           "backgroundColor": "#f5f5f5",
           "pullToRefreshBackgroundColor": "blue.600",
@@ -59,13 +59,18 @@ class TabScope{ // singleton class
   }
 
   void onDestroyPage(AppStoreData appStoreData){
-    if(pages[tabIndex].history.last == appStoreData){
-      pages[tabIndex].history.removeLast();
+    if(pages[tabIndex].history.length > 1){
+      if(pages[tabIndex].history.last == appStoreData){
+        pages[tabIndex].history.removeLast();
+      }
     }
   }
 
   bool iamLastPage(AppStoreData appStoreData){
-    return pages[tabIndex].history.last == appStoreData;
+    if(pages[tabIndex].history.length > 1){
+      return pages[tabIndex].history.last == appStoreData;
+    }
+    return false;
   }
 
   void popHistory(dynamic data){

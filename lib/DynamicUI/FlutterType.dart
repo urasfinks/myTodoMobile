@@ -915,6 +915,10 @@ class FlutterType {
     );
   }
 
+  static dynamic pNothing(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return const SizedBox(height: 0,width: 0,);
+  }
+
   static dynamic pAppStore(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     return AppStore.connect(appStoreData, (def) {
       return DynamicUI.def(parsedJson, 'child', defaultWidget, appStoreData, index, originKeyData);
