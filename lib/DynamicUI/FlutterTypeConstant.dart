@@ -120,12 +120,12 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static EdgeInsets? parseEdgeInsets(String? value) {
+  static EdgeInsets? parseEdgeInsets(dynamic value) {
     //left,top,right,bottom
-    if (value == null || value.trim() == '') {
+    if (value == null || value.toString().trim() == '') {
       return null;
     }
-    var values = value.split(",");
+    var values = value.toString().split(",");
     if (values.length > 1) {
       return EdgeInsets.only(
         left: double.parse(values[0]),
