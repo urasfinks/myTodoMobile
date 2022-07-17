@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:test3/DynamicPage/DynamicDirective.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
@@ -230,10 +229,15 @@ class DynamicFn {
   }
 
   static Widget Function(int index) getFutureList(AppStoreData appStoreData, dynamic data) {
+    //print("getFutureList");
     if (appStoreData.getServerResponse().isNotEmpty) {
       Map<String, dynamic> response = appStoreData.getServerResponse();
+      List<Widget> ret = [];
+      for(int i = 0; i< response['list'].length;i++){
+        ret.add(DynamicUI.mainJson(response['list'][i], appStoreData, i, 'Data'));
+      }
       return (int index){
-        return DynamicUI.mainJson(response['list'][index], appStoreData, index, 'Data');
+        return ret[index];
       };
     } else{
       return (int index){
@@ -243,6 +247,7 @@ class DynamicFn {
   }
 
   static Widget getFutureBuilder(AppStoreData appStoreData, dynamic data) {
+    //print("getFutureBuilder");
     if (appStoreData.getServerResponse().isNotEmpty) {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       bool grid = appStoreData.getWidgetData("grid");

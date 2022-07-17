@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
+import 'dart:developer' as developer;
 
 class Util {
   static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder, {bool reverse = false}) {
@@ -96,6 +97,10 @@ class Util {
     }).catchError((e) {
       print(e);
     });
+  }
+
+  static void log(dynamic mes){
+    developer.log(mes);
   }
 
   static String jsonStringEscape(String raw){

@@ -895,7 +895,7 @@ class FlutterType {
   }
 
   static dynamic pCachedNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    print(parsedJson);
+    //print(parsedJson);
     return CachedNetworkImage(
       color: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),

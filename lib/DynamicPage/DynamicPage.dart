@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicPage/DynamicPageUtil.dart';
 import 'package:test3/TabWrap.dart';
 import '../AppStore/AppStoreData.dart';
-import '../DynamicUI/DynamicUI.dart';
-import '../DynamicUI/FlutterTypeConstant.dart';
-import 'DynamicFn.dart';
 
 class DynamicPage extends StatefulWidget {
   final String title;
@@ -96,7 +91,7 @@ class DynamicPage extends StatefulWidget {
   }
 
   void refresh(AppStoreData appStoreData) {
-    //print("Load data: ${appStoreData.getWidgetDates()}");
+    print("Refresh: ${appStoreData.getWidgetDates()}");
     //DynamicPageUtil.loadDataTest(this);
     DynamicPageUtil.loadData(appStoreData);
   }
@@ -107,7 +102,7 @@ class DynamicPageState extends State<DynamicPage> {
 
   @override
   void dispose() {
-    print("Dispose");
+    //print("Dispose");
     if (saveStore != null) {
       TabScope.getInstance().onDestroyPage(saveStore!);
       AppStore().remove(saveStore!);
@@ -117,92 +112,11 @@ class DynamicPageState extends State<DynamicPage> {
 
   @override
   Widget build(BuildContext context) {
-    //print("Build page");
     AppStoreData appStoreData = AppStore.getStore(context);
     saveStore = appStoreData;
-    TabScope.getInstance().addHistory(saveStore!);
-    appStoreData.setOnIndexRevisionError(() {
-      widget.refresh(appStoreData);
-    });
-    if (appStoreData.getWidgetDates().isEmpty) {
-      //Only first initialization
-      appStoreData.addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
-      widget.refresh(appStoreData);
-    }
-    //print("Build CTX: ${context.hashCode}; WidgetData: ${appStoreData.getWidgetDates()}");
-    appStoreData.setCtx(context);
+    appStoreData.initPage(widget, context);
     appStoreData.setPageState(this);
-
-    dynamic wrapPage = const Text("Undefined WrapPage in Templates");
-    if (appStoreData.getServerResponse().containsKey("Template") &&
-        appStoreData.getWidgetData("wrapPage").isNotEmpty &&
-        (appStoreData.getServerResponse()["Template"] as Map).containsKey(appStoreData.getWidgetData("wrapPage"))) {
-      wrapPage = DynamicUI.main(
-          (appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")],
-          appStoreData,
-          0,
-          '');
-    }
-    if (appStoreData.getWidgetData("dialog") == false) {
-      return Scaffold(
-          backgroundColor: FlutterTypeConstant.parseColor(
-            appStoreData.getWidgetData("backgroundColor"),
-          ),
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: FlutterTypeConstant.parseColor(
-              appStoreData.getWidgetData("appBarBackgroundColor"),
-            ),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent, // Status bar
-                statusBarBrightness: Brightness.dark),
-            title: Text(
-              appStoreData.getWidgetData("title"),
-            ),
-            actions: DynamicPageUtil.getListAppBarActions(appStoreData),
-          ),
-          body: SafeArea(
-            child: Center(
-              child: LiquidPullToRefresh(
-                color: FlutterTypeConstant.parseColor(
-                  appStoreData.getWidgetData("pullToRefreshBackgroundColor"),
-                ),
-                showChildOpacityTransition: false,
-                springAnimationDurationInMilliseconds: 500,
-                animSpeedFactor: 2,
-                height: 90,
-                onRefresh: () async {
-                  AppStore.getStore(context).clearState();
-                  widget.refresh(appStoreData);
-                },
-                child: _contentBuilder(wrapPage, appStoreData),
-              ),
-            ),
-          ));
-    } else {
-      Map x = appStoreData.getWidgetDataConfig({"padding": 160, "elevation": 0.0, "borderRadius": 20, "height": 70});
-      return Dialog(
-        backgroundColor: FlutterTypeConstant.parseColor(
-          appStoreData.getWidgetData("backgroundColor"),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(FlutterTypeConstant.parseDouble(x["borderRadius"])!),
-        ),
-        insetPadding: FlutterTypeConstant.parseEdgeInsets(x["padding"].toString())!,
-        elevation: FlutterTypeConstant.parseDouble(x["elevation"]),
-        child: SizedBox(
-          height: FlutterTypeConstant.parseDouble(x["height"]),
-          child: Center(
-            child: _contentBuilder(wrapPage, appStoreData),
-          ),
-        ),
-      );
-    }
+    return appStoreData.getCompiledWidget();
   }
 
-  _contentBuilder(dynamic wrapPage, AppStoreData appStoreData) {
-    return appStoreData.getWidgetData("wrapPage").isNotEmpty
-        ? wrapPage
-        : DynamicFn.getFutureBuilder(appStoreData, null);
-  }
 }

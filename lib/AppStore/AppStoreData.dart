@@ -1,6 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:test3/DynamicPage/DynamicPage.dart';
+import '../DynamicPage/DynamicFn.dart';
+import '../DynamicPage/DynamicPageUtil.dart';
+import '../DynamicUI/DynamicUI.dart';
+import '../DynamicUI/FlutterTypeConstant.dart';
+import '../TabWrap.dart';
 import '../WebSocket.dart';
 import 'package:redux/redux.dart';
 
@@ -67,7 +75,7 @@ class AppStoreData {
 
   dynamic getWidgetDataConfig(Map<String, dynamic> def) {
     dynamic x = widgetData["config"];
-    if(x != null && x.runtimeType.toString().contains("Map")){
+    if (x != null && x.runtimeType.toString().contains("Map")) {
       for (var item in x.entries) {
         def[item.key] = item.value;
       }
@@ -167,7 +175,8 @@ class AppStoreData {
     }
   }
 
-  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void inc(String key,
+      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") + step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -181,7 +190,8 @@ class AppStoreData {
     }
   }
 
-  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void dec(String key,
+      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") - step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -222,5 +232,103 @@ class AppStoreData {
     if (syncSocket) {
       WebSocket().unsubscribe(getWidgetData("dataUID"));
     }
+  }
+
+  Widget getCompiledWidget() {
+    return compiledWidget!;
+  }
+
+  bool _build = true;
+
+  void reBuild() {
+    _build = true;
+  }
+
+  Widget? compiledWidget;
+  bool firstLoad = true;
+  Widget wrapPage = const Text("Undefined WrapPage in Templates");
+
+  void initPage(DynamicPage widget, BuildContext context) {
+    //print("initPage ${widget.url}; _build:${_build}; compiledWidget: ${compiledWidget}");
+    if (_build == true || compiledWidget == null) {
+      print("initPage ${widget.url}");
+      TabScope.getInstance().addHistory(this);
+      setOnIndexRevisionError(() {
+        widget.refresh(this);
+      });
+      if (firstLoad == true) {
+        addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
+        widget.refresh(this);
+        firstLoad = false;
+      }
+      setCtx(context);
+
+      if (getServerResponse().containsKey("Template") &&
+          getWidgetData("wrapPage").isNotEmpty &&
+          (getServerResponse()["Template"] as Map).containsKey(getWidgetData("wrapPage"))) {
+        wrapPage = DynamicUI.main((getServerResponse()["Template"] as Map)[getWidgetData("wrapPage")], this, 0, '');
+      }
+
+      if (getWidgetData("dialog") == false) {
+        compiledWidget = Scaffold(
+            backgroundColor: FlutterTypeConstant.parseColor(
+              getWidgetData("backgroundColor"),
+            ),
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: FlutterTypeConstant.parseColor(
+                getWidgetData("appBarBackgroundColor"),
+              ),
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent, // Status bar
+                  statusBarBrightness: Brightness.dark),
+              title: Text(
+                getWidgetData("title"),
+              ),
+              actions: DynamicPageUtil.getListAppBarActions(this),
+            ),
+            body: SafeArea(
+              child: Center(
+                child: LiquidPullToRefresh(
+                  color: FlutterTypeConstant.parseColor(
+                    getWidgetData("pullToRefreshBackgroundColor"),
+                  ),
+                  showChildOpacityTransition: false,
+                  springAnimationDurationInMilliseconds: 500,
+                  animSpeedFactor: 2,
+                  height: 90,
+                  onRefresh: () async {
+                    clearState();
+                    widget.refresh(this);
+                  },
+                  child: _contentBuilder(wrapPage),
+                ),
+              ),
+            ));
+      } else {
+        Map config = getWidgetDataConfig({"padding": 160, "elevation": 0.0, "borderRadius": 20, "height": 70});
+        compiledWidget = Dialog(
+          backgroundColor: FlutterTypeConstant.parseColor(
+            getWidgetData("backgroundColor"),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(FlutterTypeConstant.parseDouble(config["borderRadius"])!),
+          ),
+          insetPadding: FlutterTypeConstant.parseEdgeInsets(config["padding"].toString())!,
+          elevation: FlutterTypeConstant.parseDouble(config["elevation"]),
+          child: SizedBox(
+            height: FlutterTypeConstant.parseDouble(config["height"]),
+            child: Center(
+              child: _contentBuilder(wrapPage),
+            ),
+          ),
+        );
+      }
+      _build = false;
+    }
+  }
+
+  _contentBuilder(dynamic wrapPage) {
+    return getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicFn.getFutureBuilder(this, null);
   }
 }

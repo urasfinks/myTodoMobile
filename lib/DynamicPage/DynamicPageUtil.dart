@@ -11,7 +11,6 @@ import '../WebSocket.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show utf8, base64, jsonEncode, jsonDecode;
 import 'dart:async';
-import 'dart:developer' as developer;
 
 class DynamicPageUtil {
   static int delay = 350;
@@ -124,6 +123,7 @@ class DynamicPageUtil {
     parseTemplate(data, "AppBarActions", "actions");
     //print(data);
     appStoreData.setServerResponse(data);
+    appStoreData.reBuild();
     appStoreData.getPageState()?.setState(() {});
   }
 }

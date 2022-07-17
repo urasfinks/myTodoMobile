@@ -59,10 +59,13 @@ class TabScope{ // singleton class
   }
 
   void onDestroyPage(AppStoreData appStoreData){
-    List<AppStoreData> list = pages[tabIndex].history;
-    if(list[list.length - 1] == appStoreData){
+    if(pages[tabIndex].history.last == appStoreData){
       pages[tabIndex].history.removeLast();
     }
+  }
+
+  bool iamLastPage(AppStoreData appStoreData){
+    return pages[tabIndex].history.last == appStoreData;
   }
 
   void popHistory(dynamic data){
@@ -124,7 +127,7 @@ class _TabWrapState extends State<TabWrap> {
         items: const [
           BottomNavigationBarItem(
             label: 'Сервисы',
-            icon: Icon(Icons.menu),
+            icon: Icon(Icons.dashboard),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
