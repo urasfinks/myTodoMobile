@@ -8,14 +8,16 @@ import 'package:test3/AppStore/AppStore.dart';
 import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 
 class Util {
-  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, IndexedWidgetBuilder itemBuilder, {bool reverse = false}) {
+  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder, {bool reverse = false}) {
     //print("SEPARATED: ${separated}");
     if (separated == true) {
       return ListView.separated(
         reverse: reverse,
         physics: physics,
         itemCount: itemCount,
-        itemBuilder: itemBuilder,
+        itemBuilder: (BuildContext context, int index) {
+          return itemBuilder(index);
+        },
         separatorBuilder: (BuildContext context, int index) => Divider(height: 1,color: FlutterTypeConstant.parseColor("#f5f5f5")!,),
       );
     } else {
@@ -23,7 +25,9 @@ class Util {
         reverse: reverse,
         physics: physics,
         itemCount: itemCount,
-        itemBuilder: itemBuilder,
+        itemBuilder: (BuildContext context, int index) {
+          return itemBuilder(index);
+        },
       );
     }
   }
@@ -66,8 +70,14 @@ class Util {
       if (exp2.isEmpty) {
         continue;
       }
-      String name = exp2[0];
-      template = template.replaceAll("\${$name}", jsonStringEscape(path2(data, name)));
+      List<String> name = exp2[0].split("|");
+      String fName = exp2[0];
+      String rName = name[0];
+      if(name.length > 1 && name[1] == "unescape"){
+        template = template.replaceAll("\${$fName}", path2(data, rName));
+      }else{
+        template = template.replaceAll("\${$fName}", jsonStringEscape(path2(data, rName)));
+      }
     }
     return template;
   }

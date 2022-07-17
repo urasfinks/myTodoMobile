@@ -52,7 +52,8 @@ class AppStoreData {
     addWidgetData("progressIndicatorColor", widget.progressIndicatorColor);
     addWidgetData("dialog", widget.dialog);
     addWidgetData("separated", widget.separated);
-    addWidgetData("dialogHeight", widget.dialogHeight);
+    addWidgetData("grid", widget.grid);
+    addWidgetData("config", widget.config);
   }
 
   void addWidgetData(String key, dynamic value) {
@@ -62,6 +63,16 @@ class AppStoreData {
 
   Map<String, dynamic> getWidgetDates() {
     return widgetData;
+  }
+
+  dynamic getWidgetDataConfig(Map<String, dynamic> def) {
+    dynamic x = widgetData["config"];
+    if(x != null && x.runtimeType.toString().contains("Map")){
+      for (var item in x.entries) {
+        def[item.key] = item.value;
+      }
+    }
+    return def;
   }
 
   dynamic getWidgetData(String key) {
@@ -129,7 +140,7 @@ class AppStoreData {
   }
 
   void setIndexRevision(int newValue, {bool checkSequence = true}) {
-    print("setIndexRevision: ${newValue}; oldValue: ${_indexRevision}");
+    //print("setIndexRevision: ${newValue}; oldValue: ${_indexRevision}");
     if (checkSequence == true) {
       if (_indexRevision == newValue - 1) {
         _indexRevision++;

@@ -262,7 +262,7 @@ class FlutterType {
   }
 
   static dynamic pElevatedButtonIcon(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    print(parsedJson);
+    //print(parsedJson);
     return ElevatedButton.icon(
       onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
       style: DynamicUI.def(parsedJson, 'style', null, appStoreData, index, originKeyData),

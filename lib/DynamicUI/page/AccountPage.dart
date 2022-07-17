@@ -277,7 +277,7 @@ class _AccountPage extends State<AccountPage> {
                                   padding: FlutterTypeConstant.parseEdgeInsets("15,10,10,10"),
                                   child: const Text("Основная"),
                                 ),
-                                Divider(thickness: 1, color: FlutterTypeConstant.parseColor("#f5f5f5"),),
+                                Divider(height: 1, color: FlutterTypeConstant.parseColor("#f5f5f5"),),
                                 Container(
                                   padding: FlutterTypeConstant.parseEdgeInsets("15,10,10,10"),
                                   child: const Text("Вторичная"),

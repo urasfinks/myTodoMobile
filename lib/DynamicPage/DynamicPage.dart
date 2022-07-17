@@ -24,7 +24,8 @@ class DynamicPage extends StatefulWidget {
   final String progressIndicatorColor;
   final bool dialog;
   final bool separated;
-  final double dialogHeight;
+  final bool grid;
+  final dynamic config;
 
   const DynamicPage(
       {Key? key,
@@ -41,7 +42,8 @@ class DynamicPage extends StatefulWidget {
       this.progressIndicatorColor = "blue.600",
       this.dialog = false,
       this.separated = false,
-      this.dialogHeight = 70.0})
+      this.grid = false,
+      this.config})
       : super(key: key);
 
   @override
@@ -62,7 +64,8 @@ class DynamicPage extends StatefulWidget {
       'progressIndicatorColor': 'blue.600',
       'dialog': false,
       'separated': false,
-      'dialogHeight': 70.0
+      'grid': false,
+      'config': {}
     };
     if (data != null && data.isNotEmpty) {
       for (var item in data.entries) {
@@ -86,7 +89,8 @@ class DynamicPage extends StatefulWidget {
       appBarBackgroundColor: def['appBarBackgroundColor'],
       dialog: def['dialog'],
       separated: def['separated'],
-      dialogHeight: def['dialogHeight'],
+      grid: def['grid'],
+      config: def['config'],
     );
     return ret;
   }
@@ -134,7 +138,10 @@ class DynamicPageState extends State<DynamicPage> {
         appStoreData.getWidgetData("wrapPage").isNotEmpty &&
         (appStoreData.getServerResponse()["Template"] as Map).containsKey(appStoreData.getWidgetData("wrapPage"))) {
       wrapPage = DynamicUI.main(
-          (appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")], appStoreData, 0, '');
+          (appStoreData.getServerResponse()["Template"] as Map)[appStoreData.getWidgetData("wrapPage")],
+          appStoreData,
+          0,
+          '');
     }
     if (appStoreData.getWidgetData("dialog") == false) {
       return Scaffold(
@@ -168,28 +175,34 @@ class DynamicPageState extends State<DynamicPage> {
                   AppStore.getStore(context).clearState();
                   widget.refresh(appStoreData);
                 },
-                child:
-                    appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicFn.getFutureBuilder(appStoreData, null),
+                child: _contentBuilder(wrapPage, appStoreData),
               ),
             ),
           ));
     } else {
+      Map x = appStoreData.getWidgetDataConfig({"padding": 160, "elevation": 0.0, "borderRadius": 20, "height": 70});
       return Dialog(
         backgroundColor: FlutterTypeConstant.parseColor(
           appStoreData.getWidgetData("backgroundColor"),
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(FlutterTypeConstant.parseDouble(x["borderRadius"])!),
         ),
-        insetPadding: FlutterTypeConstant.parseEdgeInsets("160")!,
-        elevation: 0,
+        insetPadding: FlutterTypeConstant.parseEdgeInsets(x["padding"].toString())!,
+        elevation: FlutterTypeConstant.parseDouble(x["elevation"]),
         child: SizedBox(
-          height: appStoreData.getWidgetData("dialogHeight"),
+          height: FlutterTypeConstant.parseDouble(x["height"]),
           child: Center(
-            child: appStoreData.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicFn.getFutureBuilder(appStoreData, null),
+            child: _contentBuilder(wrapPage, appStoreData),
           ),
         ),
       );
     }
+  }
+
+  _contentBuilder(dynamic wrapPage, AppStoreData appStoreData) {
+    return appStoreData.getWidgetData("wrapPage").isNotEmpty
+        ? wrapPage
+        : DynamicFn.getFutureBuilder(appStoreData, null);
   }
 }

@@ -482,7 +482,7 @@ class AccountPageJsonObject {
                                 },
                                 {
                                   "flutterType": "Divider",
-                                  "thickness": 1,
+                                  "height": 1,
                                   "color": "#f5f5f5"
                                 },
                                 {

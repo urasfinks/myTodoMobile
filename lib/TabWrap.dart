@@ -29,6 +29,11 @@ class TabScope{ // singleton class
           "pullToRefreshBackgroundColor": "blue.600",
           "progressIndicatorBackgroundColor": "#ffffff",
           "root": true,
+          "config": {
+            "crossAxisCount": 3,
+            "crossAxisSpacing": 10.0
+          },
+          "grid": true
         },
       ),
     ),
@@ -48,7 +53,9 @@ class TabScope{ // singleton class
   int tabIndex = 0;
 
   void addHistory(AppStoreData appStoreData){
-    pages[tabIndex].history.add(appStoreData);
+    if(!pages[tabIndex].history.contains(appStoreData)){
+      pages[tabIndex].history.add(appStoreData);
+    }
   }
 
   void onDestroyPage(AppStoreData appStoreData){
@@ -85,7 +92,7 @@ class TabScope{ // singleton class
     return _tabScope!;
   }
   void setTabIndex(int index){
-    print("SELECTED TAB: ${index}");
+    //print("SELECTED TAB: ${index}");
     tabIndex = index;
   }
 }

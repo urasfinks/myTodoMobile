@@ -20,6 +20,7 @@ class DynamicFn {
   static dynamic parseUtilFunction(String value) {
     Map<String, Function> map = {
       "getFutureBuilder": getFutureBuilder,
+      "getFutureList": getFutureList,
       "test": test,
       "openWindow": openWindow,
       "closeWindow": closeWindow,
@@ -40,15 +41,15 @@ class DynamicFn {
     if (value != null &&
         value.runtimeType.toString() == "String" &&
         (value.toString().startsWith(":") || value.toString().startsWith("=>")) &&
-        value.toString().contains("(") && value.toString().contains(")")
-    ) {
+        value.toString().contains("(") &&
+        value.toString().contains(")")) {
       return true;
     }
     return false;
   }
 
   static dynamic evalTextFunction(String value, map, AppStoreData appStoreData, int index, String originKeyData) {
-    if(value == null){
+    if (value == null) {
       return null;
     }
     //value = '=>getAppStore(getAppStoreDataTime)|timestampToDate(timestampToDateData)';
@@ -58,36 +59,38 @@ class DynamicFn {
       List<String> exp = value.toString().split("|");
       exp[0] = exp[0].split(del)[1];
       List<dynamic> listFn = [];
-      for(String item in exp){
+      for (String item in exp) {
         listFn.add(parseNameAndArguments(item));
       }
-      Map<String, dynamic> originData = _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+      Map<String, dynamic> originData =
+          _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
-      for(Map item in listFn){
+      for (Map item in listFn) {
         List<dynamic> args = [appStoreData];
-        if(retExec != null){
+        if (retExec != null) {
           args.add(retExec);
         }
-        for(String key in item["args"]){
+        for (String key in item["args"]) {
           args.add(originData[key]);
         }
         retExec = Function.apply(parseUtilFunction(item["fn"]), args);
       }
       return retExec;
     }
+
     return del == "=>" ? Function.apply(localFunction, []) : localFunction;
   }
 
-  static Map<String, dynamic> parseNameAndArguments(String value){
+  static Map<String, dynamic> parseNameAndArguments(String value) {
     //input nameFunction(arg1,arg2,arg3)
     //output {fn: "nameFunction", args:["arg1","arg2","arg3"]}
     Map<String, dynamic> ret = {};
     List<String> args = [];
     List<String> exp1 = value.split("(");
     ret["fn"] = exp1[0];
-    if(exp1.length > 1){
+    if (exp1.length > 1) {
       List<String> exp2 = exp1[1].split(")")[0].split(",");
-      for(String item in exp2){
+      for (String item in exp2) {
         args.add(item.trim());
       }
     }
@@ -226,17 +229,42 @@ class DynamicFn {
     //print("IMAGE: ${image}");
   }
 
+  static Widget Function(int index) getFutureList(AppStoreData appStoreData, dynamic data) {
+    if (appStoreData.getServerResponse().isNotEmpty) {
+      Map<String, dynamic> response = appStoreData.getServerResponse();
+      return (int index){
+        return DynamicUI.mainJson(response['list'][index], appStoreData, index, 'Data');
+      };
+    } else{
+      return (int index){
+        return const Text("Server response is empty");
+      };
+    }
+  }
+
   static Widget getFutureBuilder(AppStoreData appStoreData, dynamic data) {
     if (appStoreData.getServerResponse().isNotEmpty) {
       Map<String, dynamic> response = appStoreData.getServerResponse();
-      return Util.getListView(
-        appStoreData.getWidgetData("separated"),
-        const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        response['list'].length,
-        (BuildContext context, int index) {
-          return DynamicUI.mainJson(response['list'][index], appStoreData, index, 'Data');
-        },
-      );
+      bool grid = appStoreData.getWidgetData("grid");
+      if (grid == false) {
+        return Util.getListView(
+          appStoreData.getWidgetData("separated"),
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          response['list'].length,
+          getFutureList(appStoreData, data),
+        );
+      } else {
+        Map x = appStoreData.getWidgetDataConfig({"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
+        return GridView.count(
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          crossAxisCount: x["crossAxisCount"],
+          childAspectRatio: x["childAspectRatio"],
+          mainAxisSpacing: x["mainAxisSpacing"],
+          crossAxisSpacing: x["crossAxisSpacing"],
+          children: List.generate(response['list'].length, getFutureList(appStoreData, data)),
+
+        );
+      }
     }
     return CircularProgressIndicator(
       backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
