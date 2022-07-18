@@ -248,7 +248,7 @@ class DynamicFn {
 
   static Widget getFutureBuilder(AppStoreData appStoreData, dynamic data) {
     //print("getFutureBuilder");
-    if (appStoreData.getServerResponse().isNotEmpty) {
+    if (appStoreData.getServerResponse().isNotEmpty && appStoreData.nowDownloadContent == false) {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       bool grid = appStoreData.getWidgetData("grid");
       if (grid == false) {

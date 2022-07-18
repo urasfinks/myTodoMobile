@@ -247,10 +247,11 @@ class AppStoreData {
   Widget? compiledWidget;
   bool firstLoad = true;
   Widget wrapPage = const Text("Undefined WrapPage in Templates");
+  bool nowDownloadContent = false;
 
   void initPage(DynamicPage widget, BuildContext context) {
     //print("initPage ${widget.url}; _build:${_build}; compiledWidget: ${compiledWidget}");
-    if (_build == true || compiledWidget == null) {
+    if (_build == true || compiledWidget == null || nowDownloadContent == true) {
       print("initPage ${widget.url}");
       TabScope.getInstance().addHistory(this);
       setOnIndexRevisionError(() {

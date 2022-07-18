@@ -22,6 +22,7 @@ class DynamicPageUtil {
   }
 
   static Future<void> loadData(AppStoreData appStoreData) async {
+    appStoreData.nowDownloadContent = true;
     if (!appStoreData.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
     }
@@ -45,6 +46,7 @@ class DynamicPageUtil {
       print(stacktrace);
       dataUpdate(ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString()), appStoreData);
     }
+    appStoreData.nowDownloadContent = false;
   }
 
   static List<Widget>? getListAppBarActions(AppStoreData appStoreData) {
