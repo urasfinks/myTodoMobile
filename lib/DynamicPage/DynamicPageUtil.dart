@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:test3/DynamicUI/Addon.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import 'package:flutter/material.dart';
@@ -82,18 +83,10 @@ class DynamicPageUtil {
           dynamic p = jsonDecode(ret);
           if (needNextRoundBorderRadius == true) {
             needNextRoundBorderRadius = false;
-            if (p["flutterType"] == "Material") {
-              p["borderRadius"] = "10,10,0,0";
-            }
+            Addon.radius(p, "top");
           }
           if (d['template'] == "GroupBottom") {
-            if (list.last["flutterType"] == "Material") {
-              if (list.last["borderRadius"] == "10,10,0,0") {
-                list.last["borderRadius"] = "10,10,10,10";
-              } else {
-                list.last["borderRadius"] = "0,0,10,10";
-              }
-            }
+            Addon.radius(list.last, "bottom");
           }
           list.add(p);
           if (d['template'] == "GroupTop") {
@@ -109,6 +102,8 @@ class DynamicPageUtil {
       data[ret] = list;
     }
   }
+
+
 
   static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData) {
     List<dynamic>? action = data['Actions'];

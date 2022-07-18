@@ -21,7 +21,8 @@ class DynamicUI {
     return def(jsonData, null, FlutterType.defaultWidget, appStoreData, index, originKeyData);
   }
 
-  static dynamic getByType(String containsKey, map, dynamic def, AppStoreData appStoreData, int index, String? originKeyData) {
+  static dynamic getByType(
+      String containsKey, map, dynamic def, AppStoreData appStoreData, int index, String? originKeyData) {
     Map<String, Function> map1 = {
       "TextStyle": FlutterType.pTextStyle,
       "Column": FlutterType.pColumn,
@@ -73,7 +74,9 @@ class DynamicUI {
       "Nothing": FlutterType.pNothing,
     };
     //print("${[map, appStoreData, index, originKeyData]}");
-    return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData]) : def;
+    return map1.containsKey(containsKey)
+        ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData])
+        : def;
   }
 
   static dynamic def(map, key, def, AppStoreData appStoreData, int index, String originKeyData) {
@@ -87,13 +90,11 @@ class DynamicUI {
       return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData, index, originKeyData);
     }
     //print(ret);
-    if(DynamicFn.isTextFunction(ret)){
+    if (DynamicFn.isTextFunction(ret)) {
       return DynamicFn.evalTextFunction(ret, map, appStoreData, index, originKeyData);
     }
     return ret;
   }
-
-
 
   static List<Widget> defList(parsedJson, String key, AppStoreData appStoreData, int index, String originKeyData) {
     List<Widget> list = [];
