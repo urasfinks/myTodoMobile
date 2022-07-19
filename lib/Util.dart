@@ -87,8 +87,10 @@ class Util {
     var stream = http.ByteStream(image.openRead());
     var length = await image.length();
     var request = http.MultipartRequest("POST", Uri.parse(url));
-    request.fields["personKey"] = AppStore.personKey;
+
     request.files.add(http.MultipartFile('avatar', stream, length, filename: basename(image.path)));
+
+    request.headers.addAll(AppStore.requestHeader);
     return await request.send().then((response) async {
       //print("RESPONSE: ${response}");
       /*response.stream.transform(utf8.decoder).listen((value) {

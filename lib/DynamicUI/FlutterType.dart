@@ -114,12 +114,6 @@ class FlutterType {
     );
   }
 
-  static dynamic pNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    return NetworkImage(
-      DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData),
-    );
-  }
-
   static dynamic pCircleAvatar(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     return CircleAvatar(
       backgroundImage: DynamicUI.def(parsedJson, 'backgroundImage', null, appStoreData, index, originKeyData),
@@ -360,8 +354,8 @@ class FlutterType {
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = type == "datetime" ? true : false;
-    TextEditingController? textController =
-        appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
+    TextEditingController? textController = appStoreData.getTextController(
+        DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
     appStoreData.set(key, textController?.text);
 
     List<TextInputFormatter> f = [];
@@ -372,7 +366,8 @@ class FlutterType {
 
     return TextField(
       onSubmitted: (String x) {
-        dynamic c = DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
+        dynamic c =
+            DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
         if (c != null && x.isNotEmpty) {
           Function.apply(c, []);
         }
@@ -893,14 +888,36 @@ class FlutterType {
     );
   }
 
+  static dynamic pNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return NetworkImage(
+      DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData),
+    );
+  }
+
+  static dynamic pCachedNetworkImageProvider(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return CachedNetworkImageProvider(
+      DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData),
+      maxWidth: FlutterTypeConstant.parseInt(
+        DynamicUI.def(parsedJson, 'maxWidth', null, appStoreData, index, originKeyData),
+      ),
+      maxHeight: FlutterTypeConstant.parseInt(
+        DynamicUI.def(parsedJson, 'maxHeight', null, appStoreData, index, originKeyData),
+      ),
+      headers: AppStore.requestHeader,
+      scale: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index, originKeyData),
+      )!,
+      cacheKey: DynamicUI.def(parsedJson, 'cacheKey', null, appStoreData, index, originKeyData),
+    );
+  }
+
   static dynamic pCachedNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     //print(parsedJson);
-    Map<String, String> requestHeaders = {'Authorization': "Basic ${AppStore.personKeyBasicAuth}"};
     return CachedNetworkImage(
       color: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
       ),
-      httpHeaders: requestHeaders,
+      httpHeaders: AppStore.requestHeader,
       imageUrl: DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData),
       //placeholder: (context, url) => const CircularProgressIndicator(),
       errorWidget: (context, url, error) => const Icon(Icons.error),

@@ -29,9 +29,8 @@ class DynamicPageUtil {
     }
     print('Prepare download: ${appStoreData.getWidgetDates()}');
     try {
-      Map<String, String> requestHeaders = {'Authorization': "Basic ${AppStore.personKeyBasicAuth}"};
       final response = await http.post(Uri.parse("${AppStore.host}${appStoreData.getWidgetData('url')}"),
-          headers: requestHeaders, body: appStoreData.getWidgetData('parentState'));
+          headers: AppStore.requestHeader, body: appStoreData.getWidgetData('parentState'));
 
       //print(response.body);
       if (response.statusCode == 200) {

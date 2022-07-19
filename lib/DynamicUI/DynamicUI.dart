@@ -32,7 +32,6 @@ class DynamicUI {
       "SizedBox": FlutterType.pSizedBox,
       "Container": FlutterType.pContainer,
       "Center": FlutterType.pCenter,
-      "NetworkImage": FlutterType.pNetworkImage,
       "CircleAvatar": FlutterType.pCircleAvatar,
       "Icon": FlutterType.pIcon,
       "AssetImage": FlutterType.pAssetImage,
@@ -70,7 +69,9 @@ class DynamicUI {
       "IconButton": FlutterType.pIconButton,
       "Checkbox": FlutterType.pCheckbox,
       "AppStore": FlutterType.pAppStore,
+      "NetworkImage": FlutterType.pNetworkImage,
       "CachedNetworkImage": FlutterType.pCachedNetworkImage,
+      "CachedNetworkImageProvider": FlutterType.pCachedNetworkImageProvider,
       "Nothing": FlutterType.pNothing,
     };
     //print("${[map, appStoreData, index, originKeyData]}");

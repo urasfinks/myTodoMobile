@@ -3,13 +3,42 @@ import 'package:redux/redux.dart';
 import 'AppStoreData.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:convert' show utf8, base64;
+import 'package:http/http.dart' as http;
 
 class AppStore {
   static String host = "http://jamsys.ru:8081";
   static String ws = "ws://jamsys.ru:8081";
 
-  static String personKey = const Uuid().v4();
-  static String personKeyBasicAuth = const Uuid().v4();
+  static String _personKey = const Uuid().v4();
+  static Map<String, String> requestHeader = {};
+
+  static getUriWebSocket(){
+    return "$ws/websocket/$_personKey";
+  }
+
+  static void updateRequestHeader(){
+    String decoded = base64.encode(utf8.encode("PersonKey:$_personKey"));
+    requestHeader.addAll({
+      'Authorization': "Basic $decoded"
+    });
+    print("Person key: $_personKey, header: $requestHeader");
+  }
+
+  static Future registerPerson(prefs) async {
+    String url = "${AppStore.host}/person/$_personKey";
+    print("URL: $url");
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      await prefs.setString('key', _personKey);
+    }
+  }
+
+  static void setPersonKey(String key) {
+    _personKey = key;
+    updateRequestHeader();
+  }
+
   static final AppStore _singleton = AppStore._internal();
   static int selectedTabIndex = 0;
 
@@ -27,7 +56,8 @@ class AppStore {
     return StoreProvider.of<AppStore>(context).state.get(context, {syncSocket: syncSocket});
   }
 
-  static dynamic connect(AppStoreData appStoreData, Widget Function(dynamic defaultValue) builder, {defaultValue = ""}) {
+  static dynamic connect(AppStoreData appStoreData, Widget Function(dynamic defaultValue) builder,
+      {defaultValue = ""}) {
     //print("connect");
     return StoreConnector<AppStore, AppStoreData>(
       converter: (store) => appStoreData,
@@ -57,7 +87,8 @@ class AppStore {
     if (value.isNotEmpty) {
       for (var item in _map.entries) {
         //If url condition check only before symbol "?"
-        String v = key == "url" ? item.value.getWidgetData(key).toString().split("?")[0] : item.value.getWidgetData(key);
+        String v =
+            key == "url" ? item.value.getWidgetData(key).toString().split("?")[0] : item.value.getWidgetData(key);
         if (value.isNotEmpty && v == value) {
           ret.add(item.value);
         }
@@ -93,4 +124,5 @@ class AppStore {
       _map.remove(key);
     }
   }
+
 }
