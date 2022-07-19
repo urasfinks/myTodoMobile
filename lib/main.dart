@@ -7,15 +7,22 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'AppStore/AppStore.dart';
 import 'TabWrap.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert' show utf8, base64;
 
 Future<void> loadPref() async {
   final prefs = await SharedPreferences.getInstance();
+  //prefs.remove('key');
   final String? key = prefs.getString('key');
   if(key == null || "" == key){
-    await prefs.setString('key', AppStore.personKey);
+    print("URL: ${AppStore.host}/person/${AppStore.personKey}");
+    final response = await http.get(Uri.parse("${AppStore.host}/person/${AppStore.personKey}"));
+    if (response.statusCode == 200) {
+      await prefs.setString('key', AppStore.personKey);
+    }
   }
-  AppStore.personKey = prefs.getString('key')!;
+  AppStore.personKey = prefs.getString('key') ?? 'undefined';
+  AppStore.personKeyBasicAuth = base64.encode(utf8.encode("PersonKey:${AppStore.personKey}"));
   print("Person key: ${AppStore.personKey}");
 }
 
@@ -39,8 +46,7 @@ class RouterPage extends StatelessWidget {
         ],
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (RouteSettings settings) {
-          return CupertinoPageRoute(
-              builder: (context) => TabWrap(context), settings: settings);
+          return CupertinoPageRoute(builder: (context) => TabWrap(context), settings: settings);
         },
       ),
     );

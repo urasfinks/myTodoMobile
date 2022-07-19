@@ -134,7 +134,7 @@ class FlutterType {
   }
 
   static dynamic pIcon(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    return  Icon(
+    return Icon(
       iconsMap[DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData)],
       color: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
@@ -360,8 +360,8 @@ class FlutterType {
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = type == "datetime" ? true : false;
-    TextEditingController? textController = appStoreData.getTextController(
-        DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
+    TextEditingController? textController =
+        appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
     appStoreData.set(key, textController?.text);
 
     List<TextInputFormatter> f = [];
@@ -372,8 +372,7 @@ class FlutterType {
 
     return TextField(
       onSubmitted: (String x) {
-        dynamic c =
-            DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
+        dynamic c = DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
         if (c != null && x.isNotEmpty) {
           Function.apply(c, []);
         }
@@ -896,10 +895,12 @@ class FlutterType {
 
   static dynamic pCachedNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     //print(parsedJson);
+    Map<String, String> requestHeaders = {'Authorization': "Basic ${AppStore.personKeyBasicAuth}"};
     return CachedNetworkImage(
       color: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
       ),
+      httpHeaders: requestHeaders,
       imageUrl: DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData),
       //placeholder: (context, url) => const CircularProgressIndicator(),
       errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -916,7 +917,10 @@ class FlutterType {
   }
 
   static dynamic pNothing(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    return const SizedBox(height: 0,width: 0,);
+    return const SizedBox(
+      height: 0,
+      width: 0,
+    );
   }
 
   static dynamic pAppStore(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {

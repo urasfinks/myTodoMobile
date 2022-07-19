@@ -73,6 +73,11 @@ class AppStoreData {
     return widgetData;
   }
 
+  void setWidgetDataConfig(String key, dynamic value) {
+    dynamic x = widgetData["config"];
+    x[key] = value;
+  }
+
   dynamic getWidgetDataConfig(Map<String, dynamic> def) {
     dynamic x = widgetData["config"];
     if (x != null && x.runtimeType.toString().contains("Map")) {
@@ -175,8 +180,7 @@ class AppStoreData {
     }
   }
 
-  void inc(String key,
-      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") + step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -190,8 +194,7 @@ class AppStoreData {
     }
   }
 
-  void dec(String key,
-      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") - step;
     if (_map[key] < min) {
       _map[key] = min;

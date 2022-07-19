@@ -49,7 +49,7 @@ class WebSocket {
   _onListen() {
     if (!_connect) {
       _channel = WebSocketChannel.connect(
-        Uri.parse('ws://jamsys.ru:8081/websocket/${AppStore.personKey}'),
+        Uri.parse('${AppStore.ws}/websocket/${AppStore.personKey}'),
       );
       _connect = true;
       _channel!.stream.listen((message) {

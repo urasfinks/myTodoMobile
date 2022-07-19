@@ -12,6 +12,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../Util.dart';
 import 'DynamicPage.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 class DynamicFn {
   static int delay = 350;
@@ -28,6 +30,8 @@ class DynamicFn {
       "openGallery": openGallery,
       "alert": alert,
       "getAppStore": getAppStore,
+      //"getUrlPersonAvatar": getUrlPersonAvatar,
+      "getMD5": getMD5,
       "timestampToDate": DynamicDirective.timestampToDate,
     };
     if (map.containsKey(value)) {
@@ -47,7 +51,7 @@ class DynamicFn {
     return false;
   }
 
-  static dynamic evalTextFunction(String value, map, AppStoreData appStoreData, int index, String originKeyData) {
+  static dynamic evalTextFunction(String? value, map, AppStoreData appStoreData, int index, String originKeyData) {
     if (value == null) {
       return null;
     }
@@ -186,6 +190,20 @@ class DynamicFn {
       ),
     );
   }
+
+  static dynamic getTimestamp(AppStoreData appStoreData, dynamic data) {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
+
+  static dynamic getMD5(AppStoreData appStoreData, dynamic data) {
+    return md5.convert(utf8.encode(data["data"])).toString();
+  }
+
+  /*
+  static dynamic getUrlPersonAvatar(AppStoreData appStoreData, dynamic data) {
+    //http://jamsys.ru:8081/avatar-get/a7d437fa-d47a-4e0f-9417-f9701ece125e?time=${time}
+    return "${AppStore.host}/avatar-get/${getMD5(appStoreData, {"data": AppStore.personKey})}?time=${getTimestamp(appStoreData, data)}";
+  }*/
 
   static dynamic getAppStore(AppStoreData appStoreData, dynamic data) {
     //print("getAppStore: ${data}");

@@ -10,7 +10,8 @@ import '../DynamicUI/page/TextEditRowJsonObject.dart';
 import '../DynamicUI/page/ErrorPageJsonObject.dart';
 import '../WebSocket.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show utf8, base64, jsonEncode, jsonDecode;
+import 'dart:convert' show jsonEncode, jsonDecode;
+
 import 'dart:async';
 
 class DynamicPageUtil {
@@ -28,9 +29,7 @@ class DynamicPageUtil {
     }
     print('Prepare download: ${appStoreData.getWidgetDates()}');
     try {
-      String encoded = base64.encode(utf8.encode("PersonKey:${AppStore.personKey}"));
-      Map<String, String> requestHeaders = {'Authorization': "Basic $encoded"};
-
+      Map<String, String> requestHeaders = {'Authorization': "Basic ${AppStore.personKeyBasicAuth}"};
       final response = await http.post(Uri.parse("${AppStore.host}${appStoreData.getWidgetData('url')}"),
           headers: requestHeaders, body: appStoreData.getWidgetData('parentState'));
 
@@ -38,15 +37,20 @@ class DynamicPageUtil {
       if (response.statusCode == 200) {
         dataUpdate(jsonDecode(response.body), appStoreData);
       } else {
-        dataUpdate(
-            ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
+        setErrorStyle(appStoreData);
+        dataUpdate(ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
       }
     } catch (e, stacktrace) {
       print(e);
       print(stacktrace);
+      setErrorStyle(appStoreData);
       dataUpdate(ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString()), appStoreData);
     }
     appStoreData.nowDownloadContent = false;
+  }
+
+  static void setErrorStyle(AppStoreData appStoreData) {
+    appStoreData.addWidgetData('grid', false); //А то не влезает
   }
 
   static List<Widget>? getListAppBarActions(AppStoreData appStoreData) {
@@ -104,8 +108,6 @@ class DynamicPageUtil {
       data[ret] = list;
     }
   }
-
-
 
   static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData) {
     List<dynamic>? action = data['Actions'];
