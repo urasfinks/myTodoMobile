@@ -6,6 +6,7 @@ import 'package:test3/DynamicUI/FlutterTypeConstant.dart';
 import 'package:test3/TabPageHistory.dart';
 import 'AppStore/AppStoreData.dart';
 import 'DynamicPage/DynamicPage.dart';
+import 'DynamicPage/DynamicPageUtil.dart';
 //import 'WebSocket.dart';
 
 class TabWrap extends StatefulWidget {
@@ -66,8 +67,8 @@ class TabScope{ // singleton class
     }
   }
 
-  bool iamLastPage(AppStoreData appStoreData){
-    if(pages[tabIndex].history.length > 1){
+  bool iamActivePage(AppStoreData appStoreData){
+    if(pages[tabIndex].history.isNotEmpty){
       return pages[tabIndex].history.last == appStoreData;
     }
     return false;
@@ -82,16 +83,25 @@ class TabScope{ // singleton class
           }
           AppStoreData last = pages[tabIndex].history.removeLast();
           Navigator.pop(last.getCtx()!);
+          whatNext(pages[tabIndex].history.last);
         }
       }else if(data != null && data["count"] != null){
           for(int i=0;i<data["count"];i++){
             AppStoreData last = pages[tabIndex].history.removeLast();
             Navigator.pop(last.getCtx()!);
+            whatNext(pages[tabIndex].history.last);
           }
       }else{
         AppStoreData last = pages[tabIndex].history.removeLast();
         Navigator.pop(last.getCtx()!);
+        whatNext(pages[tabIndex].history.last);
       }
+    }
+  }
+
+  void whatNext(AppStoreData appStoreData){
+    if(appStoreData.needUpdateOnActive){
+      DynamicPageUtil.loadData(appStoreData);
     }
   }
 

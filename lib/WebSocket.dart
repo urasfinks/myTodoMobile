@@ -46,6 +46,9 @@ class WebSocket {
   }
 
   _onListen() {
+    if(_subscribeListDataUID.isEmpty){
+      return;
+    }
     if (!_connect) {
       print(AppStore.getUriWebSocket());
       _channel = WebSocketChannel.connect(
@@ -86,7 +89,9 @@ class WebSocket {
       }, onDone: (){
         print("Socket Done");
         _connect = false;
-        reconnect();
+        if(_subscribeListDataUID.isNotEmpty){
+          reconnect();
+        }
       }, onError: (e, stacktrace){
         print("Socket OnError $e");
         print(stacktrace);
@@ -110,8 +115,6 @@ class WebSocket {
       }catch(e){}
       _onListen();
     }
-
-    _onClose();
   }
 
   bool check(dynamic object, Map<String, dynamic> map) {

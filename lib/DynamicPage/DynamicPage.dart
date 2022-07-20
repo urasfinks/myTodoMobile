@@ -93,7 +93,12 @@ class DynamicPage extends StatefulWidget {
   void refresh(AppStoreData appStoreData) {
     //print("Refresh: ${appStoreData.getWidgetDates()}");
     //DynamicPageUtil.loadDataTest(this);
-    DynamicPageUtil.loadData(appStoreData);
+    print("REFRESH: ${TabScope.getInstance().iamActivePage(appStoreData)}");
+    if (TabScope.getInstance().iamActivePage(appStoreData)) {
+      DynamicPageUtil.loadData(appStoreData);
+    } else {
+      appStoreData.needUpdateOnActive = true;
+    }
   }
 }
 
@@ -118,5 +123,4 @@ class DynamicPageState extends State<DynamicPage> {
     appStoreData.setPageState(this);
     return appStoreData.getCompiledWidget();
   }
-
 }

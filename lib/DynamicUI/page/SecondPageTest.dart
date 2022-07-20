@@ -16,7 +16,6 @@ class SecondPageTest extends StatefulWidget {
 }
 
 class _SecondPageTest extends State<SecondPageTest> {
-
   @override
   Widget build(BuildContext context) {
     WebSocket().subscribe(widget.title);
@@ -28,6 +27,12 @@ class _SecondPageTest extends State<SecondPageTest> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          color: Colors.black,
+          onPressed: () {
+            print("BACK");
+          },
+        ),
         title: Text(widget.title),
         elevation: 0,
         backgroundColor: Colors.blue[600],
@@ -45,8 +50,7 @@ class _SecondPageTest extends State<SecondPageTest> {
                 store.apply();
                 //Navigator.of(context).pop();
               },
-              child: AppStore.connect(
-                  store, (def) => Text('Go back! ${store.get("x", 0)}'), defaultValue: 0),
+              child: AppStore.connect(store, (def) => Text('Go back! ${store.get("x", 0)}'), defaultValue: 0),
             ),
             ElevatedButton(
               onPressed: () {
@@ -59,8 +63,7 @@ class _SecondPageTest extends State<SecondPageTest> {
                 }*/
                 //Navigator.of(context).pop();
               },
-              child: AppStore.connect(
-                  store, (def) => Text('Go back! ${store.get("x1", 0)}'), defaultValue: 0),
+              child: AppStore.connect(store, (def) => Text('Go back! ${store.get("x1", 0)}'), defaultValue: 0),
             ),
             Row(
               children: [
@@ -72,12 +75,11 @@ class _SecondPageTest extends State<SecondPageTest> {
                   },
                   padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                 ),
-                AppStore.connect(
-                    store, (def) => Text("${store.get('c1', 1)}"), defaultValue: 1),
+                AppStore.connect(store, (def) => Text("${store.get('c1', 1)}"), defaultValue: 1),
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
-                      Invoke.apply(store, '{"fn":"inc", "arg":{"key":"c1"}, "extra":{"max": 10.0}}');
+                    Invoke.apply(store, '{"fn":"inc", "arg":{"key":"c1"}, "extra":{"max": 10.0}}');
                   },
                   padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                 ),
@@ -88,7 +90,4 @@ class _SecondPageTest extends State<SecondPageTest> {
       ),
     );
   }
-
 }
-
-

@@ -20,6 +20,8 @@ class AppStoreData {
 
   AppStoreData(this.store, {this.syncSocket = false});
 
+  bool needUpdateOnActive = false;
+
   void setIndexRevisionWithoutReload(int index) {
     _indexRevision = index;
   }
@@ -273,12 +275,18 @@ class AppStoreData {
         wrapPage = DynamicUI.main((getServerResponse()["Template"] as Map)[getWidgetData("wrapPage")], this, 0, '');
       }
 
+      BackButton? back = (widget.root == false) ? BackButton(
+        onPressed: () {
+          TabScope.getInstance().popHistory(null);
+        },
+      ) : null;
       if (getWidgetData("dialog") == false) {
         compiledWidget = Scaffold(
             backgroundColor: FlutterTypeConstant.parseColor(
               getWidgetData("backgroundColor"),
             ),
             appBar: AppBar(
+              leading: back,
               elevation: 0,
               backgroundColor: FlutterTypeConstant.parseColor(
                 getWidgetData("appBarBackgroundColor"),
