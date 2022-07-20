@@ -33,6 +33,7 @@ class DynamicFn {
       //"getUrlPersonAvatar": getUrlPersonAvatar,
       "getMD5": getMD5,
       "timestampToDate": DynamicDirective.timestampToDate,
+      "formatNumber": DynamicDirective.formatNumber,
     };
     if (map.containsKey(value)) {
       return map[value];
