@@ -31,6 +31,7 @@ class AppStore {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       await prefs.setString('key', _personKey);
+      updateRequestHeader();
     }
   }
 

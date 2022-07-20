@@ -215,7 +215,10 @@ class AppStoreData {
   }
 
   void onChange(String key, bool notify) {
-    setParentUpdate(true);
+    dynamic x = getWidgetDataConfig({"parentUpdateOnChangeStateData": false});
+    if(x["parentUpdateOnChangeStateData"] == true){
+      setParentUpdate(true);
+    }
     if (notify == true) {
       if (syncSocket) {
         WebSocket().send(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
