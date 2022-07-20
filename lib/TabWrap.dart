@@ -83,24 +83,24 @@ class TabScope{ // singleton class
           }
           AppStoreData last = pages[tabIndex].history.removeLast();
           Navigator.pop(last.getCtx()!);
-          whatNext(pages[tabIndex].history.last);
+          whatNext(pages[tabIndex].history.last, last.getParentUpdate());
         }
       }else if(data != null && data["count"] != null){
           for(int i=0;i<data["count"];i++){
             AppStoreData last = pages[tabIndex].history.removeLast();
             Navigator.pop(last.getCtx()!);
-            whatNext(pages[tabIndex].history.last);
+            whatNext(pages[tabIndex].history.last, last.getParentUpdate());
           }
       }else{
         AppStoreData last = pages[tabIndex].history.removeLast();
         Navigator.pop(last.getCtx()!);
-        whatNext(pages[tabIndex].history.last);
+        whatNext(pages[tabIndex].history.last, last.getParentUpdate());
       }
     }
   }
 
-  void whatNext(AppStoreData appStoreData){
-    if(appStoreData.needUpdateOnActive){
+  void whatNext(AppStoreData appStoreData, bool parentUpdate){
+    if(appStoreData.needUpdateOnActive || parentUpdate){
       DynamicPageUtil.loadData(appStoreData);
     }
   }

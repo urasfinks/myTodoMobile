@@ -177,9 +177,7 @@ class AppStoreData {
   void set(String key, dynamic value, {bool notify = true}) {
     //print("Set: $key = $value");
     _map[key] = value;
-    if (notify == true) {
-      onChange(key);
-    }
+    onChange(key, notify);
   }
 
   void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
@@ -191,9 +189,7 @@ class AppStoreData {
       _map[key] = max;
     }
     _map[key] = (_map[key]).toStringAsFixed(fixed);
-    if (notify == true) {
-      onChange(key);
-    }
+    onChange(key, notify);
   }
 
   void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
@@ -205,9 +201,7 @@ class AppStoreData {
       _map[key] = max;
     }
     _map[key] = (_map[key]).toStringAsFixed(fixed);
-    if (notify == true) {
-      onChange(key);
-    }
+    onChange(key, notify);
   }
 
   void toggle(String key, {bool notify = true}) {
@@ -217,14 +211,15 @@ class AppStoreData {
     } else {
       _map[key] = false;
     }
-    if (notify == true) {
-      onChange(key);
-    }
+    onChange(key, notify);
   }
 
-  void onChange(String key) {
-    if (syncSocket) {
-      WebSocket().send(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
+  void onChange(String key, bool notify) {
+    setParentUpdate(true);
+    if (notify == true) {
+      if (syncSocket) {
+        WebSocket().send(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
+      }
     }
   }
 
@@ -342,5 +337,15 @@ class AppStoreData {
 
   _contentBuilder(dynamic wrapPage) {
     return getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicFn.getFutureBuilder(this, null);
+  }
+
+  bool _parentUpdate = false;
+
+  void setParentUpdate(bool upd){
+    _parentUpdate = upd;
+  }
+
+  bool getParentUpdate() {
+    return _parentUpdate;
   }
 }
