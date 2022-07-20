@@ -116,4 +116,15 @@ class Util {
     escaped = escaped.replaceAll("\t", "\\t");
     return escaped;
   }
+
+  static Map merge(Map def, Map? input){
+    if(input == null || input.isEmpty){
+      return def;
+    }
+    for(var item in input.entries){
+      def[item.key] = item.value;
+    }
+    return def;
+  }
+
 }

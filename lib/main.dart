@@ -10,7 +10,7 @@ import 'TabWrap.dart';
 
 Future<void> loadPref() async {
   final prefs = await SharedPreferences.getInstance();
-  prefs.remove('key');
+  //prefs.remove('key');
   final String? key = prefs.getString('key');
   if(key == null || "" == key){
     await AppStore.registerPerson(prefs);

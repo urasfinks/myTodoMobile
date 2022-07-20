@@ -1,4 +1,5 @@
 import 'package:test3/AppStore/AppStore.dart';
+import 'package:test3/DynamicPage/DynamicFn.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'dart:convert';
@@ -65,6 +66,7 @@ class WebSocket {
           AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
           if (storeData != null) {
             storeData.setIndexRevision(jsonDecoded["Revision"]);
+            DynamicFn.alert(storeData, {"data": "Сохранено"});
             storeData.set("time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
             //print("UPDATE_REVISION: ${storeData.getStringStoreState()}");
             storeData.apply();

@@ -29,8 +29,8 @@ class DynamicFn {
       "openDialog": openDialog,
       "openGallery": openGallery,
       "alert": alert,
+      "confirm": confirm,
       "getAppStore": getAppStore,
-      //"getUrlPersonAvatar": getUrlPersonAvatar,
       "getMD5": getMD5,
       "timestampToDate": DynamicDirective.timestampToDate,
       "formatNumber": DynamicDirective.formatNumber,
@@ -183,11 +183,31 @@ class DynamicFn {
     return const Text("Hoho");
   }
 
+  static dynamic confirm(AppStoreData appStoreData, dynamic data) {
+    data["action"] = true;
+    data["duration"] = 5000;
+    data["backgroundColor"] = "red";
+    alert(appStoreData, data);
+  }
+
   static dynamic alert(AppStoreData appStoreData, dynamic data) {
     print("alert: ${data}");
+    Map config = Util.merge({"data": "Сохранено" ,"backgroundColor": "rgba:30,136,229,0.95", "color":"white", "duration": 750, "action": false, "actionColor": "white", "actionTitle": "Удалить?", "actionFn": null}, data);
+
+    SnackBarAction? action = config["action"] == true ? SnackBarAction(
+      textColor: FlutterTypeConstant.parseColor(config["actionColor"]),
+      label: config["actionTitle"],
+      onPressed: DynamicFn.evalTextFunction(data['onPressed'], data, appStoreData, 0, 'no-origin-data'),
+    ) : null;
+
     ScaffoldMessenger.of(appStoreData.getCtx()!).showSnackBar(
       SnackBar(
-        content: Text(data["data"]),
+        duration: Duration(milliseconds: config["duration"]),
+        content: Text(config["data"], style: TextStyle(color: FlutterTypeConstant.parseColor(config["color"]))),
+        backgroundColor: FlutterTypeConstant.parseColor(config["backgroundColor"]),
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        action: action,
       ),
     );
   }
