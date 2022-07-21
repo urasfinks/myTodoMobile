@@ -53,7 +53,7 @@ class DynamicFn {
   }
 
   static dynamic evalTextFunction(String? value, map, AppStoreData appStoreData, int index, String originKeyData) {
-    if (value == null) {
+    if (value == null || value.isEmpty) {
       return null;
     }
     //value = '=>getAppStore(getAppStoreDataTime)|timestampToDate(timestampToDateData)';
@@ -145,18 +145,17 @@ class DynamicFn {
     }
   }
 
-  static dynamic openWindow(AppStoreData appStoreData, dynamic data) {
+  static dynamic openWindow(AppStoreData appStoreData, dynamic data) async {
+    if(data["delay"] != null){
+      await Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {});
+    }
     String st = appStoreData.getStringStoreState();
     if (st.isNotEmpty) {
       data["parentState"] = st;
     }
     print("openWindow: ${data}");
     Navigator.push(
-      appStoreData.getCtx()!,
-      /*MaterialPageRoute(
-          settings: RouteSettings(name: data["url"]),
-          builder: (context) => DynamicPage.fromMap(data),
-        )*/
+      TabScope.getInstance().getLast().getCtx()!,
       CupertinoPageRoute(
         settings: RouteSettings(name: data["url"]),
         builder: (context) => DynamicPage.fromMap(data),
@@ -186,19 +185,30 @@ class DynamicFn {
   static dynamic confirm(AppStoreData appStoreData, dynamic data) {
     data["action"] = true;
     data["duration"] = 5000;
-    data["backgroundColor"] = "red";
+    data["backgroundColor"] = "red.600";
     alert(appStoreData, data);
   }
 
   static dynamic alert(AppStoreData appStoreData, dynamic data) {
     print("alert: ${data}");
-    Map config = Util.merge({"data": "Сохранено" ,"backgroundColor": "rgba:30,136,229,0.95", "color":"white", "duration": 750, "action": false, "actionColor": "white", "actionTitle": "Удалить?", "actionFn": null}, data);
+    Map config = Util.merge({
+      "data": "Сохранено",
+      "backgroundColor": "rgba:30,136,229,0.95",
+      "color": "white",
+      "duration": 750,
+      "action": false,
+      "actionColor": "white",
+      "actionTitle": "Удалить",
+      "actionFn": null
+    }, data);
 
-    SnackBarAction? action = config["action"] == true ? SnackBarAction(
-      textColor: FlutterTypeConstant.parseColor(config["actionColor"]),
-      label: config["actionTitle"],
-      onPressed: DynamicFn.evalTextFunction(data['onPressed'], data, appStoreData, 0, 'no-origin-data'),
-    ) : null;
+    SnackBarAction? action = config["action"] == true
+        ? SnackBarAction(
+            textColor: FlutterTypeConstant.parseColor(config["actionColor"]),
+            label: config["actionTitle"],
+            onPressed: DynamicFn.evalTextFunction(data['onPressed'], data, appStoreData, 0, 'no-origin-data'),
+          )
+        : null;
 
     ScaffoldMessenger.of(appStoreData.getCtx()!).showSnackBar(
       SnackBar(
@@ -272,14 +282,14 @@ class DynamicFn {
     if (appStoreData.getServerResponse().isNotEmpty) {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       List<Widget> ret = [];
-      for(int i = 0; i< response['list'].length;i++){
+      for (int i = 0; i < response['list'].length; i++) {
         ret.add(DynamicUI.mainJson(response['list'][i], appStoreData, i, 'Data'));
       }
-      return (int index){
+      return (int index) {
         return ret[index];
       };
-    } else{
-      return (int index){
+    } else {
+      return (int index) {
         return const Text("Server response is empty");
       };
     }
@@ -298,7 +308,8 @@ class DynamicFn {
           getFutureList(appStoreData, data),
         );
       } else {
-        Map x = appStoreData.getWidgetDataConfig({"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
+        Map x = appStoreData.getWidgetDataConfig(
+            {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
         return GridView.count(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           crossAxisCount: x["crossAxisCount"],
@@ -306,7 +317,6 @@ class DynamicFn {
           mainAxisSpacing: x["mainAxisSpacing"],
           crossAxisSpacing: x["crossAxisSpacing"],
           children: List.generate(response['list'].length, getFutureList(appStoreData, data)),
-
         );
       }
     }

@@ -53,6 +53,10 @@ class TabScope{ // singleton class
   ];
   int tabIndex = 0;
 
+  AppStoreData getLast(){
+    return pages[tabIndex].history.last;
+  }
+
   void addHistory(AppStoreData appStoreData){
     if(!pages[tabIndex].history.contains(appStoreData)){
       pages[tabIndex].history.add(appStoreData);
