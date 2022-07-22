@@ -20,9 +20,7 @@ class TabWrap extends StatefulWidget {
 
 class TabScope{ // singleton class
   static TabScope? _tabScope;
-  final List<TabPageHistory> pages = [
-    TabPageHistory(
-      DynamicPage.fromMap(
+  /*DynamicPage.fromMap(
         {
           "title": 'Доступные сервисы',
           "url": '/project/system',
@@ -35,6 +33,18 @@ class TabScope{ // singleton class
             "crossAxisSpacing": 10.0
           },
           "grid": true
+        },
+      ),*/
+  final List<TabPageHistory> pages = [
+    TabPageHistory(
+      DynamicPage.fromMap(
+        {
+          "title": 'Список задач',
+          "url": '/project/to-do',
+          "backgroundColor": "#f5f5f5",
+          "pullToRefreshBackgroundColor": "blue.600",
+          "progressIndicatorBackgroundColor": "#ffffff",
+          "root": true
         },
       ),
     ),
@@ -145,7 +155,7 @@ class _TabWrapState extends State<TabWrap> {
         currentIndex: _tabScope.tabIndex,
         items: const [
           BottomNavigationBarItem(
-            label: 'Сервисы',
+            label: 'Список задач',
             icon: Icon(Icons.dashboard),
           ),
           BottomNavigationBarItem(

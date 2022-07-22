@@ -1007,7 +1007,7 @@ class FlutterType {
         DynamicUI.def(parsedJson, 'height', null, appStoreData, index, originKeyData),
       ),
       padding: FlutterTypeConstant.parseDouble(
-        DynamicUI.def(parsedJson, 'fixedWidth', 12, appStoreData, index, originKeyData),
+        DynamicUI.def(parsedJson, 'padding', 12, appStoreData, index, originKeyData),
       )!,
       splashColor: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'splashColor', null, appStoreData, index, originKeyData),
@@ -1019,7 +1019,7 @@ class FlutterType {
         DynamicUI.def(parsedJson, 'fromMax', false, appStoreData, index, originKeyData),
       )!,
       isStretch: FlutterTypeConstant.parseBool(
-        DynamicUI.def(parsedJson, 'isStretch', false, appStoreData, index, originKeyData),
+        DynamicUI.def(parsedJson, 'isStretch', true, appStoreData, index, originKeyData),
       )!,
       onValueChanged: (int index) {
         appStoreData.set(key, index);
