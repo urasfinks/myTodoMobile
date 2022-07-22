@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:test3/AppStore/AppStoreData.dart';
 import 'package:test3/DynamicPage/DynamicFn.dart';
 import '../AppStore/AppStore.dart';
@@ -955,6 +956,41 @@ class FlutterType {
     for (Widget w in children) {
       ch[count++] = w;
     }
+    return CupertinoSegmentedControl(
+      children: ch,
+      unselectedColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'unselectedColor', null, appStoreData, index, originKeyData),
+      ),
+      borderColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'borderColor', null, appStoreData, index, originKeyData),
+      ),
+      selectedColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'selectedColor', null, appStoreData, index, originKeyData),
+      ),
+      pressedColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'pressedColor', null, appStoreData, index, originKeyData),
+      ),
+      padding: FlutterTypeConstant.parseEdgeInsets(
+        DynamicUI.def(parsedJson, 'padding', null, appStoreData, index, originKeyData),
+      ),
+      onValueChanged: (int index) {
+        appStoreData.set(key, index);
+        appStoreData.apply();
+      },
+      groupValue: FlutterTypeConstant.parseInt(
+        DynamicUI.def(parsedJson, 'value', 0, appStoreData, index, originKeyData),
+      ),
+    );
+  }
+
+  static dynamic pSegmentControl2(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    List<Widget> children = DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData);
+    var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
+    Map<int, Widget> ch = {};
+    int count = 0;
+    for (Widget w in children) {
+      ch[count++] = w;
+    }
     return CustomSlidingSegmentedControl(
       children: ch,
       decoration: DynamicUI.def(parsedJson, 'decoration', null, appStoreData, index, originKeyData),
@@ -986,7 +1022,6 @@ class FlutterType {
         DynamicUI.def(parsedJson, 'isStretch', false, appStoreData, index, originKeyData),
       )!,
       onValueChanged: (int index) {
-        //appStoreData.set(key, parsedJson["children"][index]["value"]);
         appStoreData.set(key, index);
         appStoreData.apply();
       },
@@ -998,4 +1033,37 @@ class FlutterType {
       )!,
     );
   }
+
+  static dynamic pSegmentControl3(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    List<Widget> children = DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData);
+    var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
+    Map<int, Widget> ch = {};
+    int count = 0;
+    for (Widget w in children) {
+      ch[count++] = w;
+    }
+    return MaterialSegmentedControl(
+      children: ch,
+      unselectedColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'unselectedColor', null, appStoreData, index, originKeyData),
+      ),
+      borderColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'borderColor', null, appStoreData, index, originKeyData),
+      ),
+      selectedColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'selectedColor', "blue.600", appStoreData, index, originKeyData),
+      )!,
+      disabledColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'disabledColor', "red", appStoreData, index, originKeyData),
+      )!,
+      onSegmentChosen: (int index) {
+        appStoreData.set(key, index);
+        appStoreData.apply();
+      },
+      selectionIndex: FlutterTypeConstant.parseInt(
+        DynamicUI.def(parsedJson, 'value', 0, appStoreData, index, originKeyData),
+      ),
+    );
+  }
+
 }
