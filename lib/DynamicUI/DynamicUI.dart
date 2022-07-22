@@ -73,6 +73,7 @@ class DynamicUI {
       "CachedNetworkImage": FlutterType.pCachedNetworkImage,
       "CachedNetworkImageProvider": FlutterType.pCachedNetworkImageProvider,
       "Nothing": FlutterType.pNothing,
+      "SegmentControl": FlutterType.pSegmentControl,
     };
     //print("${[map, appStoreData, index, originKeyData]}");
     return map1.containsKey(containsKey)

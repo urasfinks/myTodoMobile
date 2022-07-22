@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -354,8 +356,8 @@ class FlutterType {
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = type == "datetime" ? true : false;
-    TextEditingController? textController = appStoreData.getTextController(
-        DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
+    TextEditingController? textController =
+        appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
     appStoreData.set(key, textController?.text);
 
     List<TextInputFormatter> f = [];
@@ -366,8 +368,7 @@ class FlutterType {
 
     return TextField(
       onSubmitted: (String x) {
-        dynamic c =
-            DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
+        dynamic c = DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
         if (c != null && x.isNotEmpty) {
           Function.apply(c, []);
         }
@@ -944,5 +945,57 @@ class FlutterType {
     return AppStore.connect(appStoreData, (def) {
       return DynamicUI.def(parsedJson, 'child', defaultWidget, appStoreData, index, originKeyData);
     }, defaultValue: 1);
+  }
+
+  static dynamic pSegmentControl(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    List<Widget> children = DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData);
+    var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
+    Map<int, Widget> ch = {};
+    int count = 0;
+    for (Widget w in children) {
+      ch[count++] = w;
+    }
+    return CustomSlidingSegmentedControl(
+      children: ch,
+      decoration: DynamicUI.def(parsedJson, 'decoration', null, appStoreData, index, originKeyData),
+      thumbDecoration: DynamicUI.def(parsedJson, 'thumbDecoration', null, appStoreData, index, originKeyData),
+      duration: Duration(
+        milliseconds: FlutterTypeConstant.parseInt(
+          DynamicUI.def(parsedJson, 'duration', 300, appStoreData, index, originKeyData),
+        )!,
+      ),
+      fixedWidth: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'fixedWidth', null, appStoreData, index, originKeyData),
+      ),
+      height: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'height', null, appStoreData, index, originKeyData),
+      ),
+      padding: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'fixedWidth', 12, appStoreData, index, originKeyData),
+      )!,
+      splashColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'splashColor', null, appStoreData, index, originKeyData),
+      ),
+      highlightColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'highlightColor', null, appStoreData, index, originKeyData),
+      ),
+      fromMax: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'fromMax', false, appStoreData, index, originKeyData),
+      )!,
+      isStretch: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'isStretch', false, appStoreData, index, originKeyData),
+      )!,
+      onValueChanged: (int index) {
+        //appStoreData.set(key, parsedJson["children"][index]["value"]);
+        appStoreData.set(key, index);
+        appStoreData.apply();
+      },
+      initialValue: FlutterTypeConstant.parseInt(
+        DynamicUI.def(parsedJson, 'value', 0, appStoreData, index, originKeyData),
+      ),
+      innerPadding: FlutterTypeConstant.parseEdgeInsets(
+        DynamicUI.def(parsedJson, 'padding', 2.0, appStoreData, index, originKeyData),
+      )!,
+    );
   }
 }
