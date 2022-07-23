@@ -28,6 +28,7 @@ class Addon{
   }
 
   static void _containerTopRadius(parsedJson) {
+    String saveColor = parsedJson["color"];
     parsedJson["color"] = null;
     if(parsedJson["decoration"] == null){
       Map<String, dynamic> x = {};
@@ -35,10 +36,11 @@ class Addon{
     }
     parsedJson["decoration"]["flutterType"] = "BoxDecoration";
     parsedJson["decoration"]["borderRadius"] = "10,10,0,0";
-    parsedJson["decoration"]["color"] = "white";
+    parsedJson["decoration"]["color"] = saveColor;
   }
 
   static void _containerBottomRadius(parsedJson) {
+    String saveColor = parsedJson["color"];
     parsedJson["color"] = null;
     if (parsedJson["decoration"] == null){
       Map<String, dynamic> x = {};
@@ -49,7 +51,7 @@ class Addon{
     } else {
       parsedJson["decoration"]["flutterType"] = "BoxDecoration";
       parsedJson["decoration"]["borderRadius"] = "0,0,10,10";
-      parsedJson["decoration"]["color"] = "white";
+      parsedJson["decoration"]["color"] = saveColor;
     }
   }
 

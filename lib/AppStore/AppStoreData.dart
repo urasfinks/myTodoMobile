@@ -124,7 +124,7 @@ class AppStoreData {
   TextEditingController? getTextController(String key, String def) {
     if (!listController.containsKey(key)) {
       TextEditingController textController = TextEditingController();
-      if (_map.containsKey(key)) {
+      if (_map.containsKey(key) && _map[key] != null) {
         textController.text = _map[key];
       } else {
         textController.text = def;

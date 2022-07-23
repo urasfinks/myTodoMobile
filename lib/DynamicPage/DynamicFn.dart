@@ -32,6 +32,7 @@ class DynamicFn {
       "confirm": confirm,
       "getAppStore": getAppStore,
       "getMD5": getMD5,
+      "resetTextFieldValue": resetTextFieldValue,
       "timestampToDate": DynamicDirective.timestampToDate,
       "formatNumber": DynamicDirective.formatNumber,
     };
@@ -52,20 +53,21 @@ class DynamicFn {
     return false;
   }
 
-  static dynamic evalTextFunction(String? value, map, AppStoreData appStoreData, int index, String originKeyData) {
+  static dynamic evalTextFunction(String? value, Map? map, AppStoreData appStoreData, int index, String originKeyData) {
     if (value == null || value.isEmpty) {
       return null;
     }
     //value = '=>getAppStore(getAppStoreDataTime)|timestampToDate(timestampToDateData)';
     String del = value.toString().startsWith("=>") ? "=>" : ":";
     localFunction() {
-      //print("evalTextFunction: ${value}");
+      print("evalTextFunction: ${value}");
       List<String> exp = value.toString().split("|");
       exp[0] = exp[0].split(del)[1];
       List<dynamic> listFn = [];
       for (String item in exp) {
         listFn.add(parseNameAndArguments(item));
       }
+      print(listFn);
       Map<String, dynamic> originData =
           _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
@@ -75,8 +77,15 @@ class DynamicFn {
           args.add(retExec);
         }
         for (String key in item["args"]) {
-          args.add(originData[key]);
+          if(originData.containsKey(key)){
+            args.add(originData[key]);
+          }else if(map!= null &&  map.containsKey(key)){
+            args.add(map[key]);
+          }else{
+            args.add(null);
+          }
         }
+        print("args: $args");
         retExec = Function.apply(parseUtilFunction(item["fn"]), args);
       }
       return retExec;
@@ -187,6 +196,17 @@ class DynamicFn {
     data["duration"] = 5000;
     data["backgroundColor"] = "red.600";
     alert(appStoreData, data);
+  }
+
+  static dynamic resetTextFieldValue(AppStoreData appStoreData, dynamic data) {
+    TextEditingController? tec =  appStoreData.getTextController(
+      data["name"],
+      "",
+    );
+    if(tec != null){
+      tec.text  = "";
+      appStoreData.set(data["name"], null);
+    }
   }
 
   static dynamic alert(AppStoreData appStoreData, dynamic data) {

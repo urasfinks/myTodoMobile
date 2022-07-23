@@ -258,6 +258,15 @@ class FlutterType {
     }
   }
 
+  static dynamic pRawMaterialButton(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    print("pRawMaterialButton: ${parsedJson}");
+    return RawMaterialButton(
+      constraints: const BoxConstraints(minWidth: 10, maxHeight: 10),
+      onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
+      child: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index, originKeyData),
+    );
+  }
+
   static dynamic pElevatedButtonIcon(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     //print(parsedJson);
     return ElevatedButton.icon(
@@ -355,10 +364,14 @@ class FlutterType {
   static dynamic pTextField(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
+    String formattedDate = defData;
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = type == "datetime" ? true : false;
-    TextEditingController? textController =
-        appStoreData.getTextController(DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData), defData);
+    String? defAppStoreData = appStoreData.get(key, null);
+    TextEditingController? textController = appStoreData.getTextController(
+        key,
+        defAppStoreData ?? defData
+    );
     appStoreData.set(key, textController?.text);
 
     List<TextInputFormatter> f = [];
@@ -369,7 +382,8 @@ class FlutterType {
 
     return TextField(
       onSubmitted: (String x) {
-        dynamic c = DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
+        dynamic c =
+            DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
         if (c != null && x.isNotEmpty) {
           Function.apply(c, []);
         }
@@ -426,20 +440,23 @@ class FlutterType {
       },
       onTap: (type == "datetime")
           ? () async {
+              //print("Formated date: ${formattedDate}");
               DateTime? pickedDate = await showDatePicker(
                 locale: const Locale('ru', 'ru_Ru'),
                 context: appStoreData.getCtx()!,
-                initialDate: DateTime.now(),
+                initialDate: formattedDate != "" ? DateFormat("dd.MM.yyyy").parse(formattedDate) : DateTime.now(),
                 firstDate: DateTime(1931),
                 //DateTime.now() - not to allow to choose before today.
                 lastDate: DateTime(2101),
               );
               if (pickedDate != null) {
                 //print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
-                String formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
+                formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
                 //print(formattedDate); //formatted date output using intl package =>  2021-03-16
                 appStoreData.set(key, formattedDate);
                 textController?.text = formattedDate;
+              } else {
+                textController?.text = "";
               }
             }
           : () {},
@@ -1065,5 +1082,4 @@ class FlutterType {
       ),
     );
   }
-
 }
