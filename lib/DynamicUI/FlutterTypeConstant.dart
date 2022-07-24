@@ -222,6 +222,17 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
+  static MainAxisSize? parseMainAxisSize(String? value) {
+    if (value == null || value.trim() == '') {
+      return null;
+    }
+    Map<String, MainAxisSize> map = {
+      'min': MainAxisSize.min,
+      'max': MainAxisSize.max,
+    };
+    return map.containsKey(value) ? map[value] : null;
+  }
+
   static CrossAxisAlignment? parseCrossAxisAlignment(String? value) {
     if (value == null || value.trim() == '') {
       return null;

@@ -40,6 +40,7 @@ class DynamicUI {
       "Spacer": FlutterType.pSpacer,
       "LinearGradient": FlutterType.pLinearGradient,
       "ElevatedButtonIcon": FlutterType.pElevatedButtonIcon,
+      "ElevatedButton": FlutterType.pElevatedButton,
       "ButtonStyle": FlutterType.pButtonStyle,
       "Material": FlutterType.pMaterial,
       "InkWell": FlutterType.pInkWell,

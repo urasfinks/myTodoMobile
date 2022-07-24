@@ -34,6 +34,9 @@ class FlutterType {
 
   static dynamic pColumn(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     return Column(
+      mainAxisSize: FlutterTypeConstant.parseMainAxisSize(
+        DynamicUI.def(parsedJson, 'mainAxisSize', 'max', appStoreData, index, originKeyData),
+      )!,
       crossAxisAlignment: FlutterTypeConstant.parseCrossAxisAlignment(
         DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center', appStoreData, index, originKeyData),
       )!,
@@ -259,11 +262,60 @@ class FlutterType {
   }
 
   static dynamic pRawMaterialButton(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    print("pRawMaterialButton: ${parsedJson}");
+    //print("pRawMaterialButton: ${parsedJson}");
     return RawMaterialButton(
       constraints: const BoxConstraints(minWidth: 10, maxHeight: 10),
       onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
       child: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index, originKeyData),
+    );
+  }
+
+  static dynamic pElevatedButton(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    print("pElevatedButton: ${parsedJson}");
+    /*
+    * [ElevatedButton/OutlinedButton]
+    * StadiumBorder
+    * RoundedRectangleBorder
+    * CircleBorder
+    * BeveledRectangleBorder
+    * */
+    double borderRadius = FlutterTypeConstant.parseDouble(
+      DynamicUI.def(parsedJson, 'borderRadius', 0, appStoreData, index, originKeyData),
+    )!;
+    String buttonStyleType =
+        DynamicUI.def(parsedJson, 'buttonStyle', 'ElevatedButton', appStoreData, index, originKeyData);
+    String shapeType = DynamicUI.def(parsedJson, 'shape', 'StadiumBorder', appStoreData, index, originKeyData);
+    OutlinedBorder? shape;
+
+    if (shapeType == "StadiumBorder") {
+      shape = const StadiumBorder();
+    }
+    if (shapeType == "RoundedRectangleBorder") {
+      shape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius), // <-- Radius
+      );
+    }
+    if (shapeType == "CircleBorder") {
+      shape = const CircleBorder();
+    }
+    if (shapeType == "BeveledRectangleBorder") {
+      shape = BeveledRectangleBorder(borderRadius: BorderRadius.circular(borderRadius));
+    }
+
+    ButtonStyle? buttonStyle;
+    if (buttonStyleType == "ElevatedButton") {
+      buttonStyle = ElevatedButton.styleFrom(shape: shape);
+    }
+    if (buttonStyleType == "OutlinedButton") {
+      buttonStyle = OutlinedButton.styleFrom(shape: shape);
+    }
+
+    return ElevatedButton(
+      onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
+      child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
+      style: OutlinedButton.styleFrom(
+        shape: const StadiumBorder(),
+      ),
     );
   }
 
@@ -368,13 +420,18 @@ class FlutterType {
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = type == "datetime" ? true : false;
     String? defAppStoreData = appStoreData.get(key, null);
+    //print("rebuild pTextField defAppStoreData(${key}): ${defAppStoreData}");
+    //print(">> ${defData} ${parsedJson}");
     TextEditingController? textController = appStoreData.getTextController(key, defAppStoreData ?? defData);
+    textController?.text = defAppStoreData ?? defData;
+    int? x = textController?.text.length;
+    textController?.selection = TextSelection.fromPosition(TextPosition(offset: x ?? 0));
     appStoreData.set(key, textController?.text);
 
     List<TextInputFormatter> f = [];
     String regExp = DynamicUI.def(parsedJson, 'regexp', '', appStoreData, index, originKeyData);
     if (regExp.isNotEmpty) {
-      f.add(FilteringTextInputFormatter.allow(RegExp(regExp)));
+      f.add(FilteringTextInputFormatter.allow(RegExp('^[a-z0-9_-]{3,16}\$')));
     }
 
     return TextField(
@@ -395,7 +452,7 @@ class FlutterType {
         DynamicUI.def(parsedJson, 'minLines', 1, appStoreData, index, originKeyData),
       ),
       maxLines: FlutterTypeConstant.parseInt(
-        DynamicUI.def(parsedJson, 'maxLines', 1, appStoreData, index, originKeyData),
+        DynamicUI.def(parsedJson, 'maxLines', null, appStoreData, index, originKeyData),
       ),
       maxLength: FlutterTypeConstant.parseInt(
         DynamicUI.def(parsedJson, 'maxLength', null, appStoreData, index, originKeyData),
@@ -464,7 +521,13 @@ class FlutterType {
     return InputDecoration(
       icon: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index, originKeyData),
       border: DynamicUI.def(parsedJson, 'border', null, appStoreData, index, originKeyData),
-      labelText: DynamicUI.def(parsedJson, 'labelText', '', appStoreData, index, originKeyData),
+      labelText: DynamicUI.def(parsedJson, 'labelText', null, appStoreData, index, originKeyData),
+      errorText: DynamicUI.def(parsedJson, 'errorText', null, appStoreData, index, originKeyData),
+      hintText: DynamicUI.def(parsedJson, 'hintText', null, appStoreData, index, originKeyData),
+      contentPadding: FlutterTypeConstant.parseEdgeInsets(
+        DynamicUI.def(parsedJson, 'contentPadding', null, appStoreData, index, originKeyData),
+      ),
+      prefixIcon: DynamicUI.def(parsedJson, 'prefixIcon', null, appStoreData, index, originKeyData),
     );
   }
 

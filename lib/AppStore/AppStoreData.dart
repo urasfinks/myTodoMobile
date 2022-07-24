@@ -180,6 +180,11 @@ class AppStoreData {
     onChange(key, notify);
   }
 
+  void join(String key, String appendString, {bool notify = true}) {
+    _map[key] = _map[key] + appendString;
+    onChange(key, notify);
+  }
+
   void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") + step;
     if (_map[key] < min) {

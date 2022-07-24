@@ -33,6 +33,7 @@ class DynamicFn {
       "getAppStore": getAppStore,
       "getMD5": getMD5,
       "resetTextFieldValue": resetTextFieldValue,
+      "joinAppStoreData": joinAppStoreData,
       "timestampToDate": DynamicDirective.timestampToDate,
       "formatNumber": DynamicDirective.formatNumber,
     };
@@ -60,7 +61,7 @@ class DynamicFn {
     //value = '=>getAppStore(getAppStoreDataTime)|timestampToDate(timestampToDateData)';
     String del = value.toString().startsWith("=>") ? "=>" : ":";
     localFunction() {
-      print("evalTextFunction: ${value}");
+      //print("evalTextFunction: ${value}");
       List<String> exp = value.toString().split("|");
       exp[0] = exp[0].split(del)[1];
       List<dynamic> listFn = [];
@@ -85,7 +86,7 @@ class DynamicFn {
             args.add(null);
           }
         }
-        print("args: $args");
+        //print("args: $args");
         retExec = Function.apply(parseUtilFunction(item["fn"]), args);
       }
       return retExec;
@@ -171,6 +172,11 @@ class DynamicFn {
       ),
     );
     return null;
+  }
+
+  static dynamic joinAppStoreData(AppStoreData appStoreData, dynamic data) {
+    appStoreData.join(data["key"], data["append"]);
+    appStoreData.apply();
   }
 
   static dynamic openDialog(AppStoreData appStoreData, dynamic data) {
