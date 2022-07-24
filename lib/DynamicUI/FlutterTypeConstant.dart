@@ -33,14 +33,20 @@ class FlutterTypeConstant {
     if (value.toString() == "infinity") {
       return double.infinity;
     }
-    return double.parse(value.toString());
+    try {
+      return double.parse(value.toString());
+    }catch(e){}
+    return null;
   }
 
   static int? parseInt(dynamic value) {
     if (value == null || value.toString().trim() == '') {
       return null;
     }
-    return int.parse(value.toString().replaceAll(".0", ""));
+    try {
+      return int.parse(value.toString().replaceAll(".0", ""));
+    }catch(e){}
+    return null;
   }
 
   static Color? parseColor(String? value) {
@@ -68,7 +74,10 @@ class FlutterTypeConstant {
     };
     if (value.startsWith("rgba:")) {
       List<String> l = value.split("rgba:")[1].split(",");
-      return Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!, parseDouble(l[3])!);
+      try {
+        return Color.fromRGBO(parseInt(l[0])!, parseInt(l[1])!, parseInt(l[2])!, parseDouble(l[3])!);
+      }catch(e){}
+      return Colors.pink;
     } else if (value.startsWith("#")) {
       return _parseHexColor(value);
     } else if (value.contains(".")) {
