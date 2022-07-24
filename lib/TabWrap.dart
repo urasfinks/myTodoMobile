@@ -39,7 +39,7 @@ class TabScope{ // singleton class
     TabPageHistory(
       DynamicPage.fromMap(
         {
-          "title": 'Список задач',
+          "title": 'Главная',
           "url": '/project/to-do',
           "backgroundColor": "#f5f5f5",
           "pullToRefreshBackgroundColor": "blue.600",
@@ -155,7 +155,7 @@ class _TabWrapState extends State<TabWrap> {
         currentIndex: _tabScope.tabIndex,
         items: const [
           BottomNavigationBarItem(
-            label: 'Список задач',
+            label: 'Главная',
             icon: Icon(Icons.dashboard),
           ),
           BottomNavigationBarItem(

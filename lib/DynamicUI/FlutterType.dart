@@ -368,10 +368,7 @@ class FlutterType {
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = type == "datetime" ? true : false;
     String? defAppStoreData = appStoreData.get(key, null);
-    TextEditingController? textController = appStoreData.getTextController(
-        key,
-        defAppStoreData ?? defData
-    );
+    TextEditingController? textController = appStoreData.getTextController(key, defAppStoreData ?? defData);
     appStoreData.set(key, textController?.text);
 
     List<TextInputFormatter> f = [];
@@ -875,8 +872,19 @@ class FlutterType {
   static dynamic pCheckbox(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     //print("BUILD pCheckbox");
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
+    bool value = FlutterTypeConstant.parseBool(
+      DynamicUI.def(parsedJson, 'value', false, appStoreData, index, originKeyData),
+    )!;
     //appStoreData.set(key, defValue);
     return Checkbox(
+      side: MaterialStateBorderSide.resolveWith(
+        (states) => BorderSide(
+          width: 2.0,
+          color: FlutterTypeConstant.parseColor(value == false
+              ? DynamicUI.def(parsedJson, 'borderColor', 'grey', appStoreData, index, originKeyData)
+              : 'transparent')!,
+        ),
+      ),
       value: FlutterTypeConstant.parseBool(
         DynamicUI.def(parsedJson, 'value', false, appStoreData, index, originKeyData),
       ),
