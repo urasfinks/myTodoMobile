@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test3/DynamicPage/DynamicDirective.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
@@ -32,6 +33,7 @@ class DynamicFn {
       "confirm": confirm,
       "getAppStore": getAppStore,
       "getMD5": getMD5,
+      "launcher": launcher,
       "resetTextFieldValue": resetTextFieldValue,
       "joinAppStoreData": joinAppStoreData,
       "timestampToDate": DynamicDirective.timestampToDate,
@@ -78,11 +80,11 @@ class DynamicFn {
           args.add(retExec);
         }
         for (String key in item["args"]) {
-          if(originData.containsKey(key)){
+          if (originData.containsKey(key)) {
             args.add(originData[key]);
-          }else if(map!= null &&  map.containsKey(key)){
+          } else if (map != null && map.containsKey(key)) {
             args.add(map[key]);
-          }else{
+          } else {
             args.add(null);
           }
         }
@@ -156,7 +158,7 @@ class DynamicFn {
   }
 
   static dynamic openWindow(AppStoreData appStoreData, dynamic data) async {
-    if(data["delay"] != null){
+    if (data["delay"] != null) {
       await Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {});
     }
     String st = appStoreData.getStringStoreState();
@@ -205,12 +207,12 @@ class DynamicFn {
   }
 
   static dynamic resetTextFieldValue(AppStoreData appStoreData, dynamic data) {
-    TextEditingController? tec =  appStoreData.getTextController(
+    TextEditingController? tec = appStoreData.getTextController(
       data["name"],
       "",
     );
-    if(tec != null){
-      tec.text  = "";
+    if (tec != null) {
+      tec.text = "";
       appStoreData.set(data["name"], null);
     }
   }
@@ -261,6 +263,15 @@ class DynamicFn {
     //http://jamsys.ru:8081/avatar-get/a7d437fa-d47a-4e0f-9417-f9701ece125e?time=${time}
     return "${AppStore.host}/avatar-get/${getMD5(appStoreData, {"data": AppStore.personKey})}?time=${getTimestamp(appStoreData, data)}";
   }*/
+
+  static dynamic launcher(AppStoreData appStoreData, dynamic data) async {
+    print("launcher: ${data}");
+    if(data != null && data["url"] != null && data["url"] != ""){
+      launch(data["url"], forceSafariVC: false);
+    }else{
+      alert(appStoreData, {"data": "Url is empty"});
+    }
+  }
 
   static dynamic getAppStore(AppStoreData appStoreData, dynamic data) {
     //print("getAppStore: ${data}");
