@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test3/DynamicUI/Addon.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
@@ -23,6 +24,7 @@ class DynamicPageUtil {
   }
 
   static Future<void> loadData(AppStoreData appStoreData) async {
+    print("YES");
     appStoreData.nowDownloadContent = true;
     if (!appStoreData.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
@@ -37,6 +39,10 @@ class DynamicPageUtil {
         dataUpdate(jsonDecode(response.body), appStoreData);
       } else {
         setErrorStyle(appStoreData);
+        if(response.statusCode == 401){ //Получается персону удалили, повторный перезапуск приклада заного создат новую, понимаю - это как-то не человечно, однако не будет deadlock
+          final prefs = await SharedPreferences.getInstance();
+          prefs.remove('key');
+        }
         dataUpdate(ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
       }
     } catch (e, stacktrace) {
@@ -111,6 +117,10 @@ class DynamicPageUtil {
   }
 
   static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData) {
+    if (data['ParentPersonKey'] != null) {
+      AppStore.changePersonKey(data['ParentPersonKey']);
+      return;
+    }
     List<dynamic>? action = data['Actions'];
     if (action != null && action.isNotEmpty) {
       for (Map item in action) {

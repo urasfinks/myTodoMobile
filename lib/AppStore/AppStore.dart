@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:redux/redux.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'AppStoreData.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:uuid/uuid.dart';
@@ -23,6 +24,15 @@ class AppStore {
       'Authorization': "Basic $decoded"
     });
     print("Person key: $_personKey, header: $requestHeader");
+  }
+
+  static changePersonKey(String newPersonKey) async{
+    print("changePersonKey: ${newPersonKey}");
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('key', newPersonKey);
+    _personKey = newPersonKey;
+    updateRequestHeader();
+    AppStore().reloadAll();
   }
 
   static Future registerPerson(prefs) async {
@@ -81,6 +91,12 @@ class AppStore {
   AppStoreData? getByDataUID(String dataUID) {
     List<AppStoreData> list = getByKey("dataUID", dataUID);
     return list.isNotEmpty ? list[0] : null;
+  }
+
+  void reloadAll() {
+    for (var item in _map.entries) {
+      item.value.onIndexRevisionError();
+    }
   }
 
   List<AppStoreData> getByKey(String key, String value) {

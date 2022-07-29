@@ -124,8 +124,10 @@ class TabScope{ // singleton class
     return _tabScope!;
   }
   void setTabIndex(int index){
-    //print("SELECTED TAB: ${index}");
+    print("SELECTED TAB: ${index}");
+    print(pages[index].history.last.needUpdateOnActive);
     tabIndex = index;
+
   }
 }
 
