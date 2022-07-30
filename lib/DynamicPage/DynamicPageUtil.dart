@@ -34,6 +34,7 @@ class DynamicPageUtil {
           headers: AppStore.requestHeader, body: appStoreData.getWidgetData('parentState'));
 
       //print(response.body);
+      print("Download complete");
       if (response.statusCode == 200) {
         dataUpdate(jsonDecode(response.body), appStoreData);
       } else {

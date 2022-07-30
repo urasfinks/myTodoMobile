@@ -41,7 +41,7 @@ class _AccountPage extends State<AccountPage> {
                 children: [
                   InkWell(
                     child: Icon(
-                      Icons.notifications_active,
+                      Icons.telegram_outlined,
                       size: 24,
                       color: FlutterTypeConstant.parseColor("#ffffff"),
                     ),

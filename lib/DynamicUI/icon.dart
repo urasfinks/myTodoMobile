@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 /// Icon data map for Material Icons
 const Map<String, IconData> iconsMap = <String, IconData>{
+  'telegram_outlined': Icons.telegram_outlined,
+  'telegram': Icons.telegram,
+  'telegram_rounded': Icons.telegram_rounded,
+  'telegram_sharp': Icons.telegram_sharp,
   'arrow_forward_ios_sharp': Icons.arrow_forward_ios_sharp,
   'ac_unit': Icons.ac_unit,
   'access_alarm': Icons.access_alarm,

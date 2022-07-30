@@ -12,9 +12,9 @@ Future<void> loadPref() async {
   final prefs = await SharedPreferences.getInstance();
   //prefs.remove('key');
   final String? key = prefs.getString('key');
-  if(key == null || "" == key){
+  if (key == null || "" == key) {
     await AppStore.registerPerson(prefs);
-  }else{
+  } else {
     AppStore.setPersonKey(key);
   }
 }
@@ -38,9 +38,14 @@ class RouterPage extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
         ],
         debugShowCheckedModeBanner: false,
-        onGenerateRoute: (RouteSettings settings) {
-          return CupertinoPageRoute(builder: (context) => TabWrap(context), settings: settings);
-        },
+        home: WillPopScope(
+          onWillPop: () async {
+            //Замена события
+            TabScope.getInstance().popHistory(null);
+            return false;
+          },
+          child: TabWrap(context),
+        ),
       ),
     );
   }
