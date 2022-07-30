@@ -273,6 +273,7 @@ class FlutterTypeConstant {
       'url': TextInputType.url,
       'name': TextInputType.name,
       'datetime': TextInputType.datetime,
+      'time': TextInputType.text,
       'emailAddress': TextInputType.emailAddress,
       'multiline': TextInputType.multiline,
       'number': TextInputType.number,

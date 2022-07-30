@@ -418,10 +418,9 @@ class FlutterType {
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String formattedDate = defData;
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
-    bool readOnly = type == "datetime" ? true : false;
+    bool readOnly = (type == "datetime" || type == "time") ? true : false;
     String? defAppStoreData = appStoreData.get(key, null);
-    //print("rebuild pTextField defAppStoreData(${key}): ${defAppStoreData}");
-    //print(">> ${defData} ${parsedJson}");
+
     TextEditingController? textController = appStoreData.getTextController(key, defAppStoreData ?? defData);
     textController?.text = defAppStoreData ?? defData;
     int? x = textController?.text.length;
@@ -492,28 +491,43 @@ class FlutterType {
       onChanged: (value) {
         appStoreData.set(key, value);
       },
-      onTap: (type == "datetime")
-          ? () async {
-              //print("Formated date: ${formattedDate}");
-              DateTime? pickedDate = await showDatePicker(
+      onTap: () async {
+        if (type == "datetime") {
+          DateTime? pickedDate = await showDatePicker(
+            locale: const Locale('ru', 'ru_Ru'),
+            context: appStoreData.getCtx()!,
+            initialDate: formattedDate != "" ? DateFormat("dd.MM.yyyy").parse(formattedDate) : DateTime.now(),
+            firstDate: DateTime(1931),
+            lastDate: DateTime(2101),
+          );
+          if (pickedDate != null) {
+            formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
+            appStoreData.set(key, formattedDate);
+            textController?.text = formattedDate;
+          } else {
+            textController?.text = "";
+          }
+        } else if (type == "time") {
+          final TimeOfDay? result = await showTimePicker(
+            builder: (context, child) {
+              return Localizations.override(
+                context: context,
                 locale: const Locale('ru', 'ru_Ru'),
-                context: appStoreData.getCtx()!,
-                initialDate: formattedDate != "" ? DateFormat("dd.MM.yyyy").parse(formattedDate) : DateTime.now(),
-                firstDate: DateTime(1931),
-                //DateTime.now() - not to allow to choose before today.
-                lastDate: DateTime(2101),
+                child: child,
               );
-              if (pickedDate != null) {
-                //print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
-                formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
-                //print(formattedDate); //formatted date output using intl package =>  2021-03-16
-                appStoreData.set(key, formattedDate);
-                textController?.text = formattedDate;
-              } else {
-                textController?.text = "";
-              }
-            }
-          : () {},
+            },
+            initialTime: TimeOfDay.now(),
+            context: appStoreData.getCtx()!,
+          );
+          if (result != null) {
+            formattedDate = "${result.hour}:${result.minute}";
+            appStoreData.set(key, formattedDate);
+            textController?.text = formattedDate;
+          } else {
+            textController?.text = "";
+          }
+        }
+      },
     );
   }
 
