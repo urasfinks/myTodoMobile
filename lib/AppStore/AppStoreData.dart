@@ -26,6 +26,14 @@ class AppStoreData {
     _indexRevision = index;
   }
 
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    dynamic refreshOnResume = getWidgetData("refreshOnResume");
+    //print("didChangeAppLifecycleState: ${widgetData}");
+    if(refreshOnResume != null && refreshOnResume == true && state == AppLifecycleState.resumed){
+      onIndexRevisionError();
+    }
+  }
+
   BuildContext? _ctx;
   Map<String, TextEditingController> listController = {};
   State? pageState;
@@ -40,12 +48,17 @@ class AppStoreData {
   }
 
   void addWidgetDataByMap(Map<String, dynamic> obj) {
-    for (var item in widgetData.entries) {
+    for (var item in obj.entries) {
+      if(item.key != "dataUID"){
+        addWidgetData(item.key, item.value);
+      }
+    }
+    /*for (var item in widgetData.entries) {
       if (obj.containsKey(item.key) && item.key != "dataUID") {
         //dataUID final by addWidgetDataByPage
         addWidgetData(item.key, obj[item.key]);
       }
-    }
+    }*/
   }
 
   void addWidgetDataByPage(DynamicPage widget) {
@@ -69,6 +82,14 @@ class AppStoreData {
   void addWidgetData(String key, dynamic value) {
     //print("addWidgetData(${key}) = ${value}");
     widgetData[key] = value;
+    if(key == "parentRefresh"){
+      try {
+        setParentRefresh(value);
+      }catch(e, stacktrace){
+        print(e);
+        print(stacktrace);
+      }
+    }
   }
 
   Map<String, dynamic> getWidgetDates() {
@@ -220,9 +241,9 @@ class AppStoreData {
   }
 
   void onChange(String key, bool notify) {
-    dynamic x = getWidgetDataConfig({"parentUpdateOnChangeStateData": false});
-    if(x["parentUpdateOnChangeStateData"] == true){
-      setParentUpdate(true);
+    dynamic x = getWidgetDataConfig({"parentRefreshOnChangeStateData": false});
+    if(x["parentRefreshOnChangeStateData"] == true){
+      setParentRefresh(true);
     }
     if (notify == true) {
       if (syncSocket) {
@@ -349,7 +370,7 @@ class AppStoreData {
 
   bool _parentUpdate = false;
 
-  void setParentUpdate(bool upd){
+  void setParentRefresh(bool upd){
     _parentUpdate = upd;
   }
 
