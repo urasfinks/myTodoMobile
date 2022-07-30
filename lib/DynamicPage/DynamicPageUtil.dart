@@ -117,6 +117,8 @@ class DynamicPageUtil {
   }
 
   static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData) {
+    appStoreData.setServerResponse(data);
+
     List<dynamic>? action = data['Actions'];
     if (action != null && action.isNotEmpty) {
       for (Map item in action) {
@@ -149,7 +151,7 @@ class DynamicPageUtil {
     parseTemplate(data, "Data", "list");
     parseTemplate(data, "AppBarActions", "actions");
     //print(data);
-    appStoreData.setServerResponse(data);
+
     appStoreData.reBuild();
     appStoreData.getPageState()?.setState(() {});
 
