@@ -271,7 +271,7 @@ class FlutterType {
   }
 
   static dynamic pElevatedButton(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    print("pElevatedButton: ${parsedJson}");
+    //print("pElevatedButton: ${parsedJson}");
     /*
     * [ElevatedButton/OutlinedButton]
     * StadiumBorder

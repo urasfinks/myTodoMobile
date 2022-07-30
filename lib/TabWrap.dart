@@ -18,8 +18,10 @@ class TabWrap extends StatefulWidget {
   State<TabWrap> createState() => _TabWrapState();
 }
 
-class TabScope{ // singleton class
+class TabScope {
+  // singleton class
   static TabScope? _tabScope;
+
   /*DynamicPage.fromMap(
         {
           "title": 'Доступные сервисы',
@@ -35,7 +37,7 @@ class TabScope{ // singleton class
           "grid": true
         },
       ),*/
-  final List<TabPageHistory> pages = [
+  final List<TabPageHistory> tabs = [
     TabPageHistory(
       DynamicPage.fromMap(
         {
@@ -63,77 +65,90 @@ class TabScope{ // singleton class
   ];
   int tabIndex = 0;
 
-  AppStoreData getLast(){
-    return pages[tabIndex].history.last;
+  AppStoreData? getLast() {
+    if(tabs[tabIndex].history.isNotEmpty){
+      return tabs[tabIndex].history.last;
+    }
+    return null;
   }
 
-  void addHistory(AppStoreData appStoreData){
-    if(!pages[tabIndex].history.contains(appStoreData)){
-      pages[tabIndex].history.add(appStoreData);
+  void addHistory(AppStoreData appStoreData) {
+    //print("addHistory: tabIndex: ${tabIndex};  AppStore: ${appStoreData}");
+    if (!tabs[tabIndex].history.contains(appStoreData)) {
+      tabs[tabIndex].history.add(appStoreData);
     }
   }
 
-  void onDestroyPage(AppStoreData appStoreData){
-    if(pages[tabIndex].history.length > 1){
-      if(pages[tabIndex].history.last == appStoreData){
-        pages[tabIndex].history.removeLast();
+  void onDestroyPage(AppStoreData appStoreData) {
+    if (tabs[tabIndex].history.length > 1) {
+      if (tabs[tabIndex].history.last == appStoreData) {
+        tabs[tabIndex].history.removeLast();
       }
     }
   }
 
-  bool iamActivePage(AppStoreData appStoreData){
-    if(pages[tabIndex].history.isNotEmpty){
-      return pages[tabIndex].history.last == appStoreData;
+  bool iamActivePage(AppStoreData appStoreData) {
+    if (tabs[tabIndex].history.isNotEmpty) {
+      return tabs[tabIndex].history.last == appStoreData;
     }
     return false;
   }
 
-  void popHistory(dynamic data){
-    if(pages[tabIndex].history.length > 1){
-      if(data != null && data["url"] != null){
-        while(pages[tabIndex].history.length > 1){
-          if(pages[tabIndex].history.last.getWidgetData("url") == data["url"]){
+  void popHistory(dynamic data) {
+    if (tabs[tabIndex].history.length > 1) {
+      if (data != null && data["url"] != null) {
+        AppStoreData? last;
+        while (tabs[tabIndex].history.length > 1) {
+          if (tabs[tabIndex].history.last.getWidgetData("url") == data["url"]) {
             break;
           }
-          AppStoreData last = pages[tabIndex].history.removeLast();
+          last = tabs[tabIndex].history.removeLast();
           Navigator.pop(last.getCtx()!);
-          whatNext(pages[tabIndex].history.last, last.getParentUpdate());
         }
-      }else if(data != null && data["count"] != null){
-          for(int i=0;i<data["count"];i++){
-            AppStoreData last = pages[tabIndex].history.removeLast();
-            Navigator.pop(last.getCtx()!);
-            whatNext(pages[tabIndex].history.last, last.getParentUpdate());
-          }
-      }else{
-        AppStoreData last = pages[tabIndex].history.removeLast();
+        if(last != null && tabs[tabIndex].history.isNotEmpty){
+          checkReload(tabs[tabIndex].history.last, last.getParentUpdate());
+        }
+      } else if (data != null && data["count"] != null) {
+        AppStoreData? last;
+        for (int i = 0; i < data["count"]; i++) {
+          last = tabs[tabIndex].history.removeLast();
+          Navigator.pop(last.getCtx()!);
+        }
+        if (last != null && tabs[tabIndex].history.isNotEmpty) {
+          checkReload(tabs[tabIndex].history.last, last.getParentUpdate());
+        }
+      } else {
+        AppStoreData last = tabs[tabIndex].history.removeLast();
         Navigator.pop(last.getCtx()!);
-        whatNext(pages[tabIndex].history.last, last.getParentUpdate());
+        if(tabs[tabIndex].history.isNotEmpty){
+          checkReload(tabs[tabIndex].history.last, last.getParentUpdate());
+        }
       }
     }
   }
 
-  void whatNext(AppStoreData appStoreData, bool parentUpdate){
-    if(appStoreData.needUpdateOnActive || parentUpdate){
+  void checkReload(AppStoreData appStoreData, bool parentUpdate) {
+    if (appStoreData.needUpdateOnActive || parentUpdate) {
       DynamicPageUtil.loadData(appStoreData);
     }
   }
 
-  static TabScope getInstance(){
+  static TabScope getInstance() {
     _tabScope ??= TabScope();
     return _tabScope!;
   }
-  void setTabIndex(int index){
-    print("SELECTED TAB: ${index}");
-    print(pages[index].history.last.needUpdateOnActive);
-    tabIndex = index;
 
+  void setTabIndex(int index) {
+    print("SELECTED TAB: ${index}");
+    print(tabs[index].history);
+    if(tabs[index].history.isNotEmpty){
+      checkReload(tabs[index].history.last, false);
+    }
+    tabIndex = index;
   }
 }
 
 class _TabWrapState extends State<TabWrap> {
-
-
   final TabScope _tabScope = TabScope.getInstance();
 
   @override
@@ -145,11 +160,12 @@ class _TabWrapState extends State<TabWrap> {
       tabBar: CupertinoTabBar(
         onTap: (index) {
           int x = DateTime.now().millisecondsSinceEpoch;
-          if(x - lastClick < 200){ //NICE!) IT's Double Tap!)
+          if (x - lastClick < 200) {
+            //NICE!) IT's Double Tap!)
             TabScope.getInstance().popHistory({"url": ""});
           }
           lastClick = x;
-          return _tabScope.setTabIndex(index);
+          _tabScope.setTabIndex(index);
         },
         backgroundColor: FlutterTypeConstant.parseColor("#fafafa"),
         activeColor: Colors.blue[600],
@@ -163,7 +179,6 @@ class _TabWrapState extends State<TabWrap> {
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Аккаунт',
-
           ),
         ],
       ),
@@ -171,7 +186,7 @@ class _TabWrapState extends State<TabWrap> {
         AppStore.selectedTabIndex = index;
         return CupertinoTabView(
           builder: (context) {
-            return _tabScope.pages[index].page;
+            return _tabScope.tabs[index].page;
           },
         );
       },

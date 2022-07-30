@@ -260,13 +260,13 @@ class AppStoreData {
   void initPage(DynamicPage widget, BuildContext context) {
     //print("initPage ${widget.url}; _build:${_build}; compiledWidget: ${compiledWidget}");
     if (_build == true || compiledWidget == null || nowDownloadContent == true) {
-      print("initPage ${widget.url}");
-      TabScope.getInstance().addHistory(this);
+      //print("initPage ${widget.url}");
       setOnIndexRevisionError(() {
         widget.refresh(this);
       });
       if (firstLoad == true) {
         addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
+        TabScope.getInstance().addHistory(this);
         widget.refresh(this);
         firstLoad = false;
       }
@@ -355,5 +355,10 @@ class AppStoreData {
 
   bool getParentUpdate() {
     return _parentUpdate;
+  }
+
+  @override
+  String toString() {
+    return 'AppStoreData{url: ${widgetData["url"]}';
   }
 }

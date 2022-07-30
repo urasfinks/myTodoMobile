@@ -24,7 +24,6 @@ class DynamicPageUtil {
   }
 
   static Future<void> loadData(AppStoreData appStoreData) async {
-    print("YES");
     appStoreData.nowDownloadContent = true;
     if (!appStoreData.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
@@ -98,7 +97,7 @@ class DynamicPageUtil {
             needNextRoundBorderRadius = false;
             Addon.radius(p, "top");
           }
-          if (d['template'] == "GroupBottom") {
+          if (d['template'] == "GroupBottom" && list.isNotEmpty) {
             Addon.radius(list.last, "bottom");
           }
           list.add(p);
@@ -117,10 +116,6 @@ class DynamicPageUtil {
   }
 
   static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData) {
-    if (data['ParentPersonKey'] != null) {
-      AppStore.changePersonKey(data['ParentPersonKey']);
-      return;
-    }
     List<dynamic>? action = data['Actions'];
     if (action != null && action.isNotEmpty) {
       for (Map item in action) {
@@ -156,5 +151,11 @@ class DynamicPageUtil {
     appStoreData.setServerResponse(data);
     appStoreData.reBuild();
     appStoreData.getPageState()?.setState(() {});
+
+    if (data['ParentPersonKey'] != null) {
+      Future.delayed(Duration(milliseconds: delay), () {
+        AppStore.changePersonKey(data['ParentPersonKey']);
+      });
+    }
   }
 }

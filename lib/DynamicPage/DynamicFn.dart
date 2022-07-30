@@ -70,7 +70,7 @@ class DynamicFn {
       for (String item in exp) {
         listFn.add(parseNameAndArguments(item));
       }
-      print(listFn);
+      //print(listFn);
       Map<String, dynamic> originData =
           _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
@@ -166,13 +166,18 @@ class DynamicFn {
       data["parentState"] = st;
     }
     print("openWindow: ${data}");
-    Navigator.push(
-      TabScope.getInstance().getLast().getCtx()!,
-      CupertinoPageRoute(
-        settings: RouteSettings(name: data["url"]),
-        builder: (context) => DynamicPage.fromMap(data),
-      ),
-    );
+    AppStoreData? lastPage = TabScope.getInstance().getLast();
+    if(lastPage != null){
+      Navigator.push(
+        lastPage.getCtx()!,
+        CupertinoPageRoute(
+          settings: RouteSettings(name: data["url"]),
+          builder: (context) => DynamicPage.fromMap(data),
+        ),
+      );
+    }else{
+      alert(appStoreData, {"data": "Не найдена история страниц, повторите попытку позже"});
+    }
     return null;
   }
 

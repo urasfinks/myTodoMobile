@@ -37,7 +37,7 @@ class AppStore {
 
   static Future registerPerson(prefs) async {
     String url = "${AppStore.host}/person/$_personKey";
-    print("URL: $url");
+    print("registerPerson URL: $url");
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       await prefs.setString('key', _personKey);
