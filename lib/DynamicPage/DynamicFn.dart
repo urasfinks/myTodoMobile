@@ -32,6 +32,8 @@ class DynamicFn {
       "alert": alert,
       "confirm": confirm,
       "getAppStore": getAppStore,
+      "setAppStore": setAppStore,
+      "appStoreOperator": appStoreOperator,
       "getMD5": getMD5,
       "launcher": launcher,
       "resetTextFieldValue": resetTextFieldValue,
@@ -167,7 +169,7 @@ class DynamicFn {
     }
     print("openWindow: ${data}");
     AppStoreData? lastPage = TabScope.getInstance().getLast();
-    if(lastPage != null){
+    if (lastPage != null) {
       Navigator.push(
         lastPage.getCtx()!,
         CupertinoPageRoute(
@@ -175,7 +177,7 @@ class DynamicFn {
           builder: (context) => DynamicPage.fromMap(data),
         ),
       );
-    }else{
+    } else {
       alert(appStoreData, {"data": "Не найдена история страниц, повторите попытку позже"});
     }
     return null;
@@ -271,17 +273,34 @@ class DynamicFn {
 
   static dynamic launcher(AppStoreData appStoreData, dynamic data) async {
     print("launcher: ${data}");
-    if(data != null && data["url"] != null && data["url"] != ""){
+    if (data != null && data["url"] != null && data["url"] != "") {
       launch(data["url"], forceSafariVC: false);
-    }else{
+    } else {
       alert(appStoreData, {"data": "Url is empty"});
     }
+  }
+
+  static dynamic setAppStore(AppStoreData appStoreData, dynamic data) {
+    //print("setAppStore: ${data}");
+    dynamic now = appStoreData.get(data["key"], null);
+    appStoreData.set(data["key"], data["value"] == now ? null : data["value"]);
+    appStoreData.apply();
   }
 
   static dynamic getAppStore(AppStoreData appStoreData, dynamic data) {
     //print("getAppStore: ${data}");
     //print("return getAppStore: ${appStoreData.get(data["key"], data["defaultValue"])}");
     return appStoreData.get(data["key"], data["defaultValue"]);
+  }
+
+  static dynamic appStoreOperator(AppStoreData appStoreData, dynamic data) {
+    //print("appStoreOperator: ${data}");
+    dynamic value = appStoreData.get(data["key"], null);
+    if (value != null && value == data["value"]) {
+      return data["trueCondition"];
+    } else {
+      return data["falseCondition"];
+    }
   }
 
   static dynamic openGallery(AppStoreData appStoreData, dynamic data) async {

@@ -76,7 +76,7 @@ class DynamicUI {
       "Nothing": FlutterType.pNothing,
       "SegmentControl": FlutterType.pSegmentControl,
       "RawMaterialButton": FlutterType.pRawMaterialButton,
-      "DropdownButton": FlutterType.pDropdownButton,
+      "DropdownRadio": FlutterType.pDropdownRadio,
     };
     //print("${[map, appStoreData, index, originKeyData]}");
     return map1.containsKey(containsKey)

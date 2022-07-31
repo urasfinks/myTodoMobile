@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_select/smart_select.dart';
 import 'package:test3/AppStore/AppStoreData.dart';
 import 'package:test3/DynamicPage/DynamicFn.dart';
 import '../AppStore/AppStore.dart';
@@ -1101,7 +1102,26 @@ class FlutterType {
     );
   }
 
-  static dynamic pDropdownButton(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+  static dynamic pDropdownRadio(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
+    String value = DynamicUI.def(parsedJson, 'value', '', appStoreData, index, originKeyData);
+    appStoreData.set(key, value);
+    List<S2Choice<String>> options = [];
+    for (dynamic w in parsedJson["items"]) {
+      options.add(S2Choice<String>(value: w["value"], title: w["title"]));
+    }
+    return SmartSelect<String>.single(
+        title: DynamicUI.def(parsedJson, 'title', '', appStoreData, index, originKeyData),
+        value: value,
+        choiceItems: options,
+        modalType: S2ModalType.bottomSheet,
+        onChange: (state){
+          appStoreData.set(key, state.value);
+        }
+    );
+  }
+
+  static dynamic pDropdownButton2(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     int selectedIndex =
         FlutterTypeConstant.parseInt(DynamicUI.def(parsedJson, 'data', 0, appStoreData, index, originKeyData))!;
