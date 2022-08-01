@@ -1,10 +1,12 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_select/smart_select.dart';
+
 import 'package:test3/AppStore/AppStoreData.dart';
 import 'package:test3/DynamicPage/DynamicFn.dart';
 import '../AppStore/AppStore.dart';
@@ -1112,7 +1114,7 @@ class FlutterType {
     }
     return SmartSelect<String>.single(
         title: DynamicUI.def(parsedJson, 'title', '', appStoreData, index, originKeyData),
-        value: value,
+        selectedValue: value,
         choiceItems: options,
         modalType: S2ModalType.bottomSheet,
         onChange: (state){

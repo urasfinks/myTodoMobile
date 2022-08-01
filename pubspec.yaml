@@ -51,7 +51,7 @@ dependencies:
   cached_network_image: ^3.2.1
   custom_sliding_segmented_control: ^1.7.1
   url_launcher: ^6.1.5
-  smart_select: ^4.3.2
+  flutter_awesome_select: ^6.5.0
 
 dev_dependencies:
   flutter_test:

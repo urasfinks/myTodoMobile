@@ -40,7 +40,8 @@ class Addon{
   }
 
   static void _containerBottomRadius(parsedJson) {
-    String saveColor = parsedJson["color"];
+    print("_containerBottomRadius: ${parsedJson["color"]}");
+    String saveColor = parsedJson["color"] ?? parsedJson["decoration"]["color"];
     parsedJson["color"] = null;
     if (parsedJson["decoration"] == null){
       Map<String, dynamic> x = {};

@@ -99,6 +99,7 @@ class DynamicPageUtil {
             Addon.radius(p, "top");
           }
           if (d['template'] == "GroupBottom" && list.isNotEmpty) {
+            print("Addon.radius: ${list.last}");
             Addon.radius(list.last, "bottom");
           }
           list.add(p);
