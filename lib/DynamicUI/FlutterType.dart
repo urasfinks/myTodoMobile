@@ -511,6 +511,12 @@ class FlutterType {
             textController?.text = "";
           }
         } else if (type == "time") {
+          String? t = textController?.text;
+          TimeOfDay tod = TimeOfDay.now();
+          if(t != null && t != ""){
+            List<String> exp = t.split(":");
+            tod = TimeOfDay(hour: FlutterTypeConstant.parseInt(exp[0])!, minute: FlutterTypeConstant.parseInt(exp[1])!);
+          }
           final TimeOfDay? result = await showTimePicker(
             builder: (context, child) {
               return Localizations.override(
@@ -519,15 +525,13 @@ class FlutterType {
                 child: child,
               );
             },
-            initialTime: TimeOfDay.now(),
+            initialTime: tod,
             context: appStoreData.getCtx()!,
           );
           if (result != null) {
             formattedDate = "${Util.intLPad(result.hour, pad: 2)}:${Util.intLPad(result.minute, pad: 2)}";
             appStoreData.set(key, formattedDate);
             textController?.text = formattedDate;
-          } else {
-            textController?.text = "";
           }
         }
       },
