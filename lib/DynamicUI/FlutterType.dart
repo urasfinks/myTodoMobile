@@ -523,7 +523,7 @@ class FlutterType {
             context: appStoreData.getCtx()!,
           );
           if (result != null) {
-            formattedDate = "${result.hour}:${result.minute}";
+            formattedDate = "${Util.intLPad(result.hour, pad: 2)}:${Util.intLPad(result.minute, pad: 2)}";
             appStoreData.set(key, formattedDate);
             textController?.text = formattedDate;
           } else {

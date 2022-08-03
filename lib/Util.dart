@@ -127,4 +127,7 @@ class Util {
     return def;
   }
 
+  static String intLPad(int i, {int pad = 0, String char = "0"}) => i.toString().padLeft(pad, char);
+  static String intRPad(int i, {int pad = 0, String char = "0"}) => i.toString().padRight(pad, char);
+
 }
