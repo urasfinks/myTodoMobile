@@ -1,8 +1,8 @@
 import 'dart:core';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:test3/AppStore/AppStoreData.dart';
-import 'package:test3/DynamicPage/DynamicFn.dart';
+import 'package:myTODO/AppStore/AppStoreData.dart';
+import 'package:myTODO/DynamicPage/DynamicFn.dart';
 import 'FlutterType.dart';
 
 class DynamicUI {

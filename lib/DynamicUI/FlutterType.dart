@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:intl/intl.dart';
 
-import 'package:test3/AppStore/AppStoreData.dart';
-import 'package:test3/DynamicPage/DynamicFn.dart';
+import 'package:myTODO/AppStore/AppStoreData.dart';
+import 'package:myTODO/DynamicPage/DynamicFn.dart';
 import '../AppStore/AppStore.dart';
 import '../Util.dart';
 import 'DynamicUI.dart';
