@@ -361,12 +361,14 @@ class DynamicFn {
     if (appStoreData.getServerResponse().isNotEmpty && appStoreData.nowDownloadContent == false) {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       bool grid = appStoreData.getWidgetData("grid");
+      Map cfg = appStoreData.getWidgetDataConfig({"reverse": false});
       if (grid == false) {
         return Util.getListView(
           appStoreData.getWidgetData("separated"),
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           response['list'].length,
           getFutureList(appStoreData, data),
+          reverse: cfg["reverse"]
         );
       } else {
         Map x = appStoreData.getWidgetDataConfig(
