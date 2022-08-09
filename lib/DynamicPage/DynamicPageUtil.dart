@@ -25,6 +25,7 @@ class DynamicPageUtil {
 
   static Future<void> loadData(AppStoreData appStoreData) async {
     appStoreData.nowDownloadContent = true;
+    appStoreData.needUpdateOnActive = false;
     if (!appStoreData.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
     }
