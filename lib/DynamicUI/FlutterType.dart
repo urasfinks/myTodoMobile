@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
@@ -416,6 +415,36 @@ class FlutterType {
     );
   }
 
+  static dynamic pTextFieldCupertino(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return TextField(
+      decoration: InputDecoration(
+        suffixIcon: IconButton(
+          onPressed: () {
+            print(1);
+          },
+          icon: Icon(Icons.clear, size: 18),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.only(left: 10.0, bottom: 10.0, top: 10.0),
+        hintText: 'Enter something',
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.transparent,
+            width: 0.0,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.transparent,
+            width: 0.0,
+          ),
+        ),
+      ),
+    );
+  }
+
   static dynamic pTextField(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
@@ -513,7 +542,7 @@ class FlutterType {
         } else if (type == "time") {
           String? t = textController?.text;
           TimeOfDay tod = TimeOfDay.now();
-          if(t != null && t != ""){
+          if (t != null && t != "") {
             List<String> exp = t.split(":");
             tod = TimeOfDay(hour: FlutterTypeConstant.parseInt(exp[0])!, minute: FlutterTypeConstant.parseInt(exp[1])!);
           }
@@ -540,6 +569,15 @@ class FlutterType {
 
   static dynamic pInputDecoration(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     return InputDecoration(
+      suffixIcon: DynamicUI.def(parsedJson, 'suffixIcon', null, appStoreData, index, originKeyData),
+      enabledBorder: DynamicUI.def(parsedJson, 'enabledBorder', null, appStoreData, index, originKeyData),
+      focusedBorder: DynamicUI.def(parsedJson, 'focusedBorder', null, appStoreData, index, originKeyData),
+      filled: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'filled', null, appStoreData, index, originKeyData),
+      ),
+      fillColor: FlutterTypeConstant.parseColor(
+        DynamicUI.def(parsedJson, 'fillColor', null, appStoreData, index, originKeyData),
+      ),
       icon: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index, originKeyData),
       border: DynamicUI.def(parsedJson, 'border', null, appStoreData, index, originKeyData),
       labelText: DynamicUI.def(parsedJson, 'labelText', null, appStoreData, index, originKeyData),
@@ -552,23 +590,25 @@ class FlutterType {
     );
   }
 
-  static dynamic pUnderlineInputBorder(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    return UnderlineInputBorder(
+  static dynamic pOutlineInputBorder(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return OutlineInputBorder(
       borderSide: DynamicUI.def(parsedJson, 'borderSide', const BorderSide(), appStoreData, index, originKeyData),
-      borderRadius: DynamicUI.def(
-          parsedJson,
-          'borderRadius',
-          const BorderRadius.only(
-            topLeft: Radius.circular(4.0),
-            topRight: Radius.circular(4.0),
-          ),
-          appStoreData,
-          index,
-          originKeyData),
+      borderRadius: FlutterTypeConstant.parseBorderRadius(
+        DynamicUI.def(parsedJson, 'borderRadius', 4.0, appStoreData, index, originKeyData),
+      )!,
     );
   }
 
-  static dynamic pBorderSize(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+  static dynamic pUnderlineInputBorder(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return UnderlineInputBorder(
+      borderSide: DynamicUI.def(parsedJson, 'borderSide', const BorderSide(), appStoreData, index, originKeyData),
+      borderRadius: FlutterTypeConstant.parseBorderRadius(
+        DynamicUI.def(parsedJson, 'borderRadius', 4.0, appStoreData, index, originKeyData),
+      )!,
+    );
+  }
+
+  static dynamic pBorderSide(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     return BorderSide(
       color: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'color', '#f5f5f5', appStoreData, index, originKeyData),
@@ -577,7 +617,7 @@ class FlutterType {
         DynamicUI.def(parsedJson, 'width', 1, appStoreData, index, originKeyData),
       )!,
       style: FlutterTypeConstant.parseBorderStyle(
-        DynamicUI.def(parsedJson, 'style', BorderStyle.solid, appStoreData, index, originKeyData),
+        DynamicUI.def(parsedJson, 'style', 'solid', appStoreData, index, originKeyData),
       )!,
     );
   }
@@ -1121,10 +1161,9 @@ class FlutterType {
         selectedValue: value,
         choiceItems: options,
         modalType: S2ModalType.bottomSheet,
-        onChange: (state){
+        onChange: (state) {
           appStoreData.set(key, state.value);
-        }
-    );
+        });
   }
 
   static dynamic pDropdownButton2(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
