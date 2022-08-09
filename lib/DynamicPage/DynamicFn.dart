@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myTODO/DynamicPage/DynamicDirective.dart';
+import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
@@ -355,10 +356,10 @@ class DynamicFn {
       };
     }
   }
-
   static Widget getFutureBuilder(AppStoreData appStoreData, dynamic data) {
-    //print("getFutureBuilder");
-    if (appStoreData.getServerResponse().isNotEmpty && appStoreData.nowDownloadContent == false) {
+    //print("FB resp length: ${appStoreData.getServerResponse().length}");
+    //if (appStoreData.getServerResponse().isNotEmpty && appStoreData.nowDownloadContent == false) { //BEFORE
+    if (appStoreData.getServerResponse().isNotEmpty) { //AFTER
       Map<String, dynamic> response = appStoreData.getServerResponse();
       bool grid = appStoreData.getWidgetData("grid");
       Map cfg = appStoreData.getWidgetDataConfig({"reverse": false});
@@ -383,6 +384,13 @@ class DynamicFn {
         );
       }
     }
+
+    String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
+    if(cachedDataPage != null){
+      DynamicPageUtil.dataUpdate(jsonDecode(cachedDataPage), appStoreData, native: false);
+      //print("cachedDataPage: ${cachedDataPage}");
+    }
+
     return CircularProgressIndicator(
       backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
       color: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorColor")),

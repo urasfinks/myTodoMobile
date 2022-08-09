@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../Cache.dart';
 import 'AppStoreData.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:uuid/uuid.dart';
@@ -8,6 +9,7 @@ import 'dart:convert' show utf8, base64;
 import 'package:http/http.dart' as http;
 
 class AppStore {
+  static Cache? cache;
   static String host = "http://jamsys.ru:8081";
   static String ws = "ws://jamsys.ru:8081";
 
@@ -35,12 +37,12 @@ class AppStore {
     AppStore().reloadAll();
   }
 
-  static Future registerPerson(prefs) async {
+  static Future registerPerson() async {
     String url = "${AppStore.host}/person/$_personKey";
     print("registerPerson URL: $url");
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      await prefs.setString('key', _personKey);
+      await cache?.getShared().setString('key', _personKey);
       updateRequestHeader();
     }
   }

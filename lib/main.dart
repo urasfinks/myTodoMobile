@@ -2,18 +2,18 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'AppStore/AppStore.dart';
+import 'Cache.dart';
 import 'TabWrap.dart';
 
 Future<void> loadPref() async {
-  final prefs = await SharedPreferences.getInstance();
+  AppStore.cache = await Cache.getInstance();
   //prefs.remove('key');
-  final String? key = prefs.getString('key');
+  final String? key = AppStore.cache?.get('key');
   if (key == null || "" == key) {
-    await AppStore.registerPerson(prefs);
+    await AppStore.registerPerson();
   } else {
     AppStore.setPersonKey(key);
   }

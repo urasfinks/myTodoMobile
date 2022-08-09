@@ -116,10 +116,11 @@ class DynamicPageState extends State<DynamicPage> {
 
   @override
   Widget build(BuildContext context) {
+    //print("DynPage build");
     AppStoreData appStoreData = AppStore.getStore(context);
+    appStoreData.setPageState(this);
     saveStore = appStoreData;
     appStoreData.initPage(widget, context);
-    appStoreData.setPageState(this);
     return appStoreData.getCompiledWidget();
   }
 }

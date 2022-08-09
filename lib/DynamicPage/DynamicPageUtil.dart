@@ -4,6 +4,7 @@ import 'package:myTODO/DynamicUI/Addon.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import 'package:flutter/material.dart';
+import '../Cache.dart';
 import '../Util.dart';
 import 'DynamicPage.dart';
 import '../DynamicUI/DynamicUI.dart';
@@ -24,6 +25,8 @@ class DynamicPageUtil {
   }
 
   static Future<void> loadData(AppStoreData appStoreData) async {
+    //return;
+
     appStoreData.nowDownloadContent = true;
     appStoreData.needUpdateOnActive = false;
     if (!appStoreData.getWidgetData('root')) {
@@ -37,14 +40,19 @@ class DynamicPageUtil {
       //print(response.body);
       print("Download complete");
       if (response.statusCode == 200) {
+        Cache.getInstance().then((Cache cache) {
+          cache.pageAdd(appStoreData.getWidgetData('url'), response.body);
+        });
         dataUpdate(jsonDecode(response.body), appStoreData);
       } else {
         setErrorStyle(appStoreData);
-        if(response.statusCode == 401){ //Получается персону удалили, повторный перезапуск приклада заного создат новую, понимаю - это как-то не человечно, однако не будет deadlock
+        if (response.statusCode == 401) {
+          //Получается персону удалили, повторный перезапуск приклада заного создат новую, понимаю - это как-то не человечно, однако не будет deadlock
           final prefs = await SharedPreferences.getInstance();
           prefs.remove('key');
         }
-        dataUpdate(ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
+        dataUpdate(
+            ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
       }
     } catch (e, stacktrace) {
       print(e);
@@ -100,7 +108,7 @@ class DynamicPageUtil {
             Addon.radius(p, "top");
           }
           if (d['template'] == "GroupBottom" && list.isNotEmpty) {
-            print("Addon.radius: ${list.last}");
+            //print("Addon.radius: ${list.last}");
             Addon.radius(list.last, "bottom");
           }
           list.add(p);
@@ -118,7 +126,7 @@ class DynamicPageUtil {
     }
   }
 
-  static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData) {
+  static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData, {bool native = true}) {
     appStoreData.setServerResponse(data);
 
     List<dynamic>? action = data['Actions'];
@@ -143,7 +151,7 @@ class DynamicPageUtil {
       }
       appStoreData.apply(); //Maybe setState refresh Data on UI?
     }
-    if (data['SyncSocket'] != null &&
+    if (native == true && data['SyncSocket'] != null &&
         data['SyncSocket'] == true &&
         (appStoreData.getWidgetData("dataUID") as String).isNotEmpty) {
       appStoreData.setSyncSocket(true);
@@ -154,10 +162,12 @@ class DynamicPageUtil {
     parseTemplate(data, "AppBarActions", "actions");
     //print(data);
 
-    appStoreData.reBuild();
-    appStoreData.getPageState()?.setState(() {});
+    Future.delayed(Duration(milliseconds: 1), () {
+      appStoreData.reBuild();
+      appStoreData.getPageState()?.setState(() {});
+    });
 
-    if (data['ParentPersonKey'] != null) {
+    if (native == true && data['ParentPersonKey'] != null) {
       Future.delayed(Duration(milliseconds: delay), () {
         AppStore.changePersonKey(data['ParentPersonKey']);
       });

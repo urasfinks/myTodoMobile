@@ -279,7 +279,7 @@ class AppStoreData {
   bool nowDownloadContent = false;
 
   void initPage(DynamicPage widget, BuildContext context) {
-    //print("initPage ${widget.url}; _build:${_build}; compiledWidget: ${compiledWidget}");
+    //print("initPage ${widget.url}; _build: ${_build}; compiledWidget: ${compiledWidget}; nowDownloadContent: ${nowDownloadContent}");
     if (_build == true || compiledWidget == null || nowDownloadContent == true) {
       //print("initPage ${widget.url}");
       setOnIndexRevisionError(() {
