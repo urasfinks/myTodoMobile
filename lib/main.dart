@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,7 +9,8 @@ import 'TabWrap.dart';
 
 Future<void> loadPref() async {
   AppStore.cache = await Cache.getInstance();
-  //prefs.remove('key');
+
+  //AppStore.cache.remove('key');
   final String? key = AppStore.cache?.get('key');
   if (key == null || "" == key) {
     await AppStore.registerPerson();
@@ -72,5 +72,12 @@ class _LifecycleWatcherState extends State<LifecycleWatcher> with WidgetsBinding
         ),
       ),
     );
+  }
+}
+
+void testCacheRemove() async {
+  for (int i = 0; i < 25; i++) {
+    await Future.delayed(const Duration(milliseconds: 1000), () {});
+    AppStore.cache?.pageAdd("p_$i", "0");
   }
 }

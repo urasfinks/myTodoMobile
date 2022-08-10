@@ -17,6 +17,10 @@ class Cache {
     return _cache!;
   }
 
+  void remove(String key) {
+    shared.remove(key);
+  }
+
   void pageAdd(String url, String data) {
     cacheLoadPage.add(url, data);
     _cache!.set('CacheLoadPage', cacheLoadPage.getState());
@@ -26,15 +30,11 @@ class Cache {
     return cacheLoadPage.get(url)?.data;
   }
 
-  dynamic getShared() {
-    return shared;
-  }
-
   String? get(String key) {
     return shared.getString(key);
   }
 
-  set(String key, String value) {
-    shared.setString(key, value);
+  set(String key, String value) async {
+    await shared.setString(key, value);
   }
 }

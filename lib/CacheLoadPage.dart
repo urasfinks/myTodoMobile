@@ -5,17 +5,20 @@ class CacheLoadPage {
   List<CacheLoadPageItem> list = [];
 
   void add(String url, String data) {
+    //print("List length: ${list.length}");
     CacheLoadPageItem? item = get(url);
     list.add(CacheLoadPageItem(url, data));
-    if (item == null) {
-      if (list.length > max) {
-        list.sort((a, b) {
-          return a.time > b.time ? 1 : -1;
+    if (list.length > max) {
+      if (item == null) {
+        list.sort((CacheLoadPageItem a, CacheLoadPageItem b) {
+          return a.time > b.time ? -1 : 1;
         });
+        //print("remove not find: ${list.last.url}");
         list.remove(list.last);
+      } else {
+        //print("remove find: ${item.url}");
+        list.remove(item);
       }
-    } else {
-      list.remove(item);
     }
   }
 
@@ -25,6 +28,7 @@ class CacheLoadPage {
       Map x = {};
       x["url"] = item.url;
       x["data"] = item.data;
+      x["time"] = item.time;
       to.add(x);
     }
     String x = jsonEncode(to);
@@ -40,7 +44,7 @@ class CacheLoadPage {
     try {
       dynamic lst = jsonDecode(json);
       for (Map item in lst) {
-        list.add(CacheLoadPageItem(item["url"], item["data"]));
+        list.add(CacheLoadPageItem(item["url"], item["data"], t: item["time"]));
       }
     } catch (e, stacktrace) {
       print(e);
@@ -63,7 +67,11 @@ class CacheLoadPageItem {
   String data;
   int time = 0;
 
-  CacheLoadPageItem(this.url, this.data) {
-    time = DateTime.now().millisecondsSinceEpoch;
+  CacheLoadPageItem(this.url, this.data, {int? t = null}) {
+    if (t != null) {
+      time = t;
+    } else {
+      time = DateTime.now().millisecondsSinceEpoch;
+    }
   }
 }

@@ -42,7 +42,7 @@ class AppStore {
     print("registerPerson URL: $url");
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      await cache?.getShared().setString('key', _personKey);
+      await cache?.set('key', _personKey);
       updateRequestHeader();
     }
   }
