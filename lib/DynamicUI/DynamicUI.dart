@@ -79,7 +79,7 @@ class DynamicUI {
       "RawMaterialButton": FlutterType.pRawMaterialButton,
       "DropdownRadio": FlutterType.pDropdownRadio,
     };
-    //print("${[map, appStoreData, index, originKeyData]}");
+    //AppStore.print("${[map, appStoreData, index, originKeyData]}");
     return map1.containsKey(containsKey)
         ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData])
         : def;
@@ -95,7 +95,7 @@ class DynamicUI {
     if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
       return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData, index, originKeyData);
     }
-    //print(ret);
+    //AppStore.print(ret);
     if (DynamicFn.isTextFunction(ret)) {
       return DynamicFn.evalTextFunction(ret, map, appStoreData, index, originKeyData);
     }

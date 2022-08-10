@@ -35,13 +35,13 @@ class DynamicPageUtil {
     if (!appStoreData.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
     }
-    print('Prepare download: ${appStoreData.getWidgetDates()}');
+    AppStore.debug('Prepare download: ${appStoreData.getWidgetDates()}');
     try {
       final response = await http.post(Uri.parse("${AppStore.host}${appStoreData.getWidgetData('url')}"),
           headers: AppStore.requestHeader, body: appStoreData.getWidgetData('parentState'));
 
-      //print(response.body);
-      print("Download complete");
+      //AppStore.print(response.body);
+      AppStore.debug("Download complete");
       if (response.statusCode == 200) {
         Map<String, dynamic> resp = jsonDecode(response.body);
         if(resp["Cache"] != null && resp["Cache"] == true){
@@ -61,8 +61,8 @@ class DynamicPageUtil {
             ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
       }
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      AppStore.debug(e);
+      AppStore.debug(stacktrace);
       setErrorStyle(appStoreData);
       dataUpdate(ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString()), appStoreData);
     }
@@ -87,8 +87,8 @@ class DynamicPageUtil {
         }
       }
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      AppStore.debug(e);
+      AppStore.debug(stacktrace);
     }
     return list.isNotEmpty ? list : null;
   }
@@ -101,9 +101,9 @@ class DynamicPageUtil {
       for (dynamic d in data[key]) {
         String ret;
         if (template.containsKey(d['template'])) {
-          //print(data['Template'][d['template']]);
+          //AppStore.print(data['Template'][d['template']]);
           ret = Util.template(d['data'], data['Template'][d['template']]);
-          //print(ret);
+          //AppStore.print(ret);
         } else {
           ret = jsonEncode({"flutterType": "Text", "data": "Undefined Template: ${d['template']}"});
         }
@@ -114,7 +114,7 @@ class DynamicPageUtil {
             Addon.radius(p, "top");
           }
           if (d['template'] == "GroupBottom" && list.isNotEmpty) {
-            //print("Addon.radius: ${list.last}");
+            //AppStore.print("Addon.radius: ${list.last}");
             Addon.radius(list.last, "bottom");
           }
           list.add(p);
@@ -123,9 +123,9 @@ class DynamicPageUtil {
           }
         } catch (e, stackTrace) {
           list.add({"flutterType": "Text", "data": "Exception template: ${e}"});
-          //print(ret);
+          //AppStore.print(ret);
           //developer.log(ret);
-          print(stackTrace);
+          AppStore.debug(stackTrace);
         }
       }
       data[ret] = list;
@@ -146,7 +146,7 @@ class DynamicPageUtil {
       appStoreData.setIndexRevisionWithoutReload(data['RevisionState']);
     }
     if (data['WidgetData'] != null && data['WidgetData'] != "") {
-      //print("SET NEW WIDGET DATA(${data['WidgetData']})");
+      //AppStore.print("SET NEW WIDGET DATA(${data['WidgetData']})");
       appStoreData.addWidgetDataByMap(data['WidgetData']);
     }
 
@@ -166,7 +166,7 @@ class DynamicPageUtil {
 
     parseTemplate(data, "Data", "list");
     parseTemplate(data, "AppBarActions", "actions");
-    //print(data);
+    //AppStore.print(data);
 
     /*Избежание рекурсивного переопредления _build статуса
      Поймал проблему, когда rebuild -> _build = true,

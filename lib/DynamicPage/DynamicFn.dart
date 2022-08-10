@@ -66,14 +66,14 @@ class DynamicFn {
     //value = '=>getAppStore(getAppStoreDataTime)|timestampToDate(timestampToDateData)';
     String del = value.toString().startsWith("=>") ? "=>" : ":";
     localFunction() {
-      //print("evalTextFunction: ${value}");
+      //AppStore.print("evalTextFunction: ${value}");
       List<String> exp = value.toString().split("|");
       exp[0] = exp[0].split(del)[1];
       List<dynamic> listFn = [];
       for (String item in exp) {
         listFn.add(parseNameAndArguments(item));
       }
-      //print(listFn);
+      //AppStore.print(listFn);
       Map<String, dynamic> originData =
           _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
@@ -91,7 +91,7 @@ class DynamicFn {
             args.add(null);
           }
         }
-        //print("args: $args");
+        //AppStore.print("args: $args");
         retExec = Function.apply(parseUtilFunction(item["fn"]), args);
       }
       return retExec;
@@ -132,7 +132,7 @@ class DynamicFn {
   }
 
   static dynamic closeWindow(AppStoreData appStoreData, dynamic data) {
-    //print("DATA: ${data}");
+    //AppStore.print("DATA: ${data}");
     if (data != null && data["delay"] != null) {
       Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {
         //Navigator.pop(appStoreData.getCtx()!);
@@ -155,8 +155,8 @@ class DynamicFn {
         }
       }
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      AppStore.debug(e);
+      AppStore.debug(stacktrace);
     }
   }
 
@@ -164,8 +164,8 @@ class DynamicFn {
     /*try{
       FocusScope.of(appStoreData.getCtx()!).requestFocus(FocusNode());
     }catch(e, stacktrace){
-      print(e);
-      print(stacktrace);
+      AppStore.print(e);
+      AppStore.print(stacktrace);
     }*/
     if (data["delay"] != null) {
       await Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {});
@@ -174,7 +174,7 @@ class DynamicFn {
     if (st.isNotEmpty) {
       data["parentState"] = st;
     }
-    print("openWindow: ${data}");
+    AppStore.debug("openWindow: ${data}");
     AppStoreData? lastPage = TabScope.getInstance().getLast();
     if (lastPage != null) {
       Navigator.push(
@@ -201,7 +201,7 @@ class DynamicFn {
     if (st.isNotEmpty) {
       data["parentState"] = st;
     }
-    //print("openDialog: ${data}");
+    //AppStore.print("openDialog: ${data}");
     showDialog(
       context: appStoreData.getCtx()!,
       builder: (context) => DynamicPage.fromMap(data),
@@ -209,7 +209,7 @@ class DynamicFn {
   }
 
   static dynamic test(AppStoreData appStoreData, dynamic data) {
-    print("test: ${data}");
+    AppStore.debug("test: ${data}");
     return const Text("Hoho");
   }
 
@@ -232,7 +232,7 @@ class DynamicFn {
   }
 
   static dynamic alert(AppStoreData appStoreData, dynamic data) {
-    print("alert: ${data}");
+    AppStore.debug("alert: ${data}");
     Map config = Util.merge({
       "data": "Сохранено",
       "backgroundColor": "rgba:30,136,229,0.95",
@@ -279,7 +279,7 @@ class DynamicFn {
   }*/
 
   static dynamic launcher(AppStoreData appStoreData, dynamic data) async {
-    print("launcher: ${data}");
+    AppStore.debug("launcher: ${data}");
     if (data != null && data["url"] != null && data["url"] != "") {
       launch(data["url"], forceSafariVC: false);
     } else {
@@ -288,20 +288,20 @@ class DynamicFn {
   }
 
   static dynamic setAppStore(AppStoreData appStoreData, dynamic data) {
-    //print("setAppStore: ${data}");
+    //AppStore.print("setAppStore: ${data}");
     dynamic now = appStoreData.get(data["key"], null);
     appStoreData.set(data["key"], data["value"] == now ? null : data["value"]);
     appStoreData.apply();
   }
 
   static dynamic getAppStore(AppStoreData appStoreData, dynamic data) {
-    //print("getAppStore: ${data}");
-    //print("return getAppStore: ${appStoreData.get(data["key"], data["defaultValue"])}");
+    //AppStore.print("getAppStore: ${data}");
+    //AppStore.print("return getAppStore: ${appStoreData.get(data["key"], data["defaultValue"])}");
     return appStoreData.get(data["key"], data["defaultValue"]);
   }
 
   static dynamic appStoreOperator(AppStoreData appStoreData, dynamic data) {
-    //print("appStoreOperator: ${data}");
+    //AppStore.print("appStoreOperator: ${data}");
     dynamic value = appStoreData.get(data["key"], null);
     if (value != null && value == data["value"]) {
       return data["trueCondition"];
@@ -311,7 +311,7 @@ class DynamicFn {
   }
 
   static dynamic openGallery(AppStoreData appStoreData, dynamic data) async {
-    //print("OPEN GALLERY");
+    //AppStore.print("OPEN GALLERY");
     var image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 600);
     if (image != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(

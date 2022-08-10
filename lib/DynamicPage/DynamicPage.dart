@@ -90,8 +90,8 @@ class DynamicPage extends StatefulWidget {
       );
       return ret;
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      AppStore.debug(e);
+      AppStore.debug(stacktrace);
       return DynamicPage.fromMap(
         {
           "title": 'Ошибка ',
@@ -107,10 +107,10 @@ class DynamicPage extends StatefulWidget {
 
   void refresh(AppStoreData appStoreData) {
     if (TabScope.getInstance().iamActivePage(appStoreData)) {
-      //print("DynamicPage.refresh now: ${url}");
+      //AppStore.print("DynamicPage.refresh now: ${url}");
       DynamicPageUtil.loadData(appStoreData);
     } else {
-      //print("DynamicPage.refresh lazy: ${url}");
+      //AppStore.print("DynamicPage.refresh lazy: ${url}");
       appStoreData.needUpdateOnActive = true;
     }
   }
@@ -121,7 +121,7 @@ class DynamicPageState extends State<DynamicPage> {
 
   @override
   void dispose() {
-    //print("Dispose");
+    //AppStore.print("Dispose");
     if (saveStore != null) {
       TabScope.getInstance().onDestroyPage(saveStore!);
       AppStore().remove(saveStore!);
@@ -131,7 +131,7 @@ class DynamicPageState extends State<DynamicPage> {
 
   @override
   Widget build(BuildContext context) {
-    //print("DynPage build");
+    //AppStore.print("DynPage build");
     AppStoreData appStoreData = AppStore.getStore(context);
     appStoreData.setPageState(this);
     saveStore = appStoreData;

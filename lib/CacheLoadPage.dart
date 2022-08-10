@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'AppStore/AppStore.dart';
+
 class CacheLoadPage {
   int max = 20;
   List<CacheLoadPageItem> list = [];
 
   void add(String url, String data) {
-    //print("CacheLoadPage.add: ${url}");
+    //AppStore.print("CacheLoadPage.add: ${url}");
     CacheLoadPageItem? item = get(url);
     list.add(CacheLoadPageItem(url, data));
     if (list.length > max) {
@@ -13,10 +15,10 @@ class CacheLoadPage {
         list.sort((CacheLoadPageItem a, CacheLoadPageItem b) {
           return a.time > b.time ? -1 : 1;
         });
-        //print("remove not find: ${list.last.url}");
+        //AppStore.print("remove not find: ${list.last.url}");
         list.remove(list.last);
       } else {
-        //print("remove find: ${item.url}");
+        //AppStore.print("remove find: ${item.url}");
         list.remove(item);
       }
     }
@@ -32,7 +34,7 @@ class CacheLoadPage {
       to.add(x);
     }
     String x = jsonEncode(to);
-    //print("getState: ${x}");
+    //AppStore.print("getState: ${x}");
     return x;
   }
 
@@ -40,15 +42,15 @@ class CacheLoadPage {
     if (json == null) {
       return;
     }
-    //print("fromState: ${json}");
+    //AppStore.print("fromState: ${json}");
     try {
       dynamic lst = jsonDecode(json);
       for (Map item in lst) {
         list.add(CacheLoadPageItem(item["url"], item["data"], t: item["time"]));
       }
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      AppStore.debug(e);
+      AppStore.debug(stacktrace);
     }
   }
 

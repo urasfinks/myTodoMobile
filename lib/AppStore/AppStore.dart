@@ -9,9 +9,17 @@ import 'dart:convert' show utf8, base64;
 import 'package:http/http.dart' as http;
 
 class AppStore {
+
+  static bool isPrint = false;
   static Cache? cache;
   static String host = "http://jamsys.ru:8081";
   static String ws = "ws://jamsys.ru:8081";
+
+  static void debug(dynamic data){
+    if(isPrint){
+      print(data);
+    }
+  }
 
   static String _personKey = const Uuid().v4();
   static Map<String, String> requestHeader = {};
@@ -25,11 +33,13 @@ class AppStore {
     requestHeader.addAll({
       'Authorization': "Basic $decoded"
     });
-    print("Person key: $_personKey, header: $requestHeader");
+
+    AppStore.debug("Person key: $_personKey, header: $requestHeader");
+
   }
 
   static changePersonKey(String newPersonKey) async{
-    print("changePersonKey: ${newPersonKey}");
+    AppStore.debug("changePersonKey: ${newPersonKey}");
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('key', newPersonKey);
     _personKey = newPersonKey;
@@ -39,7 +49,7 @@ class AppStore {
 
   static Future registerPerson() async {
     String url = "${AppStore.host}/person/$_personKey";
-    print("registerPerson URL: $url");
+    AppStore.debug("registerPerson URL: $url");
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       await cache?.set('key', _personKey);
@@ -71,11 +81,11 @@ class AppStore {
 
   static dynamic connect(AppStoreData appStoreData, Widget Function(dynamic defaultValue) builder,
       {defaultValue = ""}) {
-    //print("connect");
+    //AppStore.print("connect");
     return StoreConnector<AppStore, AppStoreData>(
       converter: (store) => appStoreData,
       builder: (context, state) {
-        //print("Build StoreConnector: ${state}");
+        //AppStore.print("Build StoreConnector: ${state}");
         return Function.apply(builder, [defaultValue]);
       },
     );

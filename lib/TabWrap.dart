@@ -73,7 +73,7 @@ class TabScope {
   }
 
   void addHistory(AppStoreData appStoreData) {
-    //print("addHistory: tabIndex: ${tabIndex};  AppStore: ${appStoreData}");
+    //AppStore.print("addHistory: tabIndex: ${tabIndex};  AppStore: ${appStoreData}");
     if (!tabs[tabIndex].history.contains(appStoreData)) {
       tabs[tabIndex].history.add(appStoreData);
     }
@@ -129,7 +129,7 @@ class TabScope {
 
   void checkReload(AppStoreData appStoreData, bool parentUpdate) {
     if (appStoreData.needUpdateOnActive || parentUpdate) {
-      //print("YES ${appStoreData.needUpdateOnActive}");
+      //AppStore.print("YES ${appStoreData.needUpdateOnActive}");
       DynamicPageUtil.loadData(appStoreData);
     }
   }
@@ -140,8 +140,8 @@ class TabScope {
   }
 
   void setTabIndex(int index) {
-    //print("SELECTED TAB: ${index}");
-    //print(tabs[index].history);
+    //AppStore.print("SELECTED TAB: ${index}");
+    //AppStore.print(tabs[index].history);
     if(tabs[index].history.isNotEmpty){
       checkReload(tabs[index].history.last, false);
     }

@@ -13,6 +13,8 @@ import '../TabWrap.dart';
 import '../WebSocket.dart';
 import 'package:redux/redux.dart';
 
+import 'AppStore.dart';
+
 class AppStoreData {
   bool syncSocket;
   final Store store;
@@ -29,7 +31,7 @@ class AppStoreData {
 
   void didChangeAppLifecycleState(AppLifecycleState state) {
     dynamic refreshOnResume = getWidgetData("refreshOnResume");
-    //print("didChangeAppLifecycleState: ${widgetData}");
+    //AppStore.print("didChangeAppLifecycleState: ${widgetData}");
     if (refreshOnResume != null && refreshOnResume == true && state == AppLifecycleState.resumed) {
       onIndexRevisionError();
     }
@@ -81,14 +83,14 @@ class AppStoreData {
   }
 
   void addWidgetData(String key, dynamic value) {
-    //print("addWidgetData(${key}) = ${value}");
+    //AppStore.print("addWidgetData(${key}) = ${value}");
     widgetData[key] = value;
     if (key == "parentRefresh") {
       try {
         setParentRefresh(value);
       } catch (e, stacktrace) {
-        print(e);
-        print(stacktrace);
+        AppStore.debug(e);
+        AppStore.debug(stacktrace);
       }
     }
   }
@@ -183,7 +185,7 @@ class AppStoreData {
   }
 
   void setIndexRevision(int newValue, {bool checkSequence = true}) {
-    //print("setIndexRevision: ${newValue}; oldValue: ${_indexRevision}");
+    //AppStore.print("setIndexRevision: ${newValue}; oldValue: ${_indexRevision}");
     if (checkSequence == true) {
       if (_indexRevision == newValue - 1) {
         _indexRevision++;
@@ -203,7 +205,7 @@ class AppStoreData {
   }
 
   void set(String key, dynamic value, {bool notify = true}) {
-    //print("Set: $key = $value");
+    //AppStore.print("Set: $key = $value");
     _map[key] = value;
     onChange(key, notify);
   }
@@ -262,7 +264,7 @@ class AppStoreData {
   }
 
   void apply() {
-    //print("apply");
+    //AppStore.print("apply");
     store.dispatch(null);
   }
 
@@ -289,9 +291,9 @@ class AppStoreData {
 
   void initPage(DynamicPage widget, BuildContext context) {
     try {
-      //print("initPage ${widget.url}; _build: ${_build}; compiledWidget: ${compiledWidget}; nowDownloadContent: ${nowDownloadContent}");
+      //AppStore.print("initPage ${widget.url}; _build: ${_build}; compiledWidget: ${compiledWidget}; nowDownloadContent: ${nowDownloadContent}");
       if (_build == true || compiledWidget == null || nowDownloadContent == true) {
-        print("initPage ${widget.url}");
+        //AppStore.print("initPage ${widget.url}");
         setOnIndexRevisionError(() {
           widget.refresh(this);
         });
@@ -318,9 +320,9 @@ class AppStoreData {
             : null;
         if (getWidgetData("dialog") == false) {
           Map conf = getWidgetDataConfig({"gradient": null});
-          //print("AllWidgetData: ${getWidgetData("config")}");
+          //AppStore.print("AllWidgetData: ${getWidgetData("config")}");
           bool gradient = conf["gradient"] != null;
-          //print("FLAG grad: ${gradient}");
+          //AppStore.print("FLAG grad: ${gradient}");
           compiledWidget = Scaffold(
             backgroundColor: gradient == true
                 ? Colors.transparent
@@ -372,7 +374,7 @@ class AppStoreData {
             ),
             child: compiledWidget,
           );*/
-            //print("GRAD: ${FlutterType.pLinearGradient(conf["gradient"], this, 0, "")}");
+            //AppStore.print("GRAD: ${FlutterType.pLinearGradient(conf["gradient"], this, 0, "")}");
             compiledWidget = Container(
               decoration: BoxDecoration(
                 gradient: FlutterType.pLinearGradient(conf["gradient"], this, 0, ""),
@@ -402,8 +404,8 @@ class AppStoreData {
         _build = false;
       }
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      AppStore.debug(e);
+      AppStore.debug(stacktrace);
       compiledWidget = Scaffold(
         appBar: AppBar(
           elevation: 0,

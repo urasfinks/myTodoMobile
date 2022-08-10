@@ -21,7 +21,7 @@ class _SecondPageTest extends State<SecondPageTest> {
     WebSocket().subscribe(widget.title);
     final AppStoreData store = AppStore.getStore(context);
     store.setOnIndexRevisionError(() {
-      print("Reload page");
+      AppStore.debug("Reload page");
     });
     //final AppStoreData? storeTabPage = AppStore.getStoreByDataUID(context, "TabPage");
 
@@ -30,7 +30,7 @@ class _SecondPageTest extends State<SecondPageTest> {
         leading: BackButton(
           color: Colors.black,
           onPressed: () {
-            print("BACK");
+            AppStore.debug("BACK");
           },
         ),
         title: Text(widget.title),

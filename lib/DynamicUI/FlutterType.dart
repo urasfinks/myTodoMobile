@@ -257,8 +257,8 @@ class FlutterType {
         args.add(originData[exp2[1]]);
       }
     } catch (e, stacktrace) {
-      print(e);
-      print(stacktrace);
+      AppStore.debug(e);
+      AppStore.debug(stacktrace);
     }
     if (args.length == 1) {
       args.add(null);
@@ -270,7 +270,7 @@ class FlutterType {
   }
 
   static dynamic pRawMaterialButton(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    //print("pRawMaterialButton: ${parsedJson}");
+    //AppStore.print("pRawMaterialButton: ${parsedJson}");
     return RawMaterialButton(
       constraints: const BoxConstraints(minWidth: 10, maxHeight: 10),
       onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
@@ -279,7 +279,7 @@ class FlutterType {
   }
 
   static dynamic pElevatedButton(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    //print("pElevatedButton: ${parsedJson}");
+    //AppStore.print("pElevatedButton: ${parsedJson}");
     /*
     * [ElevatedButton/OutlinedButton]
     * StadiumBorder
@@ -328,7 +328,7 @@ class FlutterType {
   }
 
   static dynamic pElevatedButtonIcon(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    //print(parsedJson);
+    //AppStore.print(parsedJson);
     return ElevatedButton.icon(
       onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
       style: DynamicUI.def(parsedJson, 'style', null, appStoreData, index, originKeyData),

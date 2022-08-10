@@ -10,7 +10,7 @@ import 'dart:developer' as developer;
 
 class Util {
   static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder, {bool reverse = false}) {
-    //print("SEPARATED: ${separated}");
+    //AppStore.print("SEPARATED: ${separated}");
     if (separated == true) {
       return ListView.separated(
         reverse: reverse,
@@ -49,7 +49,7 @@ class Util {
   }
 
   static String path(dynamic data, String path) {
-    //print("PATH: '${path}'");
+    //AppStore.print("PATH: '${path}'");
     List<String> exp = path.split(".");
     dynamic cur = data;
     for (String key in exp) {
@@ -92,12 +92,12 @@ class Util {
 
     request.headers.addAll(AppStore.requestHeader);
     return await request.send().then((response) async {
-      //print("RESPONSE: ${response}");
+      //AppStore.print("RESPONSE: ${response}");
       /*response.stream.transform(utf8.decoder).listen((value) {
-        print("VALUE: ${value}");
+        AppStore.print("VALUE: ${value}");
       });*/
     }).catchError((e) {
-      print(e);
+      AppStore.debug(e);
     });
   }
 

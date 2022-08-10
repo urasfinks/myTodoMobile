@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../AppStore/AppStore.dart';
 import '../FlutterTypeConstant.dart';
 
 class AccountPage extends StatefulWidget {
@@ -46,7 +47,7 @@ class _AccountPage extends State<AccountPage> {
                       color: FlutterTypeConstant.parseColor("#ffffff"),
                     ),
                     onTap: (){
-                      print("Halom");
+                      AppStore.debug("Halom");
                     },
                   )
                   ,
@@ -108,7 +109,7 @@ class _AccountPage extends State<AccountPage> {
                                 splashColor: Colors.grey[200],
                                 highlightColor: Colors.transparent,
                                 onTap: (){
-                                  print("Tap");
+                                  AppStore.debug("Tap");
                                 },
                                 child: Container(
                                   padding: FlutterTypeConstant.parseEdgeInsets("5,12,5,0"),
