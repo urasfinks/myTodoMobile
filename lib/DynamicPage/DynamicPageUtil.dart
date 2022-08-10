@@ -29,6 +29,9 @@ class DynamicPageUtil {
 
     appStoreData.nowDownloadContent = true;
     appStoreData.needUpdateOnActive = false;
+
+    //await Future.delayed(Duration(milliseconds: 5000), () {}); //Для тестирования загрузки из cache
+
     if (!appStoreData.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
     }
@@ -162,7 +165,11 @@ class DynamicPageUtil {
     parseTemplate(data, "AppBarActions", "actions");
     //print(data);
 
-    Future.delayed(Duration(milliseconds: 1), () {
+    /*Избежание рекурсивного переопредления _build статуса
+     Поймал проблему, когда rebuild -> _build = true,
+     но инициатор процесса initPage, в конце определяет build = false
+     и на момент setState и повторного build мы не перекомпилируем отображение*/
+    Future.delayed(const Duration(milliseconds: 1), () {
       appStoreData.reBuild();
       appStoreData.getPageState()?.setState(() {});
     });

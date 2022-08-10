@@ -356,21 +356,22 @@ class DynamicFn {
       };
     }
   }
+
   static Widget getFutureBuilder(AppStoreData appStoreData, dynamic data) {
     //print("FB resp length: ${appStoreData.getServerResponse().length}");
     //if (appStoreData.getServerResponse().isNotEmpty && appStoreData.nowDownloadContent == false) { //BEFORE
-    if (appStoreData.getServerResponse().isNotEmpty) { //AFTER
+    if (appStoreData.getServerResponse().isNotEmpty) {
+      //AFTER
       Map<String, dynamic> response = appStoreData.getServerResponse();
       bool grid = appStoreData.getWidgetData("grid");
       Map cfg = appStoreData.getWidgetDataConfig({"reverse": false});
       if (grid == false) {
         return Util.getListView(
-          appStoreData.getWidgetData("separated"),
-          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          response['list'].length,
-          getFutureList(appStoreData, data),
-          reverse: cfg["reverse"]
-        );
+            appStoreData.getWidgetData("separated"),
+            const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            response['list'].length,
+            getFutureList(appStoreData, data),
+            reverse: cfg["reverse"]);
       } else {
         Map x = appStoreData.getWidgetDataConfig(
             {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
@@ -384,12 +385,22 @@ class DynamicFn {
         );
       }
     }
+    //Я больше склонен, что бы первично отображалась всё таки актуальная информация с сервера
+    //Но если через секунду содержимое не загружено, поднимать из кеша и отображать
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      //print("Go1");
+      if(appStoreData.nowDownloadContent == true){
+        //print("Go2");
+        String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
+        if (cachedDataPage != null) {
+          //print("Go3");
+          DynamicPageUtil.dataUpdate(jsonDecode(cachedDataPage), appStoreData, native: false);
+          //print("cachedDataPage: ${cachedDataPage}");
+        }
+      }
+    });
 
-    String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
-    if(cachedDataPage != null){
-      DynamicPageUtil.dataUpdate(jsonDecode(cachedDataPage), appStoreData, native: false);
-      //print("cachedDataPage: ${cachedDataPage}");
-    }
+
 
     return CircularProgressIndicator(
       backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
