@@ -57,6 +57,7 @@ class _LifecycleWatcherState extends State<LifecycleWatcher> with WidgetsBinding
     return StoreProvider(
       store: AppStore.store,
       child: MaterialApp(
+        navigatorObservers: [ClearFocusOnPush()],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -79,5 +80,14 @@ void testCacheRemove() async {
   for (int i = 0; i < 25; i++) {
     await Future.delayed(const Duration(milliseconds: 1000), () {});
     AppStore.cache?.pageAdd("p_$i", "0");
+  }
+}
+
+class ClearFocusOnPush extends NavigatorObserver {
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    super.didPush(route, previousRoute);
+    final focus = FocusManager.instance.primaryFocus;
+    focus?.unfocus();
   }
 }

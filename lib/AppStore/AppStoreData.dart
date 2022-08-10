@@ -7,6 +7,7 @@ import 'package:myTODO/DynamicPage/DynamicPage.dart';
 import '../DynamicPage/DynamicFn.dart';
 import '../DynamicPage/DynamicPageUtil.dart';
 import '../DynamicUI/DynamicUI.dart';
+import '../DynamicUI/FlutterType.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
 import '../TabWrap.dart';
 import '../WebSocket.dart';
@@ -26,10 +27,10 @@ class AppStoreData {
     _indexRevision = index;
   }
 
-  void didChangeAppLifecycleState(AppLifecycleState state){
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     dynamic refreshOnResume = getWidgetData("refreshOnResume");
     //print("didChangeAppLifecycleState: ${widgetData}");
-    if(refreshOnResume != null && refreshOnResume == true && state == AppLifecycleState.resumed){
+    if (refreshOnResume != null && refreshOnResume == true && state == AppLifecycleState.resumed) {
       onIndexRevisionError();
     }
   }
@@ -49,7 +50,7 @@ class AppStoreData {
 
   void addWidgetDataByMap(Map<String, dynamic> obj) {
     for (var item in obj.entries) {
-      if(item.key != "dataUID"){
+      if (item.key != "dataUID") {
         addWidgetData(item.key, item.value);
       }
     }
@@ -82,10 +83,10 @@ class AppStoreData {
   void addWidgetData(String key, dynamic value) {
     //print("addWidgetData(${key}) = ${value}");
     widgetData[key] = value;
-    if(key == "parentRefresh"){
+    if (key == "parentRefresh") {
       try {
         setParentRefresh(value);
-      }catch(e, stacktrace){
+      } catch (e, stacktrace) {
         print(e);
         print(stacktrace);
       }
@@ -140,6 +141,12 @@ class AppStoreData {
   void clearState() {
     _map.clear();
     listController.clear();
+  }
+
+  void unFocusTextController() {
+    for(var item in listController.entries){
+      item.value.clear();
+    }
   }
 
   TextEditingController? getTextController(String key, String def) {
@@ -206,7 +213,8 @@ class AppStoreData {
     onChange(key, notify);
   }
 
-  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void inc(String key,
+      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") + step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -218,7 +226,8 @@ class AppStoreData {
     onChange(key, notify);
   }
 
-  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void dec(String key,
+      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") - step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -242,7 +251,7 @@ class AppStoreData {
 
   void onChange(String key, bool notify) {
     dynamic x = getWidgetDataConfig({"parentRefreshOnChangeStateData": false});
-    if(x["parentRefreshOnChangeStateData"] == true){
+    if (x["parentRefreshOnChangeStateData"] == true) {
       setParentRefresh(true);
     }
     if (notify == true) {
@@ -279,36 +288,45 @@ class AppStoreData {
   bool nowDownloadContent = false;
 
   void initPage(DynamicPage widget, BuildContext context) {
-    //print("initPage ${widget.url}; _build: ${_build}; compiledWidget: ${compiledWidget}; nowDownloadContent: ${nowDownloadContent}");
-    if (_build == true || compiledWidget == null || nowDownloadContent == true) {
-      //print("initPage ${widget.url}");
-      setOnIndexRevisionError(() {
-        widget.refresh(this);
-      });
-      if (firstLoad == true) {
-        addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
-        TabScope.getInstance().addHistory(this);
-        widget.refresh(this);
-        firstLoad = false;
-      }
-      setCtx(context);
+    try {
+      //print("initPage ${widget.url}; _build: ${_build}; compiledWidget: ${compiledWidget}; nowDownloadContent: ${nowDownloadContent}");
+      if (_build == true || compiledWidget == null || nowDownloadContent == true) {
+        print("initPage ${widget.url}");
+        setOnIndexRevisionError(() {
+          widget.refresh(this);
+        });
+        if (firstLoad == true) {
+          addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
+          TabScope.getInstance().addHistory(this);
+          widget.refresh(this);
+          firstLoad = false;
+        }
+        setCtx(context);
 
-      if (getServerResponse().containsKey("Template") &&
-          getWidgetData("wrapPage").isNotEmpty &&
-          (getServerResponse()["Template"] as Map).containsKey(getWidgetData("wrapPage"))) {
-        wrapPage = DynamicUI.main((getServerResponse()["Template"] as Map)[getWidgetData("wrapPage")], this, 0, '');
-      }
+        if (getServerResponse().containsKey("Template") &&
+            getWidgetData("wrapPage").isNotEmpty &&
+            (getServerResponse()["Template"] as Map).containsKey(getWidgetData("wrapPage"))) {
+          wrapPage = DynamicUI.main((getServerResponse()["Template"] as Map)[getWidgetData("wrapPage")], this, 0, '');
+        }
 
-      BackButton? back = (widget.root == false) ? BackButton(
-        onPressed: () {
-          TabScope.getInstance().popHistory(null);
-        },
-      ) : null;
-      if (getWidgetData("dialog") == false) {
-        compiledWidget = Scaffold(
-            backgroundColor: FlutterTypeConstant.parseColor(
-              getWidgetData("backgroundColor"),
-            ),
+        BackButton? back = (widget.root == false)
+            ? BackButton(
+                onPressed: () {
+                  TabScope.getInstance().popHistory(null);
+                },
+              )
+            : null;
+        if (getWidgetData("dialog") == false) {
+          Map conf = getWidgetDataConfig({"gradient": null});
+          //print("AllWidgetData: ${getWidgetData("config")}");
+          bool gradient = conf["gradient"] != null;
+          //print("FLAG grad: ${gradient}");
+          compiledWidget = Scaffold(
+            backgroundColor: gradient == true
+                ? Colors.transparent
+                : FlutterTypeConstant.parseColor(
+                    getWidgetData("backgroundColor"),
+                  ),
             appBar: AppBar(
               leading: back,
               elevation: 0,
@@ -340,27 +358,87 @@ class AppStoreData {
                   child: _contentBuilder(wrapPage),
                 ),
               ),
-            ));
-      } else {
-        Map config = getWidgetDataConfig({"padding": 160, "elevation": 0.0, "borderRadius": 20, "height": 70});
-        compiledWidget = Dialog(
-          backgroundColor: FlutterTypeConstant.parseColor(
-            getWidgetData("backgroundColor"),
+            ),
+          );
+          if (gradient == true) {
+            /*compiledWidget = Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.5, 0.5],
+                colors: [Colors.blue[600]!, Colors.white],
+              ),
+            ),
+            child: compiledWidget,
+          );*/
+            //print("GRAD: ${FlutterType.pLinearGradient(conf["gradient"], this, 0, "")}");
+            compiledWidget = Container(
+              decoration: BoxDecoration(
+                gradient: FlutterType.pLinearGradient(conf["gradient"], this, 0, ""),
+              ),
+              child: compiledWidget,
+            );
+          }
+        } else {
+          Map config = getWidgetDataConfig({"padding": 160, "elevation": 0.0, "borderRadius": 20, "height": 70});
+          compiledWidget = Dialog(
+            backgroundColor: FlutterTypeConstant.parseColor(
+              getWidgetData("backgroundColor"),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(FlutterTypeConstant.parseDouble(config["borderRadius"])!),
+            ),
+            insetPadding: FlutterTypeConstant.parseEdgeInsets(config["padding"].toString())!,
+            elevation: FlutterTypeConstant.parseDouble(config["elevation"]),
+            child: SizedBox(
+              height: FlutterTypeConstant.parseDouble(config["height"]),
+              child: Center(
+                child: _contentBuilder(wrapPage),
+              ),
+            ),
+          );
+        }
+        _build = false;
+      }
+    } catch (e, stacktrace) {
+      print(e);
+      print(stacktrace);
+      compiledWidget = Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent, // Status bar
+              statusBarBrightness: Brightness.dark),
+          title: const Text(
+            "Ошибка компиляции",
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(FlutterTypeConstant.parseDouble(config["borderRadius"])!),
-          ),
-          insetPadding: FlutterTypeConstant.parseEdgeInsets(config["padding"].toString())!,
-          elevation: FlutterTypeConstant.parseDouble(config["elevation"]),
-          child: SizedBox(
-            height: FlutterTypeConstant.parseDouble(config["height"]),
-            child: Center(
-              child: _contentBuilder(wrapPage),
+        ),
+        body: SafeArea(
+          child: Center(
+            child: LiquidPullToRefresh(
+              showChildOpacityTransition: false,
+              springAnimationDurationInMilliseconds: 500,
+              animSpeedFactor: 2,
+              height: 90,
+              onRefresh: () async {
+                clearState();
+                widget.refresh(this);
+              },
+              child: ListView.separated(
+                itemCount: 1,
+                itemBuilder: (BuildContext context, int index) {
+                  return Text(e.toString());
+                },
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  height: 1,
+                  color: FlutterTypeConstant.parseColor("#f5f5f5")!,
+                ),
+              ),
             ),
           ),
-        );
-      }
-      _build = false;
+        ),
+      );
     }
   }
 
@@ -370,7 +448,7 @@ class AppStoreData {
 
   bool _parentUpdate = false;
 
-  void setParentRefresh(bool upd){
+  void setParentRefresh(bool upd) {
     _parentUpdate = upd;
   }
 
@@ -382,4 +460,5 @@ class AppStoreData {
   String toString() {
     return 'AppStoreData{url: ${widgetData["url"]}';
   }
+
 }

@@ -194,16 +194,47 @@ class FlutterTypeConstant {
     return map.containsKey(value) ? map[value] : null;
   }
 
-  static List<Color> parseListColor(parsedJson) {
-    List<Color> ret = [];
+  static List<double>? parseListDouble(parsedJson) {
+    List<double> ret = [];
     if (parsedJson != null) {
-      for (String color in parsedJson) {
-        Color? x = parseColor(color);
-        if (x != null) {
-          ret.add(x);
+      if(parsedJson.runtimeType.toString().startsWith("List<dynamic>")){
+        for (double d in parsedJson) {
+            ret.add(d);
+        }
+      }
+      if(parsedJson.runtimeType.toString().startsWith("_InternalLinkedHashMap<String, dynamic>")){
+        Map x = parsedJson;
+        for (var item in x.entries) {
+          ret.add(item.value);
         }
       }
     }
+    return ret.isEmpty ? null : ret;
+  }
+
+  static List<Color> parseListColor(parsedJson) {
+    //print("VOT: ${parsedJson.runtimeType.toString()}");
+    List<Color> ret = [];
+    if (parsedJson != null) {
+      if(parsedJson.runtimeType.toString().startsWith("List<dynamic>")){
+        for (String color in parsedJson) {
+          Color? x = parseColor(color);
+          if (x != null) {
+            ret.add(x);
+          }
+        }
+      }
+      if(parsedJson.runtimeType.toString().startsWith("_InternalLinkedHashMap<String, dynamic>")){
+        Map x = parsedJson;
+        for (var item in x.entries) {
+          Color? x = parseColor(item.value);
+          if (x != null) {
+            ret.add(x);
+          }
+        }
+      }
+    }
+    //print("RES: ${ret}");
     return ret;
   }
 

@@ -161,6 +161,12 @@ class DynamicFn {
   }
 
   static dynamic openWindow(AppStoreData appStoreData, dynamic data) async {
+    /*try{
+      FocusScope.of(appStoreData.getCtx()!).requestFocus(FocusNode());
+    }catch(e, stacktrace){
+      print(e);
+      print(stacktrace);
+    }*/
     if (data["delay"] != null) {
       await Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {});
     }

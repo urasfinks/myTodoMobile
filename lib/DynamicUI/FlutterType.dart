@@ -200,6 +200,12 @@ class FlutterType {
       begin: FlutterTypeConstant.parseAlignment(
         DynamicUI.def(parsedJson, 'begin', 'centerLeft', appStoreData, index, originKeyData),
       )!,
+      end: FlutterTypeConstant.parseAlignment(
+        DynamicUI.def(parsedJson, 'end', 'centerRight', appStoreData, index, originKeyData),
+      )!,
+      stops: FlutterTypeConstant.parseListDouble(
+        DynamicUI.def(parsedJson, 'stops', null, appStoreData, index, originKeyData),
+      ),
       colors: FlutterTypeConstant.parseListColor(
         DynamicUI.def(parsedJson, 'colors', null, appStoreData, index, originKeyData),
       ),
@@ -412,36 +418,6 @@ class FlutterType {
         DynamicUI.def(parsedJson, 'textWidthBasis', null, appStoreData, index, originKeyData),
       ),
       scrollPhysics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
-    );
-  }
-
-  static dynamic pTextFieldCupertino(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    return TextField(
-      decoration: InputDecoration(
-        suffixIcon: IconButton(
-          onPressed: () {
-            print(1);
-          },
-          icon: Icon(Icons.clear, size: 18),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.only(left: 10.0, bottom: 10.0, top: 10.0),
-        hintText: 'Enter something',
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.transparent,
-            width: 0.0,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.transparent,
-            width: 0.0,
-          ),
-        ),
-      ),
     );
   }
 
