@@ -17,7 +17,7 @@ import 'dart:convert' show jsonEncode, jsonDecode;
 import 'dart:async';
 
 class DynamicPageUtil {
-  static int delay = 350;
+  static int delay = 200; //Animation open new page!!!
 
   static Future<void> loadDataTest(DynamicPage widget, AppStoreData appStoreData) async {
     await Future.delayed(Duration(milliseconds: delay), () {});
