@@ -5,7 +5,7 @@ class CacheLoadPage {
   List<CacheLoadPageItem> list = [];
 
   void add(String url, String data) {
-    //print("List length: ${list.length}");
+    //print("CacheLoadPage.add: ${url}");
     CacheLoadPageItem? item = get(url);
     list.add(CacheLoadPageItem(url, data));
     if (list.length > max) {

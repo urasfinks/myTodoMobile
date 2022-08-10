@@ -43,10 +43,13 @@ class DynamicPageUtil {
       //print(response.body);
       print("Download complete");
       if (response.statusCode == 200) {
-        Cache.getInstance().then((Cache cache) {
-          cache.pageAdd(appStoreData.getWidgetData('url'), response.body);
-        });
-        dataUpdate(jsonDecode(response.body), appStoreData);
+        Map<String, dynamic> resp = jsonDecode(response.body);
+        if(resp["Cache"] != null && resp["Cache"] == true){
+          Cache.getInstance().then((Cache cache) {
+            cache.pageAdd(appStoreData.getWidgetData('url'), response.body);
+          });
+        }
+        dataUpdate(resp, appStoreData);
       } else {
         setErrorStyle(appStoreData);
         if (response.statusCode == 401) {
