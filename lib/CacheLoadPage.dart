@@ -9,18 +9,16 @@ class CacheLoadPage {
   void add(String url, String data) {
     //AppStore.print("CacheLoadPage.add: ${url}");
     CacheLoadPageItem? item = get(url);
+    if(item != null){ //Сумарно получается замещение
+      list.remove(item);
+    }
     list.add(CacheLoadPageItem(url, data));
     if (list.length > max) {
-      if (item == null) {
-        list.sort((CacheLoadPageItem a, CacheLoadPageItem b) {
-          return a.time > b.time ? -1 : 1;
-        });
-        //AppStore.print("remove not find: ${list.last.url}");
-        list.remove(list.last);
-      } else {
-        //AppStore.print("remove find: ${item.url}");
-        list.remove(item);
-      }
+      list.sort((CacheLoadPageItem a, CacheLoadPageItem b) {
+        return a.time > b.time ? -1 : 1;
+      });
+      //AppStore.print("remove not find: ${list.last.url}");
+      list.remove(list.last);
     }
   }
 
