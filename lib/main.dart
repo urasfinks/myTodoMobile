@@ -56,20 +56,25 @@ class _LifecycleWatcherState extends State<LifecycleWatcher> with WidgetsBinding
   Widget build(BuildContext context) {
     return StoreProvider(
       store: AppStore.store,
-      child: MaterialApp(
-        navigatorObservers: [ClearFocusOnPush()],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        debugShowCheckedModeBanner: false,
-        home: WillPopScope(
-          onWillPop: () async {
-            //Замена события
-            TabScope.getInstance().popHistory(null);
-            return false;
-          },
-          child: TabWrap(context),
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: MaterialApp(
+          navigatorObservers: [ClearFocusOnPush()],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          debugShowCheckedModeBanner: false,
+          home: WillPopScope(
+            onWillPop: () async {
+              //Замена события
+              TabScope.getInstance().popHistory(null);
+              return false;
+            },
+            child: TabWrap(context),
+          ),
         ),
       ),
     );
