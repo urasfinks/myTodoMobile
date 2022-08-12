@@ -16,6 +16,7 @@ import '../Util.dart';
 import 'DynamicPage.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
 class DynamicFn {
   static int delay = 350;
@@ -41,6 +42,7 @@ class DynamicFn {
       "joinAppStoreData": joinAppStoreData,
       "timestampToDate": DynamicDirective.timestampToDate,
       "formatNumber": DynamicDirective.formatNumber,
+      "copyToClipBoard": copyToClipBoard,
     };
     if (map.containsKey(value)) {
       return map[value];
@@ -285,6 +287,11 @@ class DynamicFn {
     } else {
       alert(appStoreData, {"data": "Url is empty"});
     }
+  }
+
+  static dynamic copyToClipBoard(AppStoreData appStoreData, dynamic data) {
+    Clipboard.setData(ClipboardData(text: data["data"]));
+    alert(appStoreData, {"data": "Скопировано в буфер обмена"});
   }
 
   static dynamic setAppStore(AppStoreData appStoreData, dynamic data) {
