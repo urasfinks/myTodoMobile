@@ -161,7 +161,7 @@ class DynamicPageUtil {
         data['SyncSocket'] == true &&
         (appStoreData.getWidgetData("dataUID") as String).isNotEmpty) {
       appStoreData.setSyncSocket(true);
-      WebSocket().subscribe(appStoreData.getWidgetData("dataUID"));
+      WebSocketService().subscribe(appStoreData.getWidgetData("dataUID"));
     }
 
     parseTemplate(data, "Data", "list");

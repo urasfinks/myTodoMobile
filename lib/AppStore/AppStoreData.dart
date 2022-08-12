@@ -32,8 +32,18 @@ class AppStoreData {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     dynamic refreshOnResume = getWidgetData("refreshOnResume");
     //AppStore.print("didChangeAppLifecycleState: ${widgetData}");
-    if (refreshOnResume != null && refreshOnResume == true && state == AppLifecycleState.resumed) {
+    /*
+    * Если явно установлено, что надо страницу перезагружать при восстановлении
+    * Либо если у страницы подняты Socket слушатели, в момент опускания приложения могли поступить обновления, надо их подтянуть перезагрузкой страницы
+    * */
+    if (state == AppLifecycleState.resumed && ((refreshOnResume != null && refreshOnResume == true) || syncSocket == true ) ) {
       onIndexRevisionError();
+    }
+    if(state == AppLifecycleState.detached || state == AppLifecycleState.inactive || state == AppLifecycleState.paused){
+      WebSocketService().stop();
+    }
+    if(state == AppLifecycleState.resumed){
+      WebSocketService().start();
     }
   }
 
@@ -258,7 +268,7 @@ class AppStoreData {
     }
     if (notify == true) {
       if (syncSocket) {
-        WebSocket().send(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
+        WebSocketService().sendToServer(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
       }
     }
   }
@@ -270,7 +280,7 @@ class AppStoreData {
 
   void destroy() {
     if (syncSocket) {
-      WebSocket().unsubscribe(getWidgetData("dataUID"));
+      WebSocketService().unsubscribe(getWidgetData("dataUID"));
     }
   }
 

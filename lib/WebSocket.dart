@@ -1,19 +1,22 @@
+import 'dart:io';
+
 import 'package:myTODO/AppStore/AppStore.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
+import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 
 import 'AppStore/AppStoreData.dart';
 
-class WebSocket {
-  static final WebSocket _singleton = WebSocket._internal();
+class WebSocketService {
+  static final WebSocketService _singleton = WebSocketService._internal();
 
-  factory WebSocket() {
+  factory WebSocketService() {
     return _singleton;
   }
 
-  WebSocket._internal();
+  WebSocketService._internal();
 
   WebSocketChannel? _channel;
 
@@ -26,96 +29,144 @@ class WebSocket {
       if (!_subscribeListDataUID.contains(dataUID)) {
         _subscribeListDataUID.add(dataUID);
         _onListen();
-        send(dataUID, "SUBSCRIBE");
+        sendToServer(dataUID, "SUBSCRIBE");
       }
     }
   }
 
   void unsubscribe(String dataUID) {
-    send(dataUID, "UNSUBSCRIBE");
+    sendToServer(dataUID, "UNSUBSCRIBE");
     _subscribeListDataUID.remove(dataUID);
     _onClose();
   }
 
-  send(String dataUID, String action, {dynamic data}) {
+  List<String> listToSend = [];
+
+  sendToServer(String dataUID, String action, {dynamic data}) {
     String toSend = json.encode({"DataUID": dataUID, "Action": action, if (data != null) "Data": data});
 
-    AppStore.debug("Send: $toSend; connect: $_connect");
-    if (_subscribeListDataUID.contains(dataUID) && _connect == true && _channel != null) {
-      _channel!.sink.add(toSend);
+    if (_subscribeListDataUID.contains(dataUID)) {
+      listToSend.add(toSend);
+    }
+    _deferredSend();
+  }
+
+  _deferredSend() {
+    try {
+      if (_connect == true) {
+        while (listToSend.isNotEmpty) {
+          String data = listToSend.last;
+          if (_connect == true && _channel != null) {
+            AppStore.debug("Send to WebSocket: $data");
+            _channel!.sink.add(data);
+            listToSend.removeLast();
+          } else {
+            break;
+          }
+        }
+      }
+    } catch (e, stacktrace) {
+      AppStore.debug(e);
+      AppStore.debug(stacktrace);
     }
   }
 
+  _startListener() {
+    _channel!.stream.listen((message) {
+      AppStore.debug("Recive: $message");
+      Map<String, dynamic> jsonDecoded = json.decode(message);
+      if (check(
+          jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null, "Time": null, "Key": null})) {
+        //AppStore().getByDataUID(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
+        AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
+        if (storeData != null) {
+          storeData.setIndexRevision(jsonDecoded["Revision"]);
+          DynamicFn.alert(storeData, {"data": "Сохранено"});
+          storeData.set("time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
+          //AppStore.print("UPDATE_REVISION: ${storeData.getStringStoreState()}");
+          storeData.apply();
+        }
+      }
+      if (check(jsonDecoded, {"Action": "RELOAD_PAGE", "DataUID": null})) {
+        AppStore().getByDataUID(jsonDecoded["DataUID"])?.onIndexRevisionError();
+      }
+      if (check(jsonDecoded,
+          {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null, "Time": null, "Key": null})) {
+        AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
+        if (storeData != null) {
+          storeData.set("time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
+          if (check(jsonDecoded["Data"], {"key": null, "value": null})) {
+            storeData.set(jsonDecoded["Data"]["key"], jsonDecoded["Data"]["value"], notify: false);
+          }
+          //AppStore.print("UPDATE_STATE: ${storeData.getStringStoreState()}");
+          storeData.apply();
+          storeData.setIndexRevision(jsonDecoded["Revision"]);
+        }
+      }
+    }, onDone: () {
+      AppStore.debug("Socket Done");
+      _connect = false;
+      if (_subscribeListDataUID.isNotEmpty && _isStop == false) {
+        reconnect();
+      }
+    }, onError: (e, stacktrace) {
+      AppStore.debug("Socket OnError $e");
+      AppStore.debug(stacktrace);
+      _connect = false;
+      reconnect();
+    }, cancelOnError: true);
+  }
+
+  bool _connectProcess = false;
+
   _onListen() {
-    if(_subscribeListDataUID.isEmpty){
+    if (_subscribeListDataUID.isEmpty) {
       return;
     }
     if (!_connect) {
-      AppStore.debug(AppStore.getUriWebSocket());
-      _channel = WebSocketChannel.connect(
-        Uri.parse(AppStore.getUriWebSocket()),
-      );
-      _connect = true;
+      if (!_connectProcess) {
+        _connectProcess = true;
+        AppStore.debug("Open connection: ${AppStore.getUriWebSocket()}");
+        WebSocket.connect(AppStore.getUriWebSocket()).timeout(const Duration(seconds: 5)).then((ws) {
+          try {
+            _channel = IOWebSocketChannel(ws);
+            AppStore.debug('WebSocket connect');
+            _connect = true;
+            _startListener();
+            _deferredSend();
+          } catch (e, stacktrace) {
+            //AppStore.debug('Error happened when opening a new websocket connection. ${e.toString()}');
+            AppStore.debug(e);
+            AppStore.debug(stacktrace);
+          }
+          _connectProcess = false;
+        });
+      }
+    }
+  }
 
-      _channel!.stream.listen((message) {
-        AppStore.debug("Recive: $message");
-        Map<String, dynamic> jsonDecoded = json.decode(message);
-        if (check(
-            jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null, "Time": null, "Key": null})) {
-          //AppStore().getByDataUID(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
-          AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
-          if (storeData != null) {
-            storeData.setIndexRevision(jsonDecoded["Revision"]);
-            DynamicFn.alert(storeData, {"data": "Сохранено"});
-            storeData.set("time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
-            //AppStore.print("UPDATE_REVISION: ${storeData.getStringStoreState()}");
-            storeData.apply();
-          }
-        }
-        if (check(jsonDecoded, {"Action": "RELOAD_PAGE", "DataUID": null})) {
-          AppStore().getByDataUID(jsonDecoded["DataUID"])?.onIndexRevisionError();
-        }
-        if (check(jsonDecoded,
-            {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null, "Time": null, "Key": null})) {
-          AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
-          if (storeData != null) {
-            storeData.set("time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
-            if (check(jsonDecoded["Data"], {"key": null, "value": null})) {
-              storeData.set(jsonDecoded["Data"]["key"], jsonDecoded["Data"]["value"], notify: false);
-            }
-            //AppStore.print("UPDATE_STATE: ${storeData.getStringStoreState()}");
-            storeData.apply();
-            storeData.setIndexRevision(jsonDecoded["Revision"]);
-          }
-        }
-      }, onDone: (){
-        AppStore.debug("Socket Done");
-        _connect = false;
-        if(_subscribeListDataUID.isNotEmpty){
-          reconnect();
-        }
-      }, onError: (e, stacktrace){
-        AppStore.debug("Socket OnError $e");
-        AppStore.debug(stacktrace);
-        _connect = false;
-        reconnect();
-      },cancelOnError: true);
+  void _restoreSubscribe(){
+    if(_subscribeListDataUID.isNotEmpty){
+      for(String dataUID in _subscribeListDataUID){
+        sendToServer(dataUID, "SUBSCRIBE");
+      }
     }
   }
 
   int delay = 5000;
 
-  void reconnect() async{
+  void reconnect() async {
     await Future.delayed(Duration(milliseconds: delay), () {});
-    if(_connect == false){
+    if (_connect == false) {
       AppStore.debug("Reconnect WebSocket");
       try {
         if (_channel != null) {
           _channel!.sink.close(status.goingAway);
           _connect = false;
         }
-      }catch(e){}
+      } catch (e) {}
       _onListen();
+      _restoreSubscribe();
     }
   }
 
@@ -137,5 +188,27 @@ class WebSocket {
       _channel!.sink.close(status.goingAway);
       _connect = false;
     }
+  }
+
+  void start() {
+    AppStore.debug("Start WebSocket");
+    _isStop = false;
+    _onListen();
+    _restoreSubscribe();
+  }
+
+  bool _isStop = false;
+
+  void stop() {
+    AppStore.debug("Stop WebSocket");
+    _isStop = true;
+    if (_channel != null && _connect == true) {
+      _channel!.sink.close(status.goingAway);
+      _connect = false;
+    }
+  }
+
+  void checkConnection() {
+    AppStore.debug("Connect: $_connect; ConnectProcess: $_connectProcess; Chanel: $_channel");
   }
 }

@@ -18,7 +18,7 @@ class SecondPageTest extends StatefulWidget {
 class _SecondPageTest extends State<SecondPageTest> {
   @override
   Widget build(BuildContext context) {
-    WebSocket().subscribe(widget.title);
+    WebSocketService().subscribe(widget.title);
     final AppStoreData store = AppStore.getStore(context);
     store.setOnIndexRevisionError(() {
       AppStore.debug("Reload page");

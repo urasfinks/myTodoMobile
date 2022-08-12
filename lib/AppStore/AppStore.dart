@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 class AppStore {
 
-  static bool isPrint = false;
+  static bool isPrint = true;
   static Cache? cache;
   static String host = "http://jamsys.ru:8081";
   static String ws = "ws://jamsys.ru:8081";
