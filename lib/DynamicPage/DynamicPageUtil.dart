@@ -25,6 +25,7 @@ class DynamicPageUtil {
   }
 
   static Future<void> loadData(AppStoreData appStoreData) async {
+
     //return;
 
     appStoreData.nowDownloadContent = true;
@@ -39,6 +40,8 @@ class DynamicPageUtil {
     try {
       final response = await http.post(Uri.parse("${AppStore.host}${appStoreData.getWidgetData('url')}"),
           headers: AppStore.requestHeader, body: appStoreData.getWidgetData('parentState'));
+
+      appStoreData.clearState();
 
       //AppStore.print(response.body);
       AppStore.debug("Download complete");

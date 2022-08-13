@@ -364,7 +364,6 @@ class AppStoreData {
                   animSpeedFactor: 2,
                   height: 90,
                   onRefresh: () async {
-                    clearState();
                     widget.refresh(this);
                   },
                   child: _contentBuilder(wrapPage),
@@ -434,7 +433,6 @@ class AppStoreData {
               animSpeedFactor: 2,
               height: 90,
               onRefresh: () async {
-                clearState();
                 widget.refresh(this);
               },
               child: ListView.separated(

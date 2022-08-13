@@ -422,6 +422,7 @@ class FlutterType {
   }
 
   static dynamic pTextField(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String formattedDate = defData;
@@ -431,6 +432,7 @@ class FlutterType {
 
     TextEditingController? textController = appStoreData.getTextController(key, defAppStoreData ?? defData);
     textController?.text = defAppStoreData ?? defData;
+    AppStore.debug("BUILD TextField: ${textController?.text}");
     int? x = textController?.text.length;
     textController?.selection = TextSelection.fromPosition(TextPosition(offset: x ?? 0));
     appStoreData.set(key, textController?.text);
@@ -1016,14 +1018,22 @@ class FlutterType {
   }
 
   static dynamic pNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    String src = DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData);
+    if(!src.startsWith("http")){
+      src = "${AppStore.host}${src}";
+    }
     return NetworkImage(
-      DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData),
+      src,
     );
   }
 
   static dynamic pCachedNetworkImageProvider(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    String src = DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData);
+    if(!src.startsWith("http")){
+      src = "${AppStore.host}${src}";
+    }
     return CachedNetworkImageProvider(
-      DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData),
+      src,
       maxWidth: FlutterTypeConstant.parseInt(
         DynamicUI.def(parsedJson, 'maxWidth', null, appStoreData, index, originKeyData),
       ),

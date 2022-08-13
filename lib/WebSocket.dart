@@ -44,7 +44,7 @@ class WebSocketService {
 
   sendToServer(String dataUID, String action, {dynamic data}) {
     String toSend = json.encode({"DataUID": dataUID, "Action": action, if (data != null) "Data": data});
-
+    AppStore.debug("prepare sendToServer: $toSend");
     if (_subscribeListDataUID.contains(dataUID)) {
       listToSend.add(toSend);
     }
@@ -52,6 +52,7 @@ class WebSocketService {
   }
 
   _deferredSend() {
+    AppStore.debug("_deferredSend _connect: $_connect;");
     try {
       if (_connect == true) {
         while (listToSend.isNotEmpty) {
@@ -123,10 +124,13 @@ class WebSocketService {
     if (_subscribeListDataUID.isEmpty) {
       return;
     }
+    AppStore.debug("_onListen 1");
     if (!_connect) {
+      //AppStore.debug("_onListen 2 _connectProcess: $_connectProcess");
       if (!_connectProcess) {
+        AppStore.debug("_onListen 3");
         _connectProcess = true;
-        AppStore.debug("Open connection: ${AppStore.getUriWebSocket()}");
+        //AppStore.debug("Open connection: ${AppStore.getUriWebSocket()}");
         WebSocket.connect(AppStore.getUriWebSocket()).timeout(const Duration(seconds: 5)).then((ws) {
           try {
             _channel = IOWebSocketChannel(ws);
@@ -141,13 +145,21 @@ class WebSocketService {
           }
           _connectProcess = false;
         });
+      } else {
+        //Принудительно переводим статус остановки
+        Future.delayed(const Duration(milliseconds: 5100), () {
+          if (_connectProcess == true) {
+            _connectProcess = false;
+            reconnect();
+          }
+        });
       }
     }
   }
 
-  void _restoreSubscribe(){
-    if(_subscribeListDataUID.isNotEmpty){
-      for(String dataUID in _subscribeListDataUID){
+  void _restoreSubscribe() {
+    if (_subscribeListDataUID.isNotEmpty) {
+      for (String dataUID in _subscribeListDataUID) {
         sendToServer(dataUID, "SUBSCRIBE");
       }
     }

@@ -129,7 +129,7 @@ class TabScope {
 
   void checkReload(AppStoreData appStoreData, bool parentUpdate) {
     if (appStoreData.needUpdateOnActive || parentUpdate) {
-      //AppStore.print("YES ${appStoreData.needUpdateOnActive}");
+      //AppStore.debug("YES ${appStoreData.needUpdateOnActive}");
       DynamicPageUtil.loadData(appStoreData);
     }
   }

@@ -12,7 +12,7 @@ class AppStore {
 
   static bool isPrint = true;
   static Cache? cache;
-  static String host = "http://jamsys.ru:8081";
+  static String host = "https://jamsys.ru:8443";
   static String ws = "ws://jamsys.ru:8081";
 
   static void debug(dynamic data){
