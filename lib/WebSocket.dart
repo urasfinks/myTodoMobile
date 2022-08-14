@@ -26,9 +26,9 @@ class WebSocketService {
   void subscribe(String dataUID) {
     if (dataUID.isNotEmpty) {
       AppStore.debug("Subscribe: $dataUID");
+      _onListen();
       if (!_subscribeListDataUID.contains(dataUID)) {
         _subscribeListDataUID.add(dataUID);
-        _onListen();
         sendToServer(dataUID, "SUBSCRIBE");
       }
     }
@@ -126,7 +126,7 @@ class WebSocketService {
     }
     AppStore.debug("_onListen 1");
     if (!_connect) {
-      //AppStore.debug("_onListen 2 _connectProcess: $_connectProcess");
+      AppStore.debug("_onListen 2 _connectProcess: $_connectProcess");
       if (!_connectProcess) {
         AppStore.debug("_onListen 3");
         _connectProcess = true;

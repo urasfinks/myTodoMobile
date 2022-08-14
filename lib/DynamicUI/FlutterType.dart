@@ -427,7 +427,8 @@ class FlutterType {
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String formattedDate = defData;
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
-    bool readOnly = (type == "datetime" || type == "time") ? true : false;
+    bool readOnly = FlutterTypeConstant.parseBool(DynamicUI.def(parsedJson, 'readOnly', (type == "datetime" || type == "time"), appStoreData, index, originKeyData))!;
+
     String? defAppStoreData = appStoreData.get(key, null);
 
     TextEditingController? textController = appStoreData.getTextController(key, defAppStoreData ?? defData);
