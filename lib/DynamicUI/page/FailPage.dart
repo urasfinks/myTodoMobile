@@ -22,6 +22,7 @@ class _FailPage extends State<FailPage> {
     return Scaffold(
       backgroundColor: FlutterTypeConstant.parseColor("#f9fafa"),
       appBar: AppBar(
+        centerTitle: false,
         title: Text(widget.title),
         elevation: 0,
         backgroundColor: Colors.blue[600],
