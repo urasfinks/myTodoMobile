@@ -36,13 +36,13 @@ class AppStoreData {
     * Если явно установлено, что надо страницу перезагружать при восстановлении
     * Либо если у страницы подняты Socket слушатели, в момент опускания приложения могли поступить обновления, надо их подтянуть перезагрузкой страницы
     * */
-    if (state == AppLifecycleState.resumed && ((refreshOnResume != null && refreshOnResume == true) || syncSocket == true ) ) {
+    if (state == AppLifecycleState.resumed && ((refreshOnResume != null && refreshOnResume == true) || syncSocket == true)) {
       onIndexRevisionError();
     }
-    if(state == AppLifecycleState.detached || state == AppLifecycleState.inactive || state == AppLifecycleState.paused){
+    if (state == AppLifecycleState.detached || state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
       WebSocketService().stop();
     }
-    if(state == AppLifecycleState.resumed){
+    if (state == AppLifecycleState.resumed) {
       WebSocketService().start();
     }
   }
@@ -156,7 +156,7 @@ class AppStoreData {
   }
 
   void unFocusTextController() {
-    for(var item in listController.entries){
+    for (var item in listController.entries) {
       item.value.clear();
     }
   }
@@ -225,8 +225,7 @@ class AppStoreData {
     onChange(key, notify);
   }
 
-  void inc(String key,
-      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") + step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -238,8 +237,7 @@ class AppStoreData {
     onChange(key, notify);
   }
 
-  void dec(String key,
-      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") - step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -420,24 +418,34 @@ class AppStoreData {
     }
   }
 
-  _getAppBar(BackButton? back, String title){
-    return AppBar(
-      leading: back,
-      elevation: 0,
-      backgroundColor: FlutterTypeConstant.parseColor(
-        getWidgetData("appBarBackgroundColor"),
-      ),
-      systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent, // Status bar
-          statusBarBrightness: Brightness.dark),
-      title: back == null ? Text(title) : Transform(
-        // you can forcefully translate values left side using Transform
-        transform:  Matrix4.translationValues(-20.0, 0.0, 0.0),
-        child: Text(title),
-      ),
-      centerTitle: false,
-      actions: DynamicPageUtil.getListAppBarActions(this),
-    );
+  _getAppBar(BackButton? back, String title) {
+    return PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: AppBar(
+          leading: back,
+          elevation: 0,
+          backgroundColor: FlutterTypeConstant.parseColor(
+            getWidgetData("appBarBackgroundColor"),
+          ),
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent, // Status bar
+              statusBarBrightness: Brightness.dark),
+          title: back == null
+              ? Text(
+                  title,
+                  style: const TextStyle(fontSize: 19),
+                )
+              : Transform(
+                  // you can forcefully translate values left side using Transform
+                  transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
+                  child: Text(
+                    title,
+                    style: const TextStyle(fontSize: 19),
+                  ),
+                ),
+          centerTitle: false,
+          actions: DynamicPageUtil.getListAppBarActions(this),
+        ));
   }
 
   _contentBuilder(dynamic wrapPage) {
@@ -458,5 +466,4 @@ class AppStoreData {
   String toString() {
     return 'AppStoreData{url: ${widgetData["url"]}';
   }
-
 }
