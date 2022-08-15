@@ -24,13 +24,13 @@ class WebSocketService {
   final List<String> _subscribeListDataUID = [];
 
   void subscribe(String dataUID) {
-    if (dataUID.isNotEmpty) {
+    if (dataUID != null && dataUID.isNotEmpty) {
       AppStore.debug("Subscribe: $dataUID");
-      _onListen();
       if (!_subscribeListDataUID.contains(dataUID)) {
         _subscribeListDataUID.add(dataUID);
         sendToServer(dataUID, "SUBSCRIBE");
       }
+      _onListen();
     }
   }
 
@@ -47,6 +47,8 @@ class WebSocketService {
     AppStore.debug("prepare sendToServer: $toSend");
     if (_subscribeListDataUID.contains(dataUID)) {
       listToSend.add(toSend);
+    } else {
+      AppStore.debug("prepare sendToServer not fount $dataUID");
     }
     _deferredSend();
   }
@@ -76,8 +78,7 @@ class WebSocketService {
     _channel!.stream.listen((message) {
       AppStore.debug("Recive: $message");
       Map<String, dynamic> jsonDecoded = json.decode(message);
-      if (check(
-          jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null, "Time": null, "Key": null})) {
+      if (check(jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null, "Time": null, "Key": null})) {
         //AppStore().getByDataUID(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
         AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
         if (storeData != null) {
@@ -91,8 +92,8 @@ class WebSocketService {
       if (check(jsonDecoded, {"Action": "RELOAD_PAGE", "DataUID": null})) {
         AppStore().getByDataUID(jsonDecoded["DataUID"])?.onIndexRevisionError();
       }
-      if (check(jsonDecoded,
-          {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null, "Time": null, "Key": null})) {
+      if (check(
+          jsonDecoded, {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null, "Time": null, "Key": null})) {
         AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
         if (storeData != null) {
           storeData.set("time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
@@ -122,6 +123,7 @@ class WebSocketService {
 
   _onListen() {
     if (_subscribeListDataUID.isEmpty) {
+      AppStore.debug("_onListen _subscribeListDataUID.isEmpty");
       return;
     }
     AppStore.debug("_onListen 1");
@@ -154,6 +156,8 @@ class WebSocketService {
           }
         });
       }
+    } else {
+      AppStore.debug("Pass becouse connect = true");
     }
   }
 
@@ -212,7 +216,7 @@ class WebSocketService {
   bool _isStop = false;
 
   void stop() {
-    AppStore.debug("Stop WebSocket");
+    AppStore.debug("Stop WebSocket; connect: $_connect");
     _isStop = true;
     if (_channel != null && _connect == true) {
       _channel!.sink.close(status.goingAway);
