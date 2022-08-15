@@ -339,20 +339,7 @@ class AppStoreData {
                 : FlutterTypeConstant.parseColor(
                     getWidgetData("backgroundColor"),
                   ),
-            appBar: AppBar(
-              leading: back,
-              elevation: 0,
-              backgroundColor: FlutterTypeConstant.parseColor(
-                getWidgetData("appBarBackgroundColor"),
-              ),
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent, // Status bar
-                  statusBarBrightness: Brightness.dark),
-              title: Text(
-                getWidgetData("title"),
-              ),
-              actions: DynamicPageUtil.getListAppBarActions(this),
-            ),
+            appBar: _getAppBar(back, getWidgetData("title")),
             body: SafeArea(
               child: Center(
                 child: LiquidPullToRefresh(
@@ -372,17 +359,6 @@ class AppStoreData {
             ),
           );
           if (gradient == true) {
-            /*compiledWidget = Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.5, 0.5],
-                colors: [Colors.blue[600]!, Colors.white],
-              ),
-            ),
-            child: compiledWidget,
-          );*/
             //AppStore.print("GRAD: ${FlutterType.pLinearGradient(conf["gradient"], this, 0, "")}");
             compiledWidget = Container(
               decoration: BoxDecoration(
@@ -416,15 +392,7 @@ class AppStoreData {
       AppStore.debug(e);
       AppStore.debug(stacktrace);
       compiledWidget = Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent, // Status bar
-              statusBarBrightness: Brightness.dark),
-          title: const Text(
-            "Ошибка компиляции",
-          ),
-        ),
+        appBar: _getAppBar(null, "Ошибка компиляции"),
         body: SafeArea(
           child: Center(
             child: LiquidPullToRefresh(
@@ -450,6 +418,26 @@ class AppStoreData {
         ),
       );
     }
+  }
+
+  _getAppBar(BackButton? back, String title){
+    return AppBar(
+      leading: back,
+      elevation: 0,
+      backgroundColor: FlutterTypeConstant.parseColor(
+        getWidgetData("appBarBackgroundColor"),
+      ),
+      systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent, // Status bar
+          statusBarBrightness: Brightness.dark),
+      title: back == null ? Text(title) : Transform(
+        // you can forcefully translate values left side using Transform
+        transform:  Matrix4.translationValues(-20.0, 0.0, 0.0),
+        child: Text(title),
+      ),
+      centerTitle: false,
+      actions: DynamicPageUtil.getListAppBarActions(this),
+    );
   }
 
   _contentBuilder(dynamic wrapPage) {
