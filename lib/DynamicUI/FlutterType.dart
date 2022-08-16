@@ -1173,6 +1173,7 @@ class FlutterType {
         modalType: S2ModalType.bottomSheet,
         onChange: (state) {
           appStoreData.set(key, state.value);
+          appStoreData.apply();
         });
   }
 
