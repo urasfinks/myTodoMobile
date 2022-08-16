@@ -274,12 +274,6 @@ class DynamicFn {
     return md5.convert(utf8.encode(data["data"])).toString();
   }
 
-  /*
-  static dynamic getUrlPersonAvatar(AppStoreData appStoreData, dynamic data) {
-    //http://jamsys.ru:8081/avatar-get/a7d437fa-d47a-4e0f-9417-f9701ece125e?time=${time}
-    return "${AppStore.host}/avatar-get/${getMD5(appStoreData, {"data": AppStore.personKey})}?time=${getTimestamp(appStoreData, data)}";
-  }*/
-
   static dynamic launcher(AppStoreData appStoreData, dynamic data) async {
     AppStore.debug("launcher: ${data}");
     if (data != null && data["url"] != null && data["url"] != "") {

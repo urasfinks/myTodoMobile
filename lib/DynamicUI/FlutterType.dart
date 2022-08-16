@@ -290,8 +290,7 @@ class FlutterType {
     double borderRadius = FlutterTypeConstant.parseDouble(
       DynamicUI.def(parsedJson, 'borderRadius', 0, appStoreData, index, originKeyData),
     )!;
-    String buttonStyleType =
-        DynamicUI.def(parsedJson, 'buttonStyle', 'ElevatedButton', appStoreData, index, originKeyData);
+    String buttonStyleType = DynamicUI.def(parsedJson, 'buttonStyle', 'ElevatedButton', appStoreData, index, originKeyData);
     String shapeType = DynamicUI.def(parsedJson, 'shape', 'StadiumBorder', appStoreData, index, originKeyData);
     OutlinedBorder? shape;
 
@@ -422,12 +421,12 @@ class FlutterType {
   }
 
   static dynamic pTextField(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
     String formattedDate = defData;
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
-    bool readOnly = FlutterTypeConstant.parseBool(DynamicUI.def(parsedJson, 'readOnly', (type == "datetime" || type == "time"), appStoreData, index, originKeyData))!;
+    bool readOnly = FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'readOnly', (type == "datetime" || type == "time"), appStoreData, index, originKeyData))!;
 
     String? defAppStoreData = appStoreData.get(key, null);
 
@@ -446,8 +445,7 @@ class FlutterType {
 
     return TextField(
       onSubmitted: (String x) {
-        dynamic c =
-            DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
+        dynamic c = DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
         if (c != null && x.isNotEmpty) {
           Function.apply(c, []);
         }
@@ -1020,7 +1018,7 @@ class FlutterType {
 
   static dynamic pNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     String src = DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData);
-    if(!src.startsWith("http")){
+    if (!src.startsWith("http")) {
       src = "${AppStore.host}${src}";
     }
     return NetworkImage(
@@ -1030,7 +1028,7 @@ class FlutterType {
 
   static dynamic pCachedNetworkImageProvider(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     String src = DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData);
-    if(!src.startsWith("http")){
+    if (!src.startsWith("http")) {
       src = "${AppStore.host}${src}";
     }
     return CachedNetworkImageProvider(
@@ -1135,6 +1133,31 @@ class FlutterType {
     );
   }
 
+  static dynamic pVisibility(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return Visibility(
+      child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
+      visible: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'visible', true, appStoreData, index, originKeyData),
+      )!,
+      maintainAnimation: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'maintainAnimation', false, appStoreData, index, originKeyData),
+      )!,
+      maintainInteractivity: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'maintainInteractivity', false, appStoreData, index, originKeyData),
+      )!,
+      maintainSemantics: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'maintainSemantics', false, appStoreData, index, originKeyData),
+      )!,
+      maintainSize: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'maintainSize', false, appStoreData, index, originKeyData),
+      )!,
+      maintainState: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'maintainState', false, appStoreData, index, originKeyData),
+      )!,
+      replacement: DynamicUI.def(parsedJson, 'replacement', const SizedBox.shrink(), appStoreData, index, originKeyData),
+    );
+  }
+
   static dynamic pDropdownRadio(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     String value = DynamicUI.def(parsedJson, 'value', '', appStoreData, index, originKeyData);
@@ -1155,8 +1178,7 @@ class FlutterType {
 
   static dynamic pDropdownButton2(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
-    int selectedIndex =
-        FlutterTypeConstant.parseInt(DynamicUI.def(parsedJson, 'data', 0, appStoreData, index, originKeyData))!;
+    int selectedIndex = FlutterTypeConstant.parseInt(DynamicUI.def(parsedJson, 'data', 0, appStoreData, index, originKeyData))!;
     List<DropdownMenuItem<int>> list = [];
     var itemTemplate = DynamicUI.def(parsedJson, 'itemTemplate', 'Text', appStoreData, index, originKeyData);
     String template = appStoreData.getServerResponse()["Template"][itemTemplate];

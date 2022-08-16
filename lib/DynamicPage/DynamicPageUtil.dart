@@ -8,7 +8,6 @@ import '../Cache.dart';
 import '../Util.dart';
 import 'DynamicPage.dart';
 import '../DynamicUI/DynamicUI.dart';
-import '../DynamicUI/page/TextEditRowJsonObject.dart';
 import '../DynamicUI/page/ErrorPageJsonObject.dart';
 import '../WebSocket.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +20,7 @@ class DynamicPageUtil {
 
   static Future<void> loadDataTest(DynamicPage widget, AppStoreData appStoreData) async {
     await Future.delayed(Duration(milliseconds: delay), () {});
-    dataUpdate(TextEditRowJsonObject.getPage(), appStoreData);
+    //dataUpdate(TextEditRowJsonObject.getPage(), appStoreData);
   }
 
   static Future<void> loadData(AppStoreData appStoreData) async {

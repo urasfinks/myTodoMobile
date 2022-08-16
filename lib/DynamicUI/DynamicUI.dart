@@ -78,6 +78,7 @@ class DynamicUI {
       "SegmentControl": FlutterType.pSegmentControl,
       "RawMaterialButton": FlutterType.pRawMaterialButton,
       "DropdownRadio": FlutterType.pDropdownRadio,
+      "Visibility": FlutterType.pVisibility,
     };
     //AppStore.print("${[map, appStoreData, index, originKeyData]}");
     return map1.containsKey(containsKey)

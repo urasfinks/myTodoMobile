@@ -21,45 +21,53 @@ class _FailPage extends State<FailPage> {
 
     return Scaffold(
       backgroundColor: FlutterTypeConstant.parseColor("#f9fafa"),
-      appBar: AppBar(
-        centerTitle: false,
-        title: Text(widget.title),
-        elevation: 0,
-        backgroundColor: Colors.blue[600],
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent, // Status bar
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: AppBar(
+          centerTitle: false,
+          title: Text(
+            widget.title,
+            style: const TextStyle(fontSize: 19),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.blue[600],
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent, // Status bar
+          ),
         ),
       ),
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage("http://jamsys.ru:8081/404.jpg"),
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.topCenter
-            )
-        ),
+                image: NetworkImage("http://jamsys.ru:8081/404.jpg"), fit: BoxFit.fitWidth, alignment: Alignment.topCenter)),
         child: Column(
           children: [
-            const SizedBox(height: 100, width: 300,),
+            const SizedBox(
+              height: 100,
+              width: 300,
+            ),
             Text(
               code,
-              style: TextStyle(fontStyle: FontStyle.normal, fontSize: 100, color: FlutterTypeConstant.parseColor("#434a54"), fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontSize: 100,
+                  color: FlutterTypeConstant.parseColor("#434a54"),
+                  fontWeight: FontWeight.bold),
             ),
-            Text(titleError, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16, color: FlutterTypeConstant.parseColor("#6c7787"))),
+            Text(titleError,
+                style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16, color: FlutterTypeConstant.parseColor("#6c7787"))),
             const SizedBox(
               height: 16,
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-              child: Text(descriptionError, style: const TextStyle(fontStyle: FontStyle.normal, fontSize: 12, color: Color.fromRGBO(108, 119, 135, 0.5))),
+              child: Text(descriptionError,
+                  style: const TextStyle(fontStyle: FontStyle.normal, fontSize: 12, color: Color.fromRGBO(108, 119, 135, 0.5))),
             ),
-
           ],
         ),
       ),
     );
   }
 }
-
-
