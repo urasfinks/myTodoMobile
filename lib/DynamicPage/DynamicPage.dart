@@ -21,7 +21,7 @@ class DynamicPage extends StatefulWidget {
   final bool separated;
   final bool grid;
   final dynamic config;
-  final List<String>? bridgeState;
+  final dynamic bridgeState;
 
   const DynamicPage(
       {Key? key,
@@ -64,7 +64,7 @@ class DynamicPage extends StatefulWidget {
         'separated': false,
         'grid': false,
         'config': {},
-        'bridgeState': []
+        'bridgeState': {}
       };
       if (data != null && data.isNotEmpty) {
         for (var item in data.entries) {

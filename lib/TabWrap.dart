@@ -128,19 +128,24 @@ class TabScope {
   }
 
   void checkReload(AppStoreData viewPage, AppStoreData? removePage) {
-    if (viewPage.needUpdateOnActive || (removePage != null && removePage.getParentUpdate())) {
-      //AppStore.debug("YES ${appStoreData.needUpdateOnActive}");
-      DynamicPageUtil.loadData(viewPage);
-    }
+    bool forwardState = false;
+    //Если страница, которую мы открывали была с параметра bridgeState, то надо её состояния партировать в страницу к которой мы переключаемся обратно
     if (removePage != null) {
-      List<String>? listNameState = viewPage.getWidgetData("bridgeState");
-      if (listNameState != null && listNameState.isNotEmpty) {
-        for (String key in listNameState) {
-          dynamic value = removePage.get(key, null);
+      dynamic mapBridgeState = removePage.getWidgetData("bridgeState");
+      if (mapBridgeState != null && mapBridgeState.runtimeType.toString().contains("Map<") && mapBridgeState.isNotEmpty) {
+        for (var item in mapBridgeState.entries) {
+          dynamic value = removePage.get(item.key, null);
           if (value != null) {
-            viewPage.set(key, value, notify: false);
+            viewPage.set(item.key, value, notify: false);
+            forwardState = true;
           }
         }
+        viewPage.apply();
+      }
+    }
+    if (viewPage.needUpdateOnActive || (removePage != null && removePage.getParentUpdate())) {
+      if(forwardState == false){ //Можно накосячить с обновлениями, что бы багов небыло при передачи обратно состояния
+        DynamicPageUtil.loadData(viewPage);
       }
     }
   }

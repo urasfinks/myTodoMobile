@@ -124,7 +124,7 @@ class DynamicPageUtil {
             needNextRoundBorderRadius = true;
           }
         } catch (e, stackTrace) {
-          list.add({"flutterType": "Text", "data": "Exception template: ${e}"});
+          list.add({"flutterType": "Text", "data": "Exception template: $e"});
           //AppStore.print(ret);
           //developer.log(ret);
           AppStore.debug(stackTrace);
@@ -159,6 +159,15 @@ class DynamicPageUtil {
       }
       appStoreData.apply(); //Maybe setState refresh Data on UI?
     }
+
+    dynamic mapBridgeState = appStoreData.getWidgetData("bridgeState");
+    if (mapBridgeState != null && mapBridgeState.runtimeType.toString().contains("Map<") && mapBridgeState.isNotEmpty) {
+      for (var item in mapBridgeState.entries) {
+        appStoreData.set(item.key, item.value, notify: false);
+      }
+      appStoreData.apply();
+    }
+
     if (native == true && data['SyncSocket'] != null &&
         data['SyncSocket'] == true &&
         (appStoreData.getWidgetData("dataUID") as String).isNotEmpty) {

@@ -66,12 +66,6 @@ class AppStoreData {
         addWidgetData(item.key, item.value);
       }
     }
-    /*for (var item in widgetData.entries) {
-      if (obj.containsKey(item.key) && item.key != "dataUID") {
-        //dataUID final by addWidgetDataByPage
-        addWidgetData(item.key, obj[item.key]);
-      }
-    }*/
   }
 
   void addWidgetDataByPage(DynamicPage widget) {

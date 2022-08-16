@@ -179,6 +179,8 @@ class DynamicFn {
     AppStore.debug("openWindow: ${data}");
     AppStoreData? lastPage = TabScope.getInstance().getLast();
     if (lastPage != null) {
+      _openWindowUpdateBridgeState(appStoreData, data);
+      //AppStore.debug("YYY: ${data}");
       Navigator.push(
         lastPage.getCtx()!,
         CupertinoPageRoute(
@@ -190,6 +192,19 @@ class DynamicFn {
       alert(appStoreData, {"data": "Не найдена история страниц, повторите попытку позже"});
     }
     return null;
+  }
+
+  static void _openWindowUpdateBridgeState(AppStoreData appStoreData, dynamic data){
+    Map<String, dynamic> d = data;
+    if(d.containsKey("bridgeState")){
+      Map<String, dynamic> bs = d["bridgeState"];
+      for(var item in bs.entries){
+        dynamic value = appStoreData.get(item.key, null);
+        if(value != null && value != ""){
+          data["bridgeState"][item.key] = value;
+        }
+      }
+    }
   }
 
   static dynamic joinAppStoreData(AppStoreData appStoreData, dynamic data) {

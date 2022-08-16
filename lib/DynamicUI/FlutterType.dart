@@ -432,7 +432,7 @@ class FlutterType {
 
     TextEditingController? textController = appStoreData.getTextController(key, defAppStoreData ?? defData);
     textController?.text = defAppStoreData ?? defData;
-    AppStore.debug("BUILD TextField: ${textController?.text}");
+    //AppStore.debug("BUILD TextField: ${textController?.text}");
     int? x = textController?.text.length;
     textController?.selection = TextSelection.fromPosition(TextPosition(offset: x ?? 0));
     appStoreData.set(key, textController?.text);
@@ -1160,7 +1160,7 @@ class FlutterType {
 
   static dynamic pDropdownRadio(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
-    String value = DynamicUI.def(parsedJson, 'value', '', appStoreData, index, originKeyData);
+    String value = appStoreData.get(key, DynamicUI.def(parsedJson, 'value', '', appStoreData, index, originKeyData));
     appStoreData.set(key, value);
     List<S2Choice<String>> options = [];
     for (dynamic w in parsedJson["items"]) {
