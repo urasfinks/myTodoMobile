@@ -66,7 +66,7 @@ class TabScope {
   int tabIndex = 0;
 
   AppStoreData? getLast() {
-    if(tabs[tabIndex].history.isNotEmpty){
+    if (tabs[tabIndex].history.isNotEmpty) {
       return tabs[tabIndex].history.last;
     }
     return null;
@@ -105,7 +105,7 @@ class TabScope {
           last = tabs[tabIndex].history.removeLast();
           Navigator.pop(last.getCtx()!);
         }
-        if(last != null && tabs[tabIndex].history.isNotEmpty){
+        if (last != null && tabs[tabIndex].history.isNotEmpty) {
           checkReload(tabs[tabIndex].history.last, last);
         }
       } else if (data != null && data["count"] != null) {
@@ -120,24 +120,26 @@ class TabScope {
       } else {
         AppStoreData last = tabs[tabIndex].history.removeLast();
         Navigator.pop(last.getCtx()!);
-        if(tabs[tabIndex].history.isNotEmpty){
+        if (tabs[tabIndex].history.isNotEmpty) {
           checkReload(tabs[tabIndex].history.last, last);
         }
       }
     }
   }
 
-  void checkReload(AppStoreData viewPage, AppStoreData removePage) {
-    if (viewPage.needUpdateOnActive || removePage.getParentUpdate()) {
+  void checkReload(AppStoreData viewPage, AppStoreData? removePage) {
+    if (viewPage.needUpdateOnActive || (removePage != null && removePage.getParentUpdate())) {
       //AppStore.debug("YES ${appStoreData.needUpdateOnActive}");
       DynamicPageUtil.loadData(viewPage);
     }
-    List<String>? listNameState = viewPage.getWidgetData("bridgeState");
-    if(listNameState != null && listNameState.isNotEmpty){
-      for(String key in listNameState){
-        dynamic value = removePage.get(key, null);
-        if(value != null){
-          viewPage.set(key, value, notify: false);
+    if (removePage != null) {
+      List<String>? listNameState = viewPage.getWidgetData("bridgeState");
+      if (listNameState != null && listNameState.isNotEmpty) {
+        for (String key in listNameState) {
+          dynamic value = removePage.get(key, null);
+          if (value != null) {
+            viewPage.set(key, value, notify: false);
+          }
         }
       }
     }
@@ -151,8 +153,8 @@ class TabScope {
   void setTabIndex(int index) {
     //AppStore.print("SELECTED TAB: ${index}");
     //AppStore.print(tabs[index].history);
-    if(tabs[index].history.isNotEmpty){
-      checkReload(tabs[index].history.last, false);
+    if (tabs[index].history.isNotEmpty) {
+      checkReload(tabs[index].history.last, null);
     }
     tabIndex = index;
   }
