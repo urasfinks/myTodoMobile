@@ -21,6 +21,7 @@ class DynamicPage extends StatefulWidget {
   final bool separated;
   final bool grid;
   final dynamic config;
+  final List<String>? bridgeState;
 
   const DynamicPage(
       {Key? key,
@@ -38,7 +39,8 @@ class DynamicPage extends StatefulWidget {
       this.dialog = false,
       this.separated = false,
       this.grid = false,
-      this.config})
+      this.config,
+      this.bridgeState})
       : super(key: key);
 
   @override
@@ -61,7 +63,8 @@ class DynamicPage extends StatefulWidget {
         'dialog': false,
         'separated': false,
         'grid': false,
-        'config': {}
+        'config': {},
+        'bridgeState': []
       };
       if (data != null && data.isNotEmpty) {
         for (var item in data.entries) {
@@ -87,6 +90,7 @@ class DynamicPage extends StatefulWidget {
         separated: def['separated'],
         grid: def['grid'],
         config: def['config'],
+        bridgeState: def['bridgeState'],
       );
       return ret;
     } catch (e, stacktrace) {

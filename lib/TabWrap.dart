@@ -106,7 +106,7 @@ class TabScope {
           Navigator.pop(last.getCtx()!);
         }
         if(last != null && tabs[tabIndex].history.isNotEmpty){
-          checkReload(tabs[tabIndex].history.last, last.getParentUpdate());
+          checkReload(tabs[tabIndex].history.last, last);
         }
       } else if (data != null && data["count"] != null) {
         AppStoreData? last;
@@ -115,22 +115,31 @@ class TabScope {
           Navigator.pop(last.getCtx()!);
         }
         if (last != null && tabs[tabIndex].history.isNotEmpty) {
-          checkReload(tabs[tabIndex].history.last, last.getParentUpdate());
+          checkReload(tabs[tabIndex].history.last, last);
         }
       } else {
         AppStoreData last = tabs[tabIndex].history.removeLast();
         Navigator.pop(last.getCtx()!);
         if(tabs[tabIndex].history.isNotEmpty){
-          checkReload(tabs[tabIndex].history.last, last.getParentUpdate());
+          checkReload(tabs[tabIndex].history.last, last);
         }
       }
     }
   }
 
-  void checkReload(AppStoreData appStoreData, bool parentUpdate) {
-    if (appStoreData.needUpdateOnActive || parentUpdate) {
+  void checkReload(AppStoreData viewPage, AppStoreData removePage) {
+    if (viewPage.needUpdateOnActive || removePage.getParentUpdate()) {
       //AppStore.debug("YES ${appStoreData.needUpdateOnActive}");
-      DynamicPageUtil.loadData(appStoreData);
+      DynamicPageUtil.loadData(viewPage);
+    }
+    List<String>? listNameState = viewPage.getWidgetData("bridgeState");
+    if(listNameState != null && listNameState.isNotEmpty){
+      for(String key in listNameState){
+        dynamic value = removePage.get(key, null);
+        if(value != null){
+          viewPage.set(key, value, notify: false);
+        }
+      }
     }
   }
 

@@ -90,6 +90,7 @@ class AppStoreData {
     addWidgetData("separated", widget.separated);
     addWidgetData("grid", widget.grid);
     addWidgetData("config", widget.config);
+    addWidgetData("bridgeState", widget.bridgeState);
   }
 
   void addWidgetData(String key, dynamic value) {
@@ -125,7 +126,7 @@ class AppStoreData {
   }
 
   dynamic getWidgetData(String key) {
-    return widgetData[key];
+    return widgetData.containsKey(key) ? widgetData[key] : null;
   }
 
   void setPageState(State x) {
