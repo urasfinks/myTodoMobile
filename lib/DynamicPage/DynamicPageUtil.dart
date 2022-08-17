@@ -100,14 +100,18 @@ class DynamicPageUtil {
       List<dynamic> list = [];
       Map<String, dynamic> template = data['Template'];
       bool needNextRoundBorderRadius = false;
-      for (dynamic d in data[key]) {
+      for (dynamic item in data[key]) {
+
         String ret;
-        if (template.containsKey(d['template'])) {
-          //AppStore.print(data['Template'][d['template']]);
-          ret = Util.template(d['data'], data['Template'][d['template']]);
-          //AppStore.print(ret);
+        if (template.containsKey(item['template'])) {
+          ret = Util.template(item['data'], data['Template'][item['template']]);
+          if(item['wrapTemplate'] != null && item['wrapTemplate'] != ""){
+            item['data']["dataWrapped"] = ret;
+            ret = Util.template(item['data'], data['Template'][item['wrapTemplate']]);
+            //AppStore.fullDebug(ret);
+          }
         } else {
-          ret = jsonEncode({"flutterType": "Text", "data": "Undefined Template: ${d['template']}"});
+          ret = jsonEncode({"flutterType": "Text", "data": "Undefined Template: ${item['template']}"});
         }
         try {
           dynamic p = jsonDecode(ret);
@@ -115,18 +119,15 @@ class DynamicPageUtil {
             needNextRoundBorderRadius = false;
             Addon.radius(p, "top");
           }
-          if (d['template'] == "GroupBottom" && list.isNotEmpty) {
-            //AppStore.print("Addon.radius: ${list.last}");
+          if (item['template'] == "GroupBottom" && list.isNotEmpty) {
             Addon.radius(list.last, "bottom");
           }
           list.add(p);
-          if (d['template'] == "GroupTop") {
+          if (item['template'] == "GroupTop") {
             needNextRoundBorderRadius = true;
           }
         } catch (e, stackTrace) {
           list.add({"flutterType": "Text", "data": "Exception template: $e"});
-          //AppStore.print(ret);
-          //developer.log(ret);
           AppStore.debug(stackTrace);
         }
       }

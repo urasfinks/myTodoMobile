@@ -7,16 +7,23 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert' show utf8, base64;
 import 'package:http/http.dart' as http;
+import 'dart:developer';
 
 class AppStore {
 
-  static bool isPrint = true;
+  static bool isDebug = true;
   static Cache? cache;
   static String host = "https://jamsys.ru:8443";
   static String ws = "ws://jamsys.ru:8081";
 
+  static void fullDebug(dynamic data){
+    if(isDebug) {
+      log("${data}");
+    }
+  }
+
   static void debug(dynamic data){
-    if(isPrint){
+    if(isDebug){
       print(data);
     }
   }

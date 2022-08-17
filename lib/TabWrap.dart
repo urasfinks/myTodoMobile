@@ -72,6 +72,10 @@ class TabScope {
     return null;
   }
 
+  bool isBack(){
+    return tabs[tabIndex].history.length > 1;
+  }
+
   void addHistory(AppStoreData appStoreData) {
     //AppStore.print("addHistory: tabIndex: ${tabIndex};  AppStore: ${appStoreData}");
     if (!tabs[tabIndex].history.contains(appStoreData)) {

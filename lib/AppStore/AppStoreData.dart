@@ -425,7 +425,7 @@ class AppStoreData {
           systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarColor: Colors.transparent, // Status bar
               statusBarBrightness: Brightness.dark),
-          title: back == null
+          title: !TabScope.getInstance().isBack()
               ? Text(
                   title,
                   style: const TextStyle(fontSize: 19),
