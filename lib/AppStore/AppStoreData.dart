@@ -10,6 +10,7 @@ import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/FlutterType.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
 import '../TabWrap.dart';
+import '../Util.dart';
 import '../WebSocket.dart';
 import 'package:redux/redux.dart';
 
@@ -216,7 +217,10 @@ class AppStoreData {
   }
 
   void join(String key, String appendString, {bool notify = true}) {
-    _map[key] = _map[key] + appendString;
+    if(_map[key] == null){
+      _map[key] = "";
+    }
+    _map[key] = _map[key] + Util.template(_map, appendString);
     onChange(key, notify);
   }
 

@@ -509,10 +509,11 @@ class FlutterType {
       },
       onTap: () async {
         if (type == "datetime") {
+
           DateTime? pickedDate = await showDatePicker(
             locale: const Locale('ru', 'ru_Ru'),
             context: appStoreData.getCtx()!,
-            initialDate: formattedDate != "" ? DateFormat("dd.MM.yyyy").parse(formattedDate) : DateTime.now(),
+            initialDate: textController?.text != "" ? DateFormat("dd.MM.yyyy").parse(textController!.text) : DateTime.now(),
             firstDate: DateTime(1931),
             lastDate: DateTime(2101),
           );
@@ -1174,6 +1175,7 @@ class FlutterType {
       options.add(S2Choice<String>(value: w["value"], title: w["title"]));
     }
     return SmartSelect<String>.single(
+      choiceConfig: S2ChoiceConfig(physics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData)),
       title: DynamicUI.def(parsedJson, 'title', '', appStoreData, index, originKeyData),
       selectedValue: value,
       choiceItems: options,
@@ -1185,36 +1187,4 @@ class FlutterType {
     );
   }
 
-  static dynamic pDropdownButton2(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
-    int selectedIndex = FlutterTypeConstant.parseInt(DynamicUI.def(parsedJson, 'data', 0, appStoreData, index, originKeyData))!;
-    List<DropdownMenuItem<int>> list = [];
-    var itemTemplate = DynamicUI.def(parsedJson, 'itemTemplate', 'Text', appStoreData, index, originKeyData);
-    String template = appStoreData.getServerResponse()["Template"][itemTemplate];
-
-    int count = 0;
-    for (dynamic w in parsedJson["items"]) {
-      String ret = Util.template(w, template);
-      list.add(
-        DropdownMenuItem(
-          value: count++,
-          child: DynamicUI.main(ret, appStoreData, index, originKeyData),
-        ),
-      );
-    }
-
-    return DropdownButton<int>(
-      menuMaxHeight: 150,
-      isExpanded: true,
-      elevation: 0,
-      dropdownColor: FlutterTypeConstant.parseColor("rgba:245,245,245,0.97"),
-      borderRadius: FlutterTypeConstant.parseBorderRadius("8"),
-      value: appStoreData.get(key, selectedIndex),
-      items: list,
-      onChanged: (int? value) {
-        appStoreData.set(key, value);
-        appStoreData.apply();
-      },
-    );
-  }
 }

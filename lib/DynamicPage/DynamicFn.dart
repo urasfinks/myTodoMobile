@@ -35,11 +35,11 @@ class DynamicFn {
       "confirm": confirm,
       "getAppStore": getAppStore,
       "setAppStore": setAppStore,
+      "joinAppStoreData": joinAppStoreData,
       "appStoreOperator": appStoreOperator,
       "getMD5": getMD5,
       "launcher": launcher,
       "resetTextFieldValue": resetTextFieldValue,
-      "joinAppStoreData": joinAppStoreData,
       "timestampToDate": DynamicDirective.timestampToDate,
       "formatNumber": DynamicDirective.formatNumber,
       "copyToClipBoard": copyToClipBoard,
@@ -207,7 +207,7 @@ class DynamicFn {
   }
 
   static dynamic joinAppStoreData(AppStoreData appStoreData, dynamic data) {
-    appStoreData.join(data["key"], data["append"]);
+    appStoreData.join(data["key"], data["append"], notify: data["notify"] ?? true);
     appStoreData.apply();
   }
 
