@@ -418,33 +418,31 @@ class AppStoreData {
   }
 
   _getAppBar(BackButton? back, String title) {
-    return PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: AppBar(
-          leading: back,
-          elevation: 0,
-          backgroundColor: FlutterTypeConstant.parseColor(
-            getWidgetData("appBarBackgroundColor"),
-          ),
-          systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent, // Status bar
-              statusBarBrightness: Brightness.dark),
-          title: !TabScope.getInstance().isBack()
-              ? Text(
-                  title,
-                  style: const TextStyle(fontSize: 19),
-                )
-              : Transform(
-                  // you can forcefully translate values left side using Transform
-                  transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
-                  child: Text(
-                    title,
-                    style: const TextStyle(fontSize: 19),
-                  ),
-                ),
-          centerTitle: false,
-          actions: DynamicPageUtil.getListAppBarActions(this),
-        ));
+    return AppBar(
+      leading: back,
+      elevation: 0,
+      backgroundColor: FlutterTypeConstant.parseColor(
+        getWidgetData("appBarBackgroundColor"),
+      ),
+      systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent, // Status bar
+          statusBarBrightness: Brightness.dark),
+      title: !TabScope.getInstance().isBack()
+          ? Text(
+        title,
+        style: const TextStyle(fontSize: 19),
+      )
+          : Transform(
+        // you can forcefully translate values left side using Transform
+        transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 19),
+        ),
+      ),
+      centerTitle: false,
+      actions: DynamicPageUtil.getListAppBarActions(this),
+    );
   }
 
   _contentBuilder(dynamic wrapPage) {
