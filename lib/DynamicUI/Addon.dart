@@ -28,7 +28,7 @@ class Addon{
   }
 
   static void _containerTopRadius(parsedJson) {
-    String saveColor = parsedJson["color"];
+    String saveColor = parsedJson["color"] ?? "white";
     parsedJson["color"] = null;
     if(parsedJson["decoration"] == null){
       Map<String, dynamic> x = {};

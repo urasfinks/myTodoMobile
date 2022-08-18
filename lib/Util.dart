@@ -9,7 +9,8 @@ import 'package:myTODO/DynamicUI/FlutterTypeConstant.dart';
 import 'dart:developer' as developer;
 
 class Util {
-  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder, {bool reverse = false}) {
+  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
+      {bool reverse = false}) {
     //AppStore.print("SEPARATED: ${separated}");
     if (separated == true) {
       return ListView.separated(
@@ -19,7 +20,10 @@ class Util {
         itemBuilder: (BuildContext context, int index) {
           return itemBuilder(index);
         },
-        separatorBuilder: (BuildContext context, int index) => Divider(height: 1,color: FlutterTypeConstant.parseColor("#f5f5f5")!,),
+        separatorBuilder: (BuildContext context, int index) => Divider(
+          height: 1,
+          color: FlutterTypeConstant.parseColor("#f5f5f5")!,
+        ),
       );
     } else {
       return ListView.builder(
@@ -74,9 +78,9 @@ class Util {
       List<String> name = exp2[0].split("|");
       String fName = exp2[0];
       String rName = name[0];
-      if(name.length > 1 && name[1] == "unescape"){
+      if (name.length > 1 && name[1] == "unescape") {
         template = template.replaceAll("\${$fName}", path2(data, rName));
-      }else{
+      } else {
         template = template.replaceAll("\${$fName}", jsonStringEscape(path2(data, rName)));
       }
     }
@@ -101,11 +105,11 @@ class Util {
     });
   }
 
-  static void log(dynamic mes){
+  static void log(dynamic mes) {
     developer.log(mes);
   }
 
-  static String jsonStringEscape(String raw){
+  static String jsonStringEscape(String raw) {
     String escaped = raw;
     escaped = escaped.replaceAll("\\", "\\\\");
     escaped = escaped.replaceAll("\"", "\\\"");
@@ -117,17 +121,55 @@ class Util {
     return escaped;
   }
 
-  static Map merge(Map def, Map? input){
-    if(input == null || input.isEmpty){
+  static Map merge(Map def, Map? input) {
+    if (input == null || input.isEmpty) {
       return def;
     }
-    for(var item in input.entries){
+    for (var item in input.entries) {
       def[item.key] = item.value;
     }
     return def;
   }
 
   static String intLPad(int i, {int pad = 0, String char = "0"}) => i.toString().padLeft(pad, char);
+
   static String intRPad(int i, {int pad = 0, String char = "0"}) => i.toString().padRight(pad, char);
 
+  static bool isIndexKey(dynamic data) {
+    if (data.runtimeType.toString().contains("Map<")) {
+      Map x = data;
+      for (String s in x.keys) {
+        if (!isNumeric(s)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  static List<dynamic> getListFromMapOrString(dynamic data) {
+    List list = [];
+    if (data.runtimeType.toString().startsWith("String")) {
+      String x = data;
+      if (x.contains(",")) {
+        list.addAll(x.split(","));
+      } else {
+        list.add(data);
+      }
+    } else if (isIndexKey(data)) {
+      Map<String, dynamic> x = data;
+      for (var item in x.entries) {
+        list.add(item.value);
+      }
+    }
+    return list;
+  }
+
+  static bool isNumeric(String? s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
 }

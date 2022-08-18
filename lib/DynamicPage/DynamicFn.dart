@@ -76,8 +76,7 @@ class DynamicFn {
         listFn.add(parseNameAndArguments(item));
       }
       //AppStore.print(listFn);
-      Map<String, dynamic> originData =
-          _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+      Map<String, dynamic> originData = _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
       for (Map item in listFn) {
         List<dynamic> args = [appStoreData];
@@ -194,13 +193,13 @@ class DynamicFn {
     return null;
   }
 
-  static void _openWindowUpdateBridgeState(AppStoreData appStoreData, dynamic data){
+  static void _openWindowUpdateBridgeState(AppStoreData appStoreData, dynamic data) {
     Map<String, dynamic> d = data;
-    if(d.containsKey("bridgeState")){
+    if (d.containsKey("bridgeState")) {
       Map<String, dynamic> bs = d["bridgeState"];
-      for(var item in bs.entries){
+      for (var item in bs.entries) {
         dynamic value = appStoreData.get(item.key, null);
-        if(value != null && value != ""){
+        if (value != null && value != "") {
           data["bridgeState"][item.key] = value;
         }
       }
@@ -318,12 +317,42 @@ class DynamicFn {
 
   static dynamic appStoreOperator(AppStoreData appStoreData, dynamic data) {
     //AppStore.print("appStoreOperator: ${data}");
-    dynamic value = appStoreData.get(data["key"], null);
-    if (value != null && value == data["value"]) {
-      return data["trueCondition"];
-    } else {
-      return data["falseCondition"];
+    if(data["value"] != null){
+      dynamic value = appStoreData.get(data["key"], null);
+      List x = Util.getListFromMapOrString(data["value"]);
+      if (x.contains(value)) {
+        return data["trueCondition"];
+      }
     }
+    if(data["valueGroup"] != null){
+      Map<String, dynamic> valueGroup  = data["valueGroup"];
+      //AppStore.debug("${valueGroup}");
+      bool lCond = true;
+      for(var item in valueGroup.entries){
+        dynamic value = appStoreData.get(item.value["key"], null);
+        //AppStore.debug("${value}");
+        List x = Util.getListFromMapOrString(item.value["list"]);
+        if(item.value["condition"] == "and"){
+          if(lCond == true && x.contains(value)){
+            lCond = true;
+          }else{
+            lCond = false;
+            break;
+          }
+        }
+        if(item.value["condition"] == "or"){
+          if(lCond == true || x.contains(value)){
+            lCond = true;
+          }else{
+            lCond = false;
+            break;
+          }
+        }
+      }
+      return lCond ? data["trueCondition"] : data["falseCondition"];
+    }
+
+    return data["falseCondition"];
   }
 
   static dynamic openGallery(AppStoreData appStoreData, dynamic data) async {
@@ -395,8 +424,8 @@ class DynamicFn {
             getFutureList(appStoreData, data),
             reverse: cfg["reverse"]);
       } else {
-        Map x = appStoreData.getWidgetDataConfig(
-            {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
+        Map x = appStoreData
+            .getWidgetDataConfig({"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
         return GridView.count(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           crossAxisCount: x["crossAxisCount"],
@@ -411,7 +440,7 @@ class DynamicFn {
     //Но если через секунду содержимое не загружено, поднимать из кеша и отображать
     Future.delayed(const Duration(milliseconds: 1000), () {
       //print("Go1");
-      if(appStoreData.nowDownloadContent == true){
+      if (appStoreData.nowDownloadContent == true) {
         //print("Go2");
         String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
         if (cachedDataPage != null) {
@@ -421,8 +450,6 @@ class DynamicFn {
         }
       }
     });
-
-
 
     return CircularProgressIndicator(
       backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
