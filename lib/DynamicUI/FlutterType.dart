@@ -539,6 +539,7 @@ class FlutterType {
                 child: child,
               );
             },
+            initialEntryMode: TimePickerEntryMode.input,
             initialTime: tod,
             context: appStoreData.getCtx()!,
           );
