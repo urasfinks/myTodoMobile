@@ -53,6 +53,8 @@ dependencies:
   url_launcher: ^6.1.5
   flutter_awesome_select: ^6.5.0
   share_plus: ^4.0.10+1
+  visibility_detector: ^0.3.3
+  appmetrica_plugin: ^1.0.1
 
 dev_dependencies:
   flutter_test:

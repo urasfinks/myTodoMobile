@@ -22,6 +22,8 @@ class AppStoreData {
   final Map<String, dynamic> _map = {};
   int _indexRevision = 0;
 
+  Map<String, bool> alreadyVisible = {};
+
   AppStoreData(this.store, {this.syncSocket = false});
 
   bool needUpdateOnActive = false;

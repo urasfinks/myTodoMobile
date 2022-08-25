@@ -8,13 +8,16 @@ import 'package:uuid/uuid.dart';
 import 'dart:convert' show utf8, base64;
 import 'package:http/http.dart' as http;
 import 'dart:developer';
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 
 class AppStore {
 
-  static bool isDebug = false;
+  static bool isDebug = true;
   static Cache? cache;
   static String host = "https://jamsys.ru:8443";
   static String ws = "ws://jamsys.ru:8081";
+
+
 
   static void fullDebug(dynamic data){
     if(isDebug) {

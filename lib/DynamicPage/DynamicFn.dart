@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:image_cropper/image_cropper.dart';
@@ -6,6 +7,7 @@ import 'package:myTODO/DynamicPage/DynamicDirective.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
@@ -78,7 +80,8 @@ class DynamicFn {
         listFn.add(parseNameAndArguments(item));
       }
       //AppStore.print(listFn);
-      Map<String, dynamic> originData = _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+      Map<String, dynamic> originData =
+          _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
       for (Map item in listFn) {
         List<dynamic> args = [appStoreData];
@@ -95,6 +98,7 @@ class DynamicFn {
           }
         }
         //AppStore.print("args: $args");
+        //if(args[1]["appmetrica"])
         retExec = Function.apply(parseUtilFunction(item["fn"]), args);
       }
       return retExec;
@@ -324,33 +328,33 @@ class DynamicFn {
 
   static dynamic appStoreOperator(AppStoreData appStoreData, dynamic data) {
     //AppStore.print("appStoreOperator: ${data}");
-    if(data["value"] != null){
+    if (data["value"] != null) {
       dynamic value = appStoreData.get(data["key"], null);
       List x = Util.getListFromMapOrString(data["value"]);
       if (x.contains(value)) {
         return data["trueCondition"];
       }
     }
-    if(data["valueGroup"] != null){
-      Map<String, dynamic> valueGroup  = data["valueGroup"];
+    if (data["valueGroup"] != null) {
+      Map<String, dynamic> valueGroup = data["valueGroup"];
       //AppStore.debug("${valueGroup}");
       bool lCond = true;
-      for(var item in valueGroup.entries){
+      for (var item in valueGroup.entries) {
         dynamic value = appStoreData.get(item.value["key"], null);
         //AppStore.debug("${value}");
         List x = Util.getListFromMapOrString(item.value["list"]);
-        if(item.value["condition"] == "and"){
-          if(lCond == true && x.contains(value)){
+        if (item.value["condition"] == "and") {
+          if (lCond == true && x.contains(value)) {
             lCond = true;
-          }else{
+          } else {
             lCond = false;
             break;
           }
         }
-        if(item.value["condition"] == "or"){
-          if(lCond == true || x.contains(value)){
+        if (item.value["condition"] == "or") {
+          if (lCond == true || x.contains(value)) {
             lCond = true;
-          }else{
+          } else {
             lCond = false;
             break;
           }
@@ -397,13 +401,32 @@ class DynamicFn {
     //print("IMAGE: ${image}");
   }
 
+  static dynamic wrapVisibility(Map<String, dynamic> data, AppStoreData appStoreData, int index, Map<String, dynamic> extraData) {
+    dynamic w = DynamicUI.mainJson(data, appStoreData, index, 'Data');
+    if (extraData.containsKey("onVisibility") && extraData["onVisibility"] == true && extraData.containsKey("onVisibilityKey")) {
+      return VisibilityDetector(
+        key: Key(extraData["onVisibilityKey"]),
+        onVisibilityChanged: (visibilityInfo) {
+          if (visibilityInfo.visibleFraction * 100 == 100) {
+            if (!appStoreData.alreadyVisible.containsKey(visibilityInfo.key.toString())) {
+              appStoreData.alreadyVisible[visibilityInfo.key.toString()] = true;
+              AppMetrica.reportEvent("VIEW ${extraData["onVisibilityKey"]}");
+            }
+          }
+        },
+        child: w,
+      );
+    }
+    return w;
+  }
+
   static Widget Function(int index) getFutureList(AppStoreData appStoreData, dynamic data) {
     //print("getFutureList");
     if (appStoreData.getServerResponse().isNotEmpty) {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       List<Widget> ret = [];
       for (int i = 0; i < response['list'].length; i++) {
-        ret.add(DynamicUI.mainJson(response['list'][i], appStoreData, i, 'Data'));
+        ret.add(wrapVisibility(response['list'][i], appStoreData, i, response['Data'][i]["data"]));
       }
       return (int index) {
         return ret[index];
@@ -431,8 +454,8 @@ class DynamicFn {
             getFutureList(appStoreData, data),
             reverse: cfg["reverse"]);
       } else {
-        Map x = appStoreData
-            .getWidgetDataConfig({"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
+        Map x = appStoreData.getWidgetDataConfig(
+            {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
         return GridView.count(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           crossAxisCount: x["crossAxisCount"],

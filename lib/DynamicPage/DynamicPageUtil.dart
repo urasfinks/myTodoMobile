@@ -44,6 +44,7 @@ class DynamicPageUtil {
 
       //AppStore.print(response.body);
       AppStore.debug("Download complete");
+      //AppStore.fullDebug(response.body);
       if (response.statusCode == 200) {
         Map<String, dynamic> resp = jsonDecode(response.body);
         if(resp["Cache"] != null && resp["Cache"] == true){

@@ -1,4 +1,4 @@
-package com.example.myTODO;
+package ru.jamsys.myTODO;
 
 import io.flutter.embedding.android.FlutterActivity;
 
