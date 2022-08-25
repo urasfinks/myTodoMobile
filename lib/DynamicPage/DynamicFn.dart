@@ -4,6 +4,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myTODO/DynamicPage/DynamicDirective.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
@@ -43,6 +44,7 @@ class DynamicFn {
       "timestampToDate": DynamicDirective.timestampToDate,
       "formatNumber": DynamicDirective.formatNumber,
       "copyToClipBoard": copyToClipBoard,
+      "share": share,
     };
     if (map.containsKey(value)) {
       return map[value];
@@ -300,6 +302,11 @@ class DynamicFn {
   static dynamic copyToClipBoard(AppStoreData appStoreData, dynamic data) {
     Clipboard.setData(ClipboardData(text: data["data"]));
     alert(appStoreData, {"data": "Скопировано в буфер обмена"});
+  }
+
+  static dynamic share(AppStoreData appStoreData, dynamic data) {
+    Share.share(data["data"], subject: 'Поделиться');
+    //Clipboard.setData(ClipboardData(text: data["data"]));
   }
 
   static dynamic setAppStore(AppStoreData appStoreData, dynamic data) {

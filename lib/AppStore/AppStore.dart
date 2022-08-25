@@ -11,7 +11,7 @@ import 'dart:developer';
 
 class AppStore {
 
-  static bool isDebug = true;
+  static bool isDebug = false;
   static Cache? cache;
   static String host = "https://jamsys.ru:8443";
   static String ws = "ws://jamsys.ru:8081";
