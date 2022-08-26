@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 
 import 'package:myTODO/AppStore/AppStoreData.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
+import '../AppMetric.dart';
 import '../AppStore/AppStore.dart';
 import '../Util.dart';
 import 'DynamicUI.dart';
@@ -257,8 +258,7 @@ class FlutterType {
         args.add(originData[exp2[1]]);
       }
     } catch (e, stacktrace) {
-      AppStore.debug(e);
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
     }
     if (args.length == 1) {
       args.add(null);

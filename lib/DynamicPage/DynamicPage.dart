@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myTODO/AppStore/AppStore.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
 import 'package:myTODO/TabWrap.dart';
+import '../AppMetric.dart';
 import '../AppStore/AppStoreData.dart';
 
 class DynamicPage extends StatefulWidget {
@@ -94,8 +95,7 @@ class DynamicPage extends StatefulWidget {
       );
       return ret;
     } catch (e, stacktrace) {
-      AppStore.debug(e);
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
       return DynamicPage.fromMap(
         {
           "title": 'Ошибка ',

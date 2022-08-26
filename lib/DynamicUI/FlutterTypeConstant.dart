@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../AppMetric.dart';
+
 class FlutterTypeConstant {
   static dynamic parseFontStyle(String? value) {
     if (value == null || value.trim() == '') {
@@ -88,8 +90,7 @@ class FlutterTypeConstant {
           return x[parseInt(l[1])!];
         }
       } catch (e, stacktrace) {
-        print(e);
-        print(stacktrace);
+        AppMetric().exception(e, stacktrace);
       }
       return null;
     } else {

@@ -8,6 +8,7 @@ import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import '../AppMetric.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
@@ -80,8 +81,7 @@ class DynamicFn {
         listFn.add(parseNameAndArguments(item));
       }
       //AppStore.print(listFn);
-      Map<String, dynamic> originData =
-          _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+      Map<String, dynamic> originData = _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
       for (Map item in listFn) {
         List<dynamic> args = [appStoreData];
@@ -98,7 +98,12 @@ class DynamicFn {
           }
         }
         //AppStore.print("args: $args");
-        //if(args[1]["appmetrica"])
+        if (args[1] != null && args[1].runtimeType.toString().contains("Map<")) {
+          Map f = args[1];
+          if (f.containsKey("metric")) {
+            AppMetric().send(f["metric"]);
+          }
+        }
         retExec = Function.apply(parseUtilFunction(item["fn"]), args);
       }
       return retExec;
@@ -162,18 +167,11 @@ class DynamicFn {
         }
       }
     } catch (e, stacktrace) {
-      AppStore.debug(e);
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
     }
   }
 
   static dynamic openWindow(AppStoreData appStoreData, dynamic data) async {
-    /*try{
-      FocusScope.of(appStoreData.getCtx()!).requestFocus(FocusNode());
-    }catch(e, stacktrace){
-      AppStore.print(e);
-      AppStore.print(stacktrace);
-    }*/
     if (data["delay"] != null) {
       await Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {});
     }
@@ -403,14 +401,14 @@ class DynamicFn {
 
   static dynamic wrapVisibility(Map<String, dynamic> data, AppStoreData appStoreData, int index, Map<String, dynamic> extraData) {
     dynamic w = DynamicUI.mainJson(data, appStoreData, index, 'Data');
-    if (extraData.containsKey("onVisibility") && extraData["onVisibility"] == true && extraData.containsKey("onVisibilityKey")) {
+    if (extraData.containsKey("onVisibility") && extraData["onVisibility"] == true && extraData.containsKey("metric")) {
       return VisibilityDetector(
-        key: Key(extraData["onVisibilityKey"]),
+        key: Key(extraData["metric"]),
         onVisibilityChanged: (visibilityInfo) {
           if (visibilityInfo.visibleFraction * 100 == 100) {
             if (!appStoreData.alreadyVisible.containsKey(visibilityInfo.key.toString())) {
               appStoreData.alreadyVisible[visibilityInfo.key.toString()] = true;
-              AppMetrica.reportEvent("VIEW ${extraData["onVisibilityKey"]}");
+              AppMetric().send(extraData["metric"]);
             }
           }
         },
@@ -454,8 +452,8 @@ class DynamicFn {
             getFutureList(appStoreData, data),
             reverse: cfg["reverse"]);
       } else {
-        Map x = appStoreData.getWidgetDataConfig(
-            {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
+        Map x = appStoreData
+            .getWidgetDataConfig({"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
         return GridView.count(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           crossAxisCount: x["crossAxisCount"],

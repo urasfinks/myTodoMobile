@@ -7,6 +7,7 @@ import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 
+import 'AppMetric.dart';
 import 'AppStore/AppStoreData.dart';
 
 class WebSocketService {
@@ -69,8 +70,7 @@ class WebSocketService {
         }
       }
     } catch (e, stacktrace) {
-      AppStore.debug(e);
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
     }
   }
 
@@ -112,8 +112,7 @@ class WebSocketService {
         reconnect();
       }
     }, onError: (e, stacktrace) {
-      AppStore.debug("Socket OnError $e");
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
       _connect = false;
       reconnect();
     }, cancelOnError: true);
@@ -142,8 +141,7 @@ class WebSocketService {
             _deferredSend();
           } catch (e, stacktrace) {
             //AppStore.debug('Error happened when opening a new websocket connection. ${e.toString()}');
-            AppStore.debug(e);
-            AppStore.debug(stacktrace);
+            AppMetric().exception(e, stacktrace);
           }
           _connectProcess = false;
         });

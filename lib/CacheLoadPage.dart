@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'AppMetric.dart';
 import 'AppStore/AppStore.dart';
 
 class CacheLoadPage {
@@ -47,8 +48,7 @@ class CacheLoadPage {
         list.add(CacheLoadPageItem(item["url"], item["data"], t: item["time"]));
       }
     } catch (e, stacktrace) {
-      AppStore.debug(e);
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
     }
   }
 

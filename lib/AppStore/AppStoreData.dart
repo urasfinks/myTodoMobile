@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:myTODO/DynamicPage/DynamicPage.dart';
+import '../AppMetric.dart';
 import '../DynamicPage/DynamicFn.dart';
 import '../DynamicPage/DynamicPageUtil.dart';
 import '../DynamicUI/DynamicUI.dart';
@@ -97,8 +98,7 @@ class AppStoreData {
       try {
         setParentRefresh(value);
       } catch (e, stacktrace) {
-        AppStore.debug(e);
-        AppStore.debug(stacktrace);
+        AppMetric().exception(e, stacktrace);
       }
     }
   }
@@ -388,8 +388,7 @@ class AppStoreData {
         _build = false;
       }
     } catch (e, stacktrace) {
-      AppStore.debug(e);
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
       compiledWidget = Scaffold(
         appBar: _getAppBar(null, "Ошибка компиляции"),
         body: SafeArea(

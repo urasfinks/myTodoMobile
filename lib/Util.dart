@@ -8,6 +8,8 @@ import 'package:myTODO/AppStore/AppStore.dart';
 import 'package:myTODO/DynamicUI/FlutterTypeConstant.dart';
 import 'dart:developer' as developer;
 
+import 'AppMetric.dart';
+
 class Util {
   static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
       {bool reverse = false}) {
@@ -101,7 +103,7 @@ class Util {
         AppStore.print("VALUE: ${value}");
       });*/
     }).catchError((e) {
-      AppStore.debug(e);
+      AppMetric().exception(e, null);
     });
   }
 

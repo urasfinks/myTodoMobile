@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myTODO/DynamicUI/Addon.dart';
+import '../AppMetric.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,9 @@ class DynamicPageUtil {
             cache.pageAdd(appStoreData.getWidgetData('url'), response.body);
           });
         }
+        if(resp["AppMetricToken"] != null){
+          AppMetric().activate(resp["AppMetricToken"]);
+        }
         dataUpdate(resp, appStoreData);
       } else {
         setErrorStyle(appStoreData);
@@ -64,8 +68,7 @@ class DynamicPageUtil {
             ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
       }
     } catch (e, stacktrace) {
-      AppStore.debug(e);
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
       setErrorStyle(appStoreData);
       dataUpdate(ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString()), appStoreData);
     }
@@ -90,8 +93,7 @@ class DynamicPageUtil {
         }
       }
     } catch (e, stacktrace) {
-      AppStore.debug(e);
-      AppStore.debug(stacktrace);
+      AppMetric().exception(e, stacktrace);
     }
     return list.isNotEmpty ? list : null;
   }
@@ -127,9 +129,9 @@ class DynamicPageUtil {
           if (item['template'] == "GroupTop") {
             needNextRoundBorderRadius = true;
           }
-        } catch (e, stackTrace) {
+        } catch (e, stacktrace) {
           list.add({"flutterType": "Text", "data": "Exception template: $e"});
-          AppStore.debug(stackTrace);
+          AppMetric().exception(e, stacktrace);
         }
       }
       data[ret] = list;

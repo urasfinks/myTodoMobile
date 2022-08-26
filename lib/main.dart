@@ -1,5 +1,5 @@
 import 'dart:core';
-import 'package:appmetrica_plugin/appmetrica_plugin.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,17 +20,11 @@ Future<void> loadPref() async {
   }
 }
 
-AppMetricaConfig get _config => const AppMetricaConfig('e0efc97c-b1aa-4c88-813a-fa1ef1ea20ed', logs: true);
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
-  AppMetrica.runZoneGuarded(() {
-    AppMetrica.activate(_config);
-  });
-  //AppMetrica.activate(const AppMetricaConfig("e0efc97c-b1aa-4c88-813a-fa1ef1ea20ed"));
-
   await loadPref();
-  //runApp(MyPage());
   runApp(const Center(child: LifecycleApp()));
 }
 
