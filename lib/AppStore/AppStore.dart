@@ -11,14 +11,14 @@ import 'dart:developer';
 
 class AppStore {
 
-  static bool isDebug = true;
+  static bool isDebug = false;
   static Cache? cache;
   static String host = "https://jamsys.ru:8443";
   static String promo = "/project/to-do/promo";
   static String ws = "ws://jamsys.ru:8081";
   static String version = "1";
 
-  static bool firstStart = true;
+  static bool firstStart = false;
 
   static void fullDebug(dynamic data){
     if(isDebug) {

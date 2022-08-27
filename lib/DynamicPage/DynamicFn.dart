@@ -217,7 +217,7 @@ class DynamicFn {
   }
 
   static dynamic openDialog(AppStoreData appStoreData, dynamic data) {
-    print(data);
+    //print(data);
     data["dialog"] = true;
     String st = appStoreData.getStringStoreState();
     if (st.isNotEmpty) {

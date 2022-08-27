@@ -49,5 +49,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+    <string>myTODO просит доступ к камере, что бы загрузить фотографию вашего профиля</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>myTODO просит доступ к галерее, что бы загрузить фотографию вашего профиля</string>
 </dict>
 </plist>
