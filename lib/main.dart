@@ -5,11 +5,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'AppStore/AppStore.dart';
-import 'BoardingPage.dart';
 import 'Cache.dart';
 import 'TabWrap.dart';
 
-bool firstStart = false;
+
 
 Future<void> loadPref() async {
   AppStore.cache = await Cache.getInstance();
@@ -17,7 +16,7 @@ Future<void> loadPref() async {
   //AppStore.cache.remove('key');
   final String? key = AppStore.cache?.get('key');
   if (key == null || "" == key) {
-    firstStart = true;
+    AppStore.firstStart = true;
     await AppStore.registerPerson();
   } else {
     AppStore.setPersonKey(key);
@@ -27,11 +26,7 @@ Future<void> loadPref() async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
   await loadPref();
-  if (firstStart == true) {
-    runApp(App());
-  } else {
-    runApp(const Center(child: LifecycleApp()));
-  }
+  runApp(const Center(child: LifecycleApp()));
 }
 
 class LifecycleApp extends StatefulWidget {

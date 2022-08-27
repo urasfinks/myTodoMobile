@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:intl/intl.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 
 import 'package:myTODO/AppStore/AppStoreData.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
@@ -46,7 +47,7 @@ class FlutterType {
       mainAxisAlignment: FlutterTypeConstant.parseMainAxisAlignment(
         DynamicUI.def(parsedJson, 'mainAxisAlignment', 'start', appStoreData, index, originKeyData),
       )!,
-      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ,
     );
   }
 
@@ -58,7 +59,7 @@ class FlutterType {
       mainAxisAlignment: FlutterTypeConstant.parseMainAxisAlignment(
         DynamicUI.def(parsedJson, 'mainAxisAlignment', 'start', appStoreData, index, originKeyData),
       )!,
-      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ,
     );
   }
 
@@ -151,31 +152,6 @@ class FlutterType {
   static dynamic pAssetImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     return AssetImage(
       DynamicUI.def(parsedJson, 'src', '', appStoreData, index, originKeyData),
-    );
-  }
-
-  static dynamic pDecorationImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    return DecorationImage(
-      image: DynamicUI.def(parsedJson, 'image', null, appStoreData, index, originKeyData),
-      fit: FlutterTypeConstant.parseBoxFit(
-        DynamicUI.def(parsedJson, 'fit', null, appStoreData, index, originKeyData),
-      ),
-      scale: FlutterTypeConstant.parseDouble(
-        DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index, originKeyData),
-      )!,
-      opacity: FlutterTypeConstant.parseDouble(
-        DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index, originKeyData),
-      )!,
-      repeat: FlutterTypeConstant.parseImageRepeat(
-        DynamicUI.def(parsedJson, 'scale', "noRepeat", appStoreData, index, originKeyData),
-      )!,
-      filterQuality: FilterQuality.high,
-      alignment: FlutterTypeConstant.parseAlignment(
-        DynamicUI.def(parsedJson, 'alignment', "center", appStoreData, index, originKeyData),
-      )!,
-      matchTextDirection: FlutterTypeConstant.parseBool(
-        DynamicUI.def(parsedJson, 'matchTextDirection', false, appStoreData, index, originKeyData),
-      )!,
     );
   }
 
@@ -635,7 +611,7 @@ class FlutterType {
         DynamicUI.def(parsedJson, 'padding', null, appStoreData, index, originKeyData),
       )!,
       physics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
-      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ,
     );
   }
 
@@ -720,7 +696,7 @@ class FlutterType {
       clipBehavior: FlutterTypeConstant.parseClip(
         DynamicUI.def(parsedJson, 'clipBehavior', 'none', appStoreData, index, originKeyData),
       )!,
-      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ,
     );
   }
 
@@ -789,7 +765,7 @@ class FlutterType {
       clipBehavior: FlutterTypeConstant.parseClip(
         DynamicUI.def(parsedJson, 'clipBehavior', 'hardEdge', appStoreData, index, originKeyData),
       )!,
-      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ,
     );
   }
 
@@ -1025,6 +1001,60 @@ class FlutterType {
     );
   }
 
+  static dynamic pDecorationImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return DecorationImage(
+      image: DynamicUI.def(parsedJson, 'image', null, appStoreData, index, originKeyData),
+      fit: FlutterTypeConstant.parseBoxFit(
+        DynamicUI.def(parsedJson, 'fit', null, appStoreData, index, originKeyData),
+      ),
+      scale: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index, originKeyData),
+      )!,
+      opacity: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'opacity', 1.0, appStoreData, index, originKeyData),
+      )!,
+      repeat: FlutterTypeConstant.parseImageRepeat(
+        DynamicUI.def(parsedJson, 'repeat', "noRepeat", appStoreData, index, originKeyData),
+      )!,
+      filterQuality: FilterQuality.high,
+      alignment: FlutterTypeConstant.parseAlignment(
+        DynamicUI.def(parsedJson, 'alignment', "center", appStoreData, index, originKeyData),
+      )!,
+      matchTextDirection: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'matchTextDirection', false, appStoreData, index, originKeyData),
+      )!,
+    );
+  }
+
+  static dynamic pImageNetwork(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    String src = DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData);
+    if (!src.startsWith("http")) {
+      src = "${AppStore.host}${src}";
+    }
+    return Image.network(
+      src,
+      width: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'width', null, appStoreData, index, originKeyData),
+      ),
+      height: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'height', null, appStoreData, index, originKeyData),
+      ),
+      fit: FlutterTypeConstant.parseBoxFit(
+        DynamicUI.def(parsedJson, 'fit', null, appStoreData, index, originKeyData),
+      ),
+      scale: FlutterTypeConstant.parseDouble(
+        DynamicUI.def(parsedJson, 'scale', 1.0, appStoreData, index, originKeyData),
+      )!,
+      repeat: FlutterTypeConstant.parseImageRepeat(
+        DynamicUI.def(parsedJson, 'repeat', "noRepeat", appStoreData, index, originKeyData),
+      )!,
+      filterQuality: FilterQuality.high,
+      alignment: FlutterTypeConstant.parseAlignment(
+        DynamicUI.def(parsedJson, 'alignment', "center", appStoreData, index, originKeyData),
+      )!,
+    );
+  }
+
   static dynamic pNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     String src = DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData);
     if (!src.startsWith("http")) {
@@ -1058,12 +1088,16 @@ class FlutterType {
 
   static dynamic pCachedNetworkImage(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
     //print(parsedJson);
+    String src = DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData);
+    if (!src.startsWith("http")) {
+      src = "${AppStore.host}${src}";
+    }
     return CachedNetworkImage(
       color: FlutterTypeConstant.parseColor(
         DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
       ),
       httpHeaders: AppStore.requestHeader,
-      imageUrl: DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData),
+      imageUrl: src,
       //placeholder: (context, url) => const CircularProgressIndicator(),
       errorWidget: (context, url, error) => const Icon(Icons.error),
       fit: FlutterTypeConstant.parseBoxFit(
@@ -1092,7 +1126,7 @@ class FlutterType {
   }
 
   static dynamic pSegmentControl(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
-    List<Widget> children = DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData);
+    List<Widget> children = DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ;
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     Map<int, Widget> ch = {};
     int count = 0;
@@ -1185,6 +1219,45 @@ class FlutterType {
         appStoreData.set(key, state.value);
         appStoreData.apply();
       },
+    );
+  }
+
+  static dynamic pPageViewModel(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return PageViewModel(
+      title: DynamicUI.def(parsedJson, 'title', '', appStoreData, index, originKeyData),
+      body: DynamicUI.def(parsedJson, 'body', '', appStoreData, index, originKeyData),
+      image: DynamicUI.def(parsedJson, 'image', null, appStoreData, index, originKeyData),
+    );
+  }
+
+  static dynamic pIntroductionScreen(parsedJson, AppStoreData appStoreData, int index, String originKeyData) {
+    return IntroductionScreen(
+      pages: DynamicUI.defListPageViewModel(parsedJson, 'pages', appStoreData, index, originKeyData),
+      onDone: DynamicFn.evalTextFunction(parsedJson['onDone'], parsedJson, appStoreData, index, originKeyData),
+      onSkip: DynamicFn.evalTextFunction(parsedJson['onSkip'], parsedJson, appStoreData, index, originKeyData), // You can override onSkip callback
+      showSkipButton: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'showSkipButton', true, appStoreData, index, originKeyData),
+      )!,
+      showBackButton: FlutterTypeConstant.parseBool(
+        DynamicUI.def(parsedJson, 'showBackButton', false, appStoreData, index, originKeyData),
+      )!,
+      skipOrBackFlex: 0,
+      nextFlex: 0,
+      back: DynamicUI.def(parsedJson, 'back', const Icon(Icons.arrow_back), appStoreData, index, originKeyData),
+      skip: DynamicUI.def(parsedJson, 'skip', const Text('Пропустить', style: TextStyle(fontWeight: FontWeight.w600)), appStoreData, index, originKeyData),
+      next: DynamicUI.def(parsedJson, 'next', const Icon(Icons.arrow_forward), appStoreData, index, originKeyData),
+      done: DynamicUI.def(parsedJson, 'done', const Text('Готово', style: TextStyle(fontWeight: FontWeight.w600)), appStoreData, index, originKeyData),
+      curve: Curves.fastLinearToSlowEaseIn,
+      controlsMargin: const EdgeInsets.all(16),
+      controlsPadding:  const EdgeInsets.all(12.0),
+      dotsDecorator: const DotsDecorator(
+        size: Size(10.0, 10.0),
+        color: Color(0xFFBDBDBD),
+        activeSize: Size(22.0, 10.0),
+        activeShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+        ),
+      ),
     );
   }
 

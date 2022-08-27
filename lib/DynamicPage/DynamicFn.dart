@@ -47,6 +47,7 @@ class DynamicFn {
       "formatNumber": DynamicDirective.formatNumber,
       "copyToClipBoard": copyToClipBoard,
       "share": share,
+      "promo": promo,
     };
     if (map.containsKey(value)) {
       return map[value];
@@ -80,7 +81,8 @@ class DynamicFn {
         listFn.add(parseNameAndArguments(item));
       }
       //AppStore.print(listFn);
-      Map<String, dynamic> originData = _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+      Map<String, dynamic> originData =
+          _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
       for (Map item in listFn) {
         List<dynamic> args = [appStoreData];
@@ -215,6 +217,7 @@ class DynamicFn {
   }
 
   static dynamic openDialog(AppStoreData appStoreData, dynamic data) {
+    print(data);
     data["dialog"] = true;
     String st = appStoreData.getStringStoreState();
     if (st.isNotEmpty) {
@@ -398,7 +401,8 @@ class DynamicFn {
     //print("IMAGE: ${image}");
   }
 
-  static dynamic wrapVisibility(Map<String, dynamic> data, AppStoreData appStoreData, int index, Map<String, dynamic> extraData) {
+  static dynamic wrapVisibility(
+      Map<String, dynamic> data, AppStoreData appStoreData, int index, Map<String, dynamic> extraData) {
     dynamic w = DynamicUI.mainJson(data, appStoreData, index, 'Data');
     if (extraData.containsKey("onVisibility") && extraData["onVisibility"] == true && extraData.containsKey("metric")) {
       return VisibilityDetector(
@@ -435,6 +439,13 @@ class DynamicFn {
     }
   }
 
+  static dynamic promo(AppStoreData appStoreData, dynamic data) {
+    Future.delayed(const Duration(milliseconds: 1), () {
+      data["config"] = {"height": -1, "padding": 0, "borderRadius": 0};
+      DynamicFn.openDialog(appStoreData, data);
+    });
+  }
+
   static Widget getFutureBuilder(AppStoreData appStoreData, dynamic data) {
     //print("FB resp length: ${appStoreData.getServerResponse().length}");
     //if (appStoreData.getServerResponse().isNotEmpty && appStoreData.nowDownloadContent == false) { //BEFORE
@@ -442,7 +453,12 @@ class DynamicFn {
       //AFTER
       Map<String, dynamic> response = appStoreData.getServerResponse();
       bool grid = appStoreData.getWidgetData("grid");
+      bool withoutListView = appStoreData.getWidgetData("WithoutListView") ?? false;
       Map cfg = appStoreData.getWidgetDataConfig({"reverse": false});
+      if(withoutListView == true){
+        //print("WithoutListView: ${response['list']}");
+        return getFutureList(appStoreData, data)(0);
+      }
       if (grid == false) {
         return Util.getListView(
             appStoreData.getWidgetData("separated"),
@@ -451,8 +467,8 @@ class DynamicFn {
             getFutureList(appStoreData, data),
             reverse: cfg["reverse"]);
       } else {
-        Map x = appStoreData
-            .getWidgetDataConfig({"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
+        Map x = appStoreData.getWidgetDataConfig(
+            {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
         return GridView.count(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           crossAxisCount: x["crossAxisCount"],
@@ -478,9 +494,11 @@ class DynamicFn {
       }
     });
 
-    return CircularProgressIndicator(
-      backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
-      color: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorColor")),
+    return Center(
+      child: CircularProgressIndicator(
+        backgroundColor: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorBackgroundColor")),
+        color: FlutterTypeConstant.parseColor(appStoreData.getWidgetData("progressIndicatorColor")),
+      ),
     );
   }
 }

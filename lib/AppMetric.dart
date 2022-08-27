@@ -33,6 +33,8 @@ class AppMetric {
   }
 
   exception(dynamic e, dynamic stacktrace) async {
+    AppStore.debug(e);
+    AppStore.debug(stacktrace);
     listException.add(Ex(e, stacktrace));
     if (listException.length > maxStack) {
       listException.remove(listException.first);

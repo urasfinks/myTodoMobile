@@ -72,7 +72,7 @@ class TabScope {
     return null;
   }
 
-  bool isBack(){
+  bool isBack() {
     return tabs[tabIndex].history.length > 1;
   }
 
@@ -136,7 +136,9 @@ class TabScope {
     //Если страница, которую мы открывали была с параметра bridgeState, то надо её состояния партировать в страницу к которой мы переключаемся обратно
     if (removePage != null) {
       dynamic mapBridgeState = removePage.getWidgetData("bridgeState");
-      if (mapBridgeState != null && mapBridgeState.runtimeType.toString().contains("Map<") && mapBridgeState.isNotEmpty) {
+      if (mapBridgeState != null &&
+          mapBridgeState.runtimeType.toString().contains("Map<") &&
+          mapBridgeState.isNotEmpty) {
         for (var item in mapBridgeState.entries) {
           dynamic value = removePage.get(item.key, null);
           if (value != null) {
@@ -148,7 +150,8 @@ class TabScope {
       }
     }
     if (viewPage.needUpdateOnActive || (removePage != null && removePage.getParentUpdate())) {
-      if(forwardState == false){ //Можно накосячить с обновлениями, что бы багов небыло при передачи обратно состояния
+      if (forwardState == false) {
+        //Можно накосячить с обновлениями, что бы багов небыло при передачи обратно состояния
         DynamicPageUtil.loadData(viewPage);
       }
     }
@@ -214,20 +217,3 @@ class _TabWrapState extends State<TabWrap> {
     );
   }
 }
-
-/*BottomNavigationBarItem(
-            icon: Badge(
-              position: BadgePosition.topEnd(top: 0, end: -22),
-              shape: BadgeShape.square,
-              borderRadius: BorderRadius.circular(10),
-              badgeContent: AppStore.connect(
-                  "",
-                  (store, def) => Text(
-                        store != null ? store.get("cart", '0') : def,
-                        style: const TextStyle(color: Colors.white, fontSize: 8),
-                      ),
-                  defaultValue: '0'),
-              child: const Icon(Icons.business),
-            ),
-            label: 'Организация',
-          ),*/

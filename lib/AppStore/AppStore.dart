@@ -14,7 +14,11 @@ class AppStore {
   static bool isDebug = true;
   static Cache? cache;
   static String host = "https://jamsys.ru:8443";
+  static String promo = "/project/to-do/promo";
   static String ws = "ws://jamsys.ru:8081";
+  static String version = "1";
+
+  static bool firstStart = true;
 
   static void fullDebug(dynamic data){
     if(isDebug) {
@@ -36,7 +40,7 @@ class AppStore {
   }
 
   static void updateRequestHeader(){
-    String decoded = base64.encode(utf8.encode("PersonKey:$_personKey"));
+    String decoded = base64.encode(utf8.encode("PersonKey_$version:$_personKey"));
     requestHeader.addAll({
       'Authorization': "Basic $decoded"
     });
