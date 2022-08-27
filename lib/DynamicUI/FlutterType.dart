@@ -1248,6 +1248,7 @@ class FlutterType {
       next: DynamicUI.def(parsedJson, 'next', const Icon(Icons.arrow_forward), appStoreData, index, originKeyData),
       done: DynamicUI.def(parsedJson, 'done', const Text('Готово', style: TextStyle(fontWeight: FontWeight.w600)), appStoreData, index, originKeyData),
       curve: Curves.fastLinearToSlowEaseIn,
+      animationDuration: 1000,
       controlsMargin: const EdgeInsets.all(16),
       controlsPadding:  const EdgeInsets.all(12.0),
       dotsDecorator: const DotsDecorator(

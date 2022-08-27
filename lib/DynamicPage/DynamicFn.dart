@@ -225,6 +225,8 @@ class DynamicFn {
     }
     //AppStore.print("openDialog: ${data}");
     showDialog(
+      useSafeArea: false,
+      barrierDismissible: false,
       context: appStoreData.getCtx()!,
       builder: (context) => DynamicPage.fromMap(data),
     );
