@@ -4,7 +4,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myTODO/DynamicPage/DynamicDirective.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../AppMetric.dart';
@@ -20,6 +19,7 @@ import 'DynamicPage.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:flutter_share/flutter_share.dart';
 
 class DynamicFn {
   static int delay = 350;
@@ -310,8 +310,10 @@ class DynamicFn {
     alert(appStoreData, {"data": "Скопировано в буфер обмена"});
   }
 
-  static dynamic share(AppStoreData appStoreData, dynamic data) {
-    Share.share(data["data"], subject: 'Поделиться');
+  static dynamic share(AppStoreData appStoreData, dynamic data) async {
+    final box = appStoreData.getCtx()?.findRenderObject() as RenderBox?;
+    //await Share.share(data["data"], subject: 'Поделиться', sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
+    await FlutterShare.share(title: 'Поделиться',text: data["data"]);
     //Clipboard.setData(ClipboardData(text: data["data"]));
   }
 
