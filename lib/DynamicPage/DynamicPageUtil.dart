@@ -7,6 +7,7 @@ import '../AppStore/AppStoreData.dart';
 import 'package:flutter/material.dart';
 import '../Cache.dart';
 import '../Util.dart';
+import 'DynamicFn.dart';
 import 'DynamicPage.dart';
 import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/page/ErrorPageJsonObject.dart';
@@ -72,8 +73,10 @@ class DynamicPageUtil {
         String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
         if (cachedDataPage != null) {
           DynamicPageUtil.dataUpdate(jsonDecode(cachedDataPage), appStoreData, native: false);
+          DynamicFn.alert(appStoreData, {"data": "Локальная версия"});
+        } else {
+          dataUpdate(ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString()), appStoreData);
         }
-        //dataUpdate(ErrorPageJsonObject.getPage("500", "YAHO", e.toString()), appStoreData);
       } else {
         dataUpdate(ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString()), appStoreData);
       }

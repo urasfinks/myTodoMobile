@@ -489,14 +489,15 @@ class DynamicFn {
     //Я больше склонен, что бы первично отображалась всё таки актуальная информация с сервера
     //Но если через секунду содержимое не загружено, поднимать из кеша и отображать
     Future.delayed(const Duration(milliseconds: 1000), () {
-      print("Go1");
+      //print("Go1");
       if (appStoreData.nowDownloadContent == true) {
-        print("Go2");
+        //print("Go2");
         String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
         if (cachedDataPage != null) {
           //print("Go3");
           DynamicPageUtil.dataUpdate(jsonDecode(cachedDataPage), appStoreData, native: false);
           //print("cachedDataPage: ${cachedDataPage}");
+          DynamicFn.alert(appStoreData, {"data": "Локальная версия"});
         }
       }
     });
