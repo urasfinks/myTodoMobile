@@ -25,7 +25,6 @@ class DynamicPageUtil {
   }
 
   static Future<void> loadData(AppStoreData appStoreData) async {
-
     //return;
 
     appStoreData.nowDownloadContent = true;
@@ -48,12 +47,12 @@ class DynamicPageUtil {
       //AppStore.fullDebug(response.body);
       if (response.statusCode == 200) {
         Map<String, dynamic> resp = jsonDecode(response.body);
-        if(resp["Cache"] != null && resp["Cache"] == true){
+        if (resp["Cache"] != null && resp["Cache"] == true) {
           Cache.getInstance().then((Cache cache) {
             cache.pageAdd(appStoreData.getWidgetData('url'), response.body);
           });
         }
-        if(resp["AppMetricToken"] != null){
+        if (resp["AppMetricToken"] != null) {
           AppMetric().activate(resp["AppMetricToken"]);
         }
         dataUpdate(resp, appStoreData);
@@ -64,13 +63,20 @@ class DynamicPageUtil {
           final prefs = await SharedPreferences.getInstance();
           prefs.remove('key');
         }
-        dataUpdate(
-            ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
+        dataUpdate(ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
       }
     } catch (e, stacktrace) {
       AppMetric().exception(e, stacktrace);
       setErrorStyle(appStoreData);
-      dataUpdate(ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString()), appStoreData);
+      if (e.toString().contains("Failed host lookup:")) {
+        String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
+        if (cachedDataPage != null) {
+          DynamicPageUtil.dataUpdate(jsonDecode(cachedDataPage), appStoreData, native: false);
+        }
+        //dataUpdate(ErrorPageJsonObject.getPage("500", "YAHO", e.toString()), appStoreData);
+      } else {
+        dataUpdate(ErrorPageJsonObject.getPage("500", "Ошибка приложения", e.toString()), appStoreData);
+      }
     }
     appStoreData.nowDownloadContent = false;
   }
@@ -104,11 +110,10 @@ class DynamicPageUtil {
       Map<String, dynamic> template = data['Template'];
       bool needNextRoundBorderRadius = false;
       for (dynamic item in data[key]) {
-
         String ret;
         if (template.containsKey(item['template'])) {
           ret = Util.template(item['data'], data['Template'][item['template']]);
-          if(item['wrapTemplate'] != null && item['wrapTemplate'] != ""){
+          if (item['wrapTemplate'] != null && item['wrapTemplate'] != "") {
             item['data']["dataWrapped"] = ret;
             ret = Util.template(item['data'], data['Template'][item['wrapTemplate']]);
             //AppStore.fullDebug(ret);
@@ -172,7 +177,8 @@ class DynamicPageUtil {
       appStoreData.apply();
     }
 
-    if (native == true && data['SyncSocket'] != null &&
+    if (native == true &&
+        data['SyncSocket'] != null &&
         data['SyncSocket'] == true &&
         (appStoreData.getWidgetData("dataUID") as String).isNotEmpty) {
       appStoreData.setSyncSocket(true);

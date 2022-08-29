@@ -55,7 +55,7 @@ class WebSocketService {
   }
 
   _deferredSend() {
-    AppStore.debug("_deferredSend _connect: $_connect;");
+    //AppStore.debug("_deferredSend _connect: $_connect;");
     try {
       if (_connect == true) {
         while (listToSend.isNotEmpty) {
@@ -125,11 +125,11 @@ class WebSocketService {
       AppStore.debug("_onListen _subscribeListDataUID.isEmpty");
       return;
     }
-    AppStore.debug("_onListen 1");
+    //AppStore.debug("_onListen 1");
     if (!_connect) {
-      AppStore.debug("_onListen 2 _connectProcess: $_connectProcess");
+      //AppStore.debug("_onListen 2 _connectProcess: $_connectProcess");
       if (!_connectProcess) {
-        AppStore.debug("_onListen 3");
+        //AppStore.debug("_onListen 3");
         _connectProcess = true;
         //AppStore.debug("Open connection: ${AppStore.getUriWebSocket()}");
         WebSocket.connect(AppStore.getUriWebSocket()).timeout(const Duration(seconds: 5)).then((ws) {

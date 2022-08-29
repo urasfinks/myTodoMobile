@@ -312,7 +312,7 @@ class AppStoreData {
 
   void initPage(DynamicPage widget, BuildContext context) {
     try {
-      //AppStore.print("initPage ${widget.url}; _build: ${_build}; compiledWidget: ${compiledWidget}; nowDownloadContent: ${nowDownloadContent}");
+      //AppStore.debug("initPage ${widget.url}; _build: ${_build}; compiledWidget: ${compiledWidget}; nowDownloadContent: ${nowDownloadContent}");
       if (_build == true || compiledWidget == null || nowDownloadContent == true) {
         //AppStore.print("initPage ${widget.url}");
         setOnIndexRevisionError(() {

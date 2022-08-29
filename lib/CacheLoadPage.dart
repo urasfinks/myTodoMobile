@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'AppMetric.dart';
-import 'AppStore/AppStore.dart';
 
 class CacheLoadPage {
-  int max = 20;
+  int max = 100;
   List<CacheLoadPageItem> list = [];
 
   void add(String url, String data) {

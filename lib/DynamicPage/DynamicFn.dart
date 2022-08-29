@@ -81,8 +81,7 @@ class DynamicFn {
         listFn.add(parseNameAndArguments(item));
       }
       //AppStore.print(listFn);
-      Map<String, dynamic> originData =
-          _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+      Map<String, dynamic> originData = _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
       for (Map item in listFn) {
         List<dynamic> args = [appStoreData];
@@ -311,9 +310,8 @@ class DynamicFn {
   }
 
   static dynamic share(AppStoreData appStoreData, dynamic data) async {
-    final box = appStoreData.getCtx()?.findRenderObject() as RenderBox?;
     //await Share.share(data["data"], subject: 'Поделиться', sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
-    await FlutterShare.share(title: 'Поделиться',text: data["data"]);
+    await FlutterShare.share(title: 'Поделиться', text: data["data"]);
     //Clipboard.setData(ClipboardData(text: data["data"]));
   }
 
@@ -406,9 +404,12 @@ class DynamicFn {
   }
 
   static dynamic wrapVisibility(
-      Map<String, dynamic> data, AppStoreData appStoreData, int index, Map<String, dynamic> extraData) {
+      Map<String, dynamic> data, AppStoreData appStoreData, int index, Map<String, dynamic>? extraData) {
     dynamic w = DynamicUI.mainJson(data, appStoreData, index, 'Data');
-    if (extraData.containsKey("onVisibility") && extraData["onVisibility"] == true && extraData.containsKey("metric")) {
+    if (extraData != null &&
+        extraData.containsKey("onVisibility") &&
+        extraData["onVisibility"] == true &&
+        extraData.containsKey("metric")) {
       return VisibilityDetector(
         key: Key(extraData["metric"]),
         onVisibilityChanged: (visibilityInfo) {
@@ -431,7 +432,8 @@ class DynamicFn {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       List<Widget> ret = [];
       for (int i = 0; i < response['list'].length; i++) {
-        ret.add(wrapVisibility(response['list'][i], appStoreData, i, response['Data'][i]["data"]));
+        ret.add(
+            wrapVisibility(response['list'][i], appStoreData, i, response['Data'] != null ? response['Data'][i]["data"] : null));
       }
       return (int index) {
         return ret[index];
@@ -454,12 +456,13 @@ class DynamicFn {
     //print("FB resp length: ${appStoreData.getServerResponse().length}");
     //if (appStoreData.getServerResponse().isNotEmpty && appStoreData.nowDownloadContent == false) { //BEFORE
     if (appStoreData.getServerResponse().isNotEmpty) {
+      //AppStore.fullDebug(appStoreData.getServerResponse());
       //AFTER
       Map<String, dynamic> response = appStoreData.getServerResponse();
-      bool grid = appStoreData.getWidgetData("grid");
+      bool grid = appStoreData.getWidgetData("grid") ?? false;
       bool withoutListView = appStoreData.getWidgetData("WithoutListView") ?? false;
       Map cfg = appStoreData.getWidgetDataConfig({"reverse": false});
-      if(withoutListView == true){
+      if (withoutListView == true) {
         //print("WithoutListView: ${response['list']}");
         return getFutureList(appStoreData, data)(0);
       }
@@ -471,8 +474,8 @@ class DynamicFn {
             getFutureList(appStoreData, data),
             reverse: cfg["reverse"]);
       } else {
-        Map x = appStoreData.getWidgetDataConfig(
-            {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
+        Map x = appStoreData
+            .getWidgetDataConfig({"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
         return GridView.count(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           crossAxisCount: x["crossAxisCount"],
@@ -486,9 +489,9 @@ class DynamicFn {
     //Я больше склонен, что бы первично отображалась всё таки актуальная информация с сервера
     //Но если через секунду содержимое не загружено, поднимать из кеша и отображать
     Future.delayed(const Duration(milliseconds: 1000), () {
-      //print("Go1");
+      print("Go1");
       if (appStoreData.nowDownloadContent == true) {
-        //print("Go2");
+        print("Go2");
         String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
         if (cachedDataPage != null) {
           //print("Go3");
