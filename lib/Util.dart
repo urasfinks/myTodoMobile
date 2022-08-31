@@ -174,4 +174,8 @@ class Util {
     }
     return double.tryParse(s) != null;
   }
+
+  static int getTimestamp() {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
 }

@@ -33,20 +33,25 @@ class AppStoreData {
     _indexRevision = index;
   }
 
+  int inactiveTimestamp = 0;
+
   void didChangeAppLifecycleState(AppLifecycleState state) {
     dynamic refreshOnResume = getWidgetData("refreshOnResume");
     //AppStore.print("didChangeAppLifecycleState: ${widgetData}");
     /*
     * Если явно установлено, что надо страницу перезагружать при восстановлении
     * Либо если у страницы подняты Socket слушатели, в момент опускания приложения могли поступить обновления, надо их подтянуть перезагрузкой страницы
+    * Или время просто достаточно долгое (видел как разваливаются виджеты почемуто, но после оновления всё гуд)
     * */
+    bool veryLong = state == AppLifecycleState.resumed && inactiveTimestamp > 0 && Util.getTimestamp() - inactiveTimestamp > 300000;
     if (state == AppLifecycleState.resumed &&
-        ((refreshOnResume != null && refreshOnResume == true) || syncSocket == true)) {
+        ((refreshOnResume != null && refreshOnResume == true) || syncSocket == true || veryLong == true)) {
       onIndexRevisionError();
     }
     if (state == AppLifecycleState.detached ||
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.paused) {
+      inactiveTimestamp = Util.getTimestamp();
       WebSocketService().stop();
     }
     if (state == AppLifecycleState.resumed) {

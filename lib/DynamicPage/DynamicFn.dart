@@ -288,7 +288,7 @@ class DynamicFn {
   }
 
   static dynamic getTimestamp(AppStoreData appStoreData, dynamic data) {
-    return DateTime.now().millisecondsSinceEpoch;
+    return Util.getTimestamp();
   }
 
   static dynamic getMD5(AppStoreData appStoreData, dynamic data) {
