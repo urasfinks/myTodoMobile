@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Cache.dart';
+import '../TabWrap.dart';
 import 'AppStoreData.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:uuid/uuid.dart';
@@ -19,6 +20,8 @@ class AppStore {
   static String version = "1";
 
   static bool firstStart = false;
+
+  static TabWrapState? tabWrapState;
 
   static void fullDebug(dynamic data){
     if(isDebug) {

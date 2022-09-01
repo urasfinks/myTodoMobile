@@ -10,7 +10,7 @@ import '../AppMetric.dart';
 import '../AppStore/AppStore.dart';
 import '../AppStore/AppStoreData.dart';
 import '../DynamicUI/DynamicUI.dart';
-import '../TabWrap.dart';
+import '../TabScope.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -48,6 +48,7 @@ class DynamicFn {
       "copyToClipBoard": copyToClipBoard,
       "share": share,
       "promo": promo,
+      "selectTab": selectTab,
     };
     if (map.containsKey(value)) {
       return map[value];
@@ -81,7 +82,8 @@ class DynamicFn {
         listFn.add(parseNameAndArguments(item));
       }
       //AppStore.print(listFn);
-      Map<String, dynamic> originData = _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
+      Map<String, dynamic> originData =
+          _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
       for (Map item in listFn) {
         List<dynamic> args = [appStoreData];
@@ -315,6 +317,34 @@ class DynamicFn {
     //Clipboard.setData(ClipboardData(text: data["data"]));
   }
 
+  static dynamic openUri(AppStoreData? appStoreData, dynamic data) {
+    String uri = data["uri"];
+    AppStore.debug("openUri: ${data}");
+    List<String> s = uri.split("/");
+    s.remove(s.first);
+    s.remove(s.first);
+    s.remove(s.first);
+    if (s.isNotEmpty) {
+      String requestUri = "/${s.join("/")}";
+      if (requestUri != "/") {
+        selectTab(null, {"index": 0});
+        AppStoreData? asd = TabScope.getInstance().getLast();
+        if (asd != null) {
+          Map<String, dynamic> d = {};
+          d["url"] = requestUri;
+          openWindow(asd, d);
+        }
+      }
+    }
+  }
+
+  static dynamic selectTab(AppStoreData? appStoreData, dynamic data) {
+    int? index = FlutterTypeConstant.parseInt(data["index"]);
+    if (index != null) {
+      AppStore.tabWrapState?.selectTab(index);
+    }
+  }
+
   static dynamic setAppStore(AppStoreData appStoreData, dynamic data) {
     //AppStore.print("setAppStore: ${data}");
     dynamic now = appStoreData.get(data["key"], null);
@@ -432,8 +462,8 @@ class DynamicFn {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       List<Widget> ret = [];
       for (int i = 0; i < response['list'].length; i++) {
-        ret.add(
-            wrapVisibility(response['list'][i], appStoreData, i, response['Data'] != null ? response['Data'][i]["data"] : null));
+        ret.add(wrapVisibility(
+            response['list'][i], appStoreData, i, response['Data'] != null ? response['Data'][i]["data"] : null));
       }
       return (int index) {
         return ret[index];
@@ -474,8 +504,8 @@ class DynamicFn {
             getFutureList(appStoreData, data),
             reverse: cfg["reverse"]);
       } else {
-        Map x = appStoreData
-            .getWidgetDataConfig({"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
+        Map x = appStoreData.getWidgetDataConfig(
+            {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
         return GridView.count(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           crossAxisCount: x["crossAxisCount"],

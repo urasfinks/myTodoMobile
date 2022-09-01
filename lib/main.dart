@@ -4,29 +4,26 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:myTODO/DynamicPage/DynamicFn.dart';
 
 import 'AppStore/AppStore.dart';
 import 'Cache.dart';
+import 'TabScope.dart';
 import 'TabWrap.dart';
 import 'package:uni_links/uni_links.dart';
 
-
-
 void _handleIncomingLinks() {
     uriLinkStream.listen((Uri? uri) {
-      print('got uri 1: $uri');
+      DynamicFn.openUri(null, {"uri": uri.toString()});
     }, onError: (Object err) {
-      print('got err: $err');
+      AppStore.debug(err);
     });
 }
 
 Future<void> _handleInitialUri() async {
   final uri = await getInitialUri();
-  print('got uri 2: $uri');
+  DynamicFn.openUri(null, {"uri": uri.toString()});
 }
-
-
-
 
 Future<void> loadPref() async {
   AppStore.cache = await Cache.getInstance();

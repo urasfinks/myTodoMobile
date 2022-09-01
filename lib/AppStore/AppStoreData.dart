@@ -10,7 +10,7 @@ import '../DynamicPage/DynamicPageUtil.dart';
 import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/FlutterType.dart';
 import '../DynamicUI/FlutterTypeConstant.dart';
-import '../TabWrap.dart';
+import '../TabScope.dart';
 import '../Util.dart';
 import '../WebSocket.dart';
 import 'package:redux/redux.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:myTODO/AppStore/AppStore.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
-import 'package:myTODO/TabWrap.dart';
 import '../AppMetric.dart';
 import '../AppStore/AppStoreData.dart';
+import '../TabScope.dart';
 
 class DynamicPage extends StatefulWidget {
   final String title;
