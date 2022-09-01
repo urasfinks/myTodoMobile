@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,23 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'AppStore/AppStore.dart';
 import 'Cache.dart';
 import 'TabWrap.dart';
+import 'package:uni_links/uni_links.dart';
+
+
+
+void _handleIncomingLinks() {
+    uriLinkStream.listen((Uri? uri) {
+      print('got uri 1: $uri');
+    }, onError: (Object err) {
+      print('got err: $err');
+    });
+}
+
+Future<void> _handleInitialUri() async {
+  final uri = await getInitialUri();
+  print('got uri 2: $uri');
+}
+
 
 
 
@@ -26,6 +44,8 @@ Future<void> loadPref() async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
   await loadPref();
+  _handleIncomingLinks();
+  _handleInitialUri();
   runApp(const Center(child: LifecycleApp()));
 }
 
