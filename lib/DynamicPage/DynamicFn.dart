@@ -321,6 +321,9 @@ class DynamicFn {
     String uri = data["uri"];
     AppStore.debug("openUri: ${data}");
     if(uri != null){
+      if(uri.endsWith("/")){
+        uri = uri.substring(0, uri.length - 1);
+      }
       List<String> s = uri.split("/");
       s.remove(s.first);
       s.remove(s.first);
