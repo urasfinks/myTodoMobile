@@ -67,7 +67,13 @@ class AppStoreData {
 
   String getStringStoreState() {
     if (_map.isNotEmpty) {
-      return jsonEncode(_map);
+      Map<String, dynamic> mapRet = {};
+      for (var item in _map.entries) {
+        if(!item.key.startsWith("_")){
+          mapRet[item.key] = item.value;
+        }
+      }
+      return jsonEncode(mapRet);
     }
     return "";
   }
