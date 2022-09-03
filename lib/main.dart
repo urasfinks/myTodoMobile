@@ -14,7 +14,9 @@ import 'package:uni_links/uni_links.dart';
 
 void _handleIncomingLinks() {
     uriLinkStream.listen((Uri? uri) {
-      DynamicFn.openUri(null, {"uri": uri.toString()});
+      if(uri != null){
+        DynamicFn.openUri(null, {"uri": uri.toString()});
+      }
     }, onError: (Object err) {
       AppStore.debug(err);
     });
@@ -22,7 +24,9 @@ void _handleIncomingLinks() {
 
 Future<void> _handleInitialUri() async {
   final uri = await getInitialUri();
-  DynamicFn.openUri(null, {"uri": uri.toString()});
+  if(uri != null){
+    DynamicFn.openUri(null, {"uri": uri.toString()});
+  }
 }
 
 Future<void> loadPref() async {

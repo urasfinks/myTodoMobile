@@ -320,19 +320,21 @@ class DynamicFn {
   static dynamic openUri(AppStoreData? appStoreData, dynamic data) {
     String uri = data["uri"];
     AppStore.debug("openUri: ${data}");
-    List<String> s = uri.split("/");
-    s.remove(s.first);
-    s.remove(s.first);
-    s.remove(s.first);
-    if (s.isNotEmpty) {
-      String requestUri = "/${s.join("/")}";
-      if (requestUri != "/") {
-        selectTab(null, {"index": 0});
-        AppStoreData? asd = TabScope.getInstance().getLast();
-        if (asd != null) {
-          Map<String, dynamic> d = {};
-          d["url"] = requestUri;
-          openWindow(asd, d);
+    if(uri != null){
+      List<String> s = uri.split("/");
+      s.remove(s.first);
+      s.remove(s.first);
+      s.remove(s.first);
+      if (s.isNotEmpty) {
+        String requestUri = "/${s.join("/")}";
+        if (requestUri != "/") {
+          selectTab(null, {"index": 0});
+          AppStoreData? asd = TabScope.getInstance().getLast();
+          if (asd != null) {
+            Map<String, dynamic> d = {};
+            d["url"] = requestUri;
+            openWindow(asd, d);
+          }
         }
       }
     }

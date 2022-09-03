@@ -38,7 +38,7 @@
                 <data android:scheme="https" />
 
                 <!-- Include one or more domains that should be verified. -->
-                <data android:host="jamsys.ru" />
+                <data android:host="jamsys.ru" android:pathPattern="/project/to-do/.*" />
             </intent-filter>
         </activity>
        <activity
