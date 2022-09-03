@@ -43,7 +43,8 @@ class AppStoreData {
     * Либо если у страницы подняты Socket слушатели, в момент опускания приложения могли поступить обновления, надо их подтянуть перезагрузкой страницы
     * Или время просто достаточно долгое (видел как разваливаются виджеты почемуто, но после оновления всё гуд)
     * */
-    bool veryLong = state == AppLifecycleState.resumed && inactiveTimestamp > 0 && Util.getTimestamp() - inactiveTimestamp > 300000;
+    bool veryLong =
+        state == AppLifecycleState.resumed && inactiveTimestamp > 0 && Util.getTimestamp() - inactiveTimestamp > 300000;
     if (state == AppLifecycleState.resumed &&
         ((refreshOnResume != null && refreshOnResume == true) || syncSocket == true || veryLong == true)) {
       onIndexRevisionError();
@@ -67,13 +68,18 @@ class AppStoreData {
 
   String getStringStoreState() {
     if (_map.isNotEmpty) {
-      Map<String, dynamic> mapRet = {};
-      for (var item in _map.entries) {
-        if(!item.key.startsWith("_")){
-          mapRet[item.key] = item.value;
+      dynamic sendPrivateState = getWidgetData("sendPrivateState");
+      if (sendPrivateState != null && sendPrivateState == true) {
+        return jsonEncode(_map);
+      } else {
+        Map<String, dynamic> mapRet = {};
+        for (var item in _map.entries) {
+          if (!item.key.startsWith("_")) {
+            mapRet[item.key] = item.value;
+          }
         }
+        return jsonEncode(mapRet);
       }
-      return jsonEncode(mapRet);
     }
     return "";
   }

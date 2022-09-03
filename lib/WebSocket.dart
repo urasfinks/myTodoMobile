@@ -84,7 +84,7 @@ class WebSocketService {
         if (storeData != null) {
           storeData.setIndexRevision(jsonDecoded["Revision"]);
           DynamicFn.alert(storeData, {"data": "Сохранено"});
-          storeData.set("time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
+          storeData.set("_time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
           //AppStore.print("UPDATE_REVISION: ${storeData.getStringStoreState()}");
           storeData.apply();
         }
@@ -96,7 +96,7 @@ class WebSocketService {
           jsonDecoded, {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null, "Time": null, "Key": null})) {
         AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
         if (storeData != null) {
-          storeData.set("time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
+          storeData.set("_time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
           if (check(jsonDecoded["Data"], {"key": null, "value": null})) {
             storeData.set(jsonDecoded["Data"]["key"], jsonDecoded["Data"]["value"], notify: false);
           }

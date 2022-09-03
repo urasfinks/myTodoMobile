@@ -43,7 +43,7 @@ class DynamicPageUtil {
 
       appStoreData.clearState();
 
-      //AppStore.print(response.body);
+      //AppStore.fullDebug(response.body);
       AppStore.debug("Download complete");
       //AppStore.fullDebug(response.body);
       if (response.statusCode == 200) {
