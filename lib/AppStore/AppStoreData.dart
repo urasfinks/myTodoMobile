@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -370,7 +371,11 @@ class AppStoreData {
   }
 
   createDialog() {
-    Map config = getWidgetDataConfig({"padding": 160, "elevation": 0.0, "borderRadius": 20, "height": 70});
+    Map config = getWidgetDataConfig({"padding": 0, "elevation": 0.0, "borderRadius": 20, "height": -1});
+    bool? withoutListView = getWidgetData("WithoutListView");
+    if(withoutListView == null){
+      widgetData["WithoutListView"] = true;
+    }
     Widget ch;
     if (config["height"] == -1) {
       ch = _contentBuilder(wrapPage);
