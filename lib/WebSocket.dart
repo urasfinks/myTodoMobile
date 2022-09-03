@@ -78,7 +78,8 @@ class WebSocketService {
     _channel!.stream.listen((message) {
       AppStore.debug("Recive: $message");
       Map<String, dynamic> jsonDecoded = json.decode(message);
-      if (check(jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null, "Time": null, "Key": null})) {
+      if (check(
+          jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null, "Time": null, "Key": null})) {
         //AppStore().getByDataUID(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
         AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
         if (storeData != null) {
@@ -92,8 +93,8 @@ class WebSocketService {
       if (check(jsonDecoded, {"Action": "RELOAD_PAGE", "DataUID": null})) {
         AppStore().getByDataUID(jsonDecoded["DataUID"])?.onIndexRevisionError();
       }
-      if (check(
-          jsonDecoded, {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null, "Time": null, "Key": null})) {
+      if (check(jsonDecoded,
+          {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null, "Time": null, "Key": null})) {
         AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
         if (storeData != null) {
           storeData.set("_time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
@@ -132,19 +133,23 @@ class WebSocketService {
         //AppStore.debug("_onListen 3");
         _connectProcess = true;
         //AppStore.debug("Open connection: ${AppStore.getUriWebSocket()}");
-        WebSocket.connect(AppStore.getUriWebSocket()).timeout(const Duration(seconds: 5)).then((ws) {
-          try {
-            _channel = IOWebSocketChannel(ws);
-            AppStore.debug('WebSocket connect');
-            _connect = true;
-            _startListener();
-            _deferredSend();
-          } catch (e, stacktrace) {
-            //AppStore.debug('Error happened when opening a new websocket connection. ${e.toString()}');
-            AppMetric().exception(e, stacktrace);
-          }
-          _connectProcess = false;
-        });
+        try {
+          WebSocket.connect(AppStore.getUriWebSocket()).timeout(const Duration(seconds: 5)).then((ws) {
+            try {
+              _channel = IOWebSocketChannel(ws);
+              AppStore.debug('WebSocket connect');
+              _connect = true;
+              _startListener();
+              _deferredSend();
+            } catch (e, stacktrace) {
+              //AppStore.debug('Error happened when opening a new websocket connection. ${e.toString()}');
+              AppMetric().exception(e, stacktrace);
+            }
+            _connectProcess = false;
+          });
+        } catch (e) {
+          reconnect();
+        }
       } else {
         //Принудительно переводим статус остановки
         Future.delayed(const Duration(milliseconds: 5100), () {
