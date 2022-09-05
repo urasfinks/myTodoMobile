@@ -94,8 +94,7 @@ class _LifecycleAppState extends State<LifecycleApp> with WidgetsBindingObserver
           home: WillPopScope(
             onWillPop: () async {
               //Замена события
-              TabScope.getInstance().popHistory(null);
-              return false;
+              return !TabScope.getInstance().popHistory(null);
             },
             child: TabWrap(context),
           ),

@@ -86,7 +86,7 @@ class TabScope {
     return false;
   }
 
-  void popHistory(dynamic data) {
+  bool popHistory(dynamic data) {
     if (tabs[tabIndex].history.length > 1) {
       if (data != null && data["url"] != null) {
         AppStoreData? last;
@@ -116,7 +116,9 @@ class TabScope {
           checkReload(tabs[tabIndex].history.last, last);
         }
       }
+      return true;
     }
+    return false;
   }
 
   void checkReload(AppStoreData viewPage, AppStoreData? removePage) {
