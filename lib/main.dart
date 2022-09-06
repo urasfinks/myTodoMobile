@@ -47,7 +47,7 @@ void main() async {
   await loadPref();
   _handleIncomingLinks();
   _handleInitialUri();
-  runApp(const Center(child: LifecycleApp()));
+  runApp(const LifecycleApp());
 }
 
 class LifecycleApp extends StatefulWidget {

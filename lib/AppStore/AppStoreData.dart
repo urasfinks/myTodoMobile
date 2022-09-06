@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,9 +49,7 @@ class AppStoreData {
         ((refreshOnResume != null && refreshOnResume == true) || syncSocket == true || veryLong == true)) {
       onIndexRevisionError();
     }
-    if (state == AppLifecycleState.detached ||
-        state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.detached || state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
       inactiveTimestamp = Util.getTimestamp();
       WebSocketService().stop();
     }
@@ -247,8 +244,7 @@ class AppStoreData {
     onChange(key, notify);
   }
 
-  void inc(String key,
-      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") + step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -260,8 +256,7 @@ class AppStoreData {
     onChange(key, notify);
   }
 
-  void dec(String key,
-      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _map[key] = double.parse("${_map[key]}") - step;
     if (_map[key] < min) {
       _map[key] = min;
@@ -290,8 +285,7 @@ class AppStoreData {
     }
     if (notify == true) {
       if (syncSocket) {
-        WebSocketService()
-            .sendToServer(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
+        WebSocketService().sendToServer(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
       }
     }
   }
@@ -373,7 +367,7 @@ class AppStoreData {
   createDialog() {
     Map config = getWidgetDataConfig({"padding": 0, "elevation": 0.0, "borderRadius": 20, "height": -1});
     bool? withoutListView = getWidgetData("WithoutListView");
-    if(withoutListView == null){
+    if (withoutListView == null) {
       widgetData["WithoutListView"] = true;
     }
     Widget ch;
@@ -412,22 +406,18 @@ class AppStoreData {
               getWidgetData("backgroundColor"),
             ),
       appBar: _getAppBar(back, getWidgetData("title")),
-      body: SafeArea(
-        child: Center(
-          child: LiquidPullToRefresh(
-            color: FlutterTypeConstant.parseColor(
-              getWidgetData("pullToRefreshBackgroundColor"),
-            ),
-            showChildOpacityTransition: false,
-            springAnimationDurationInMilliseconds: 500,
-            animSpeedFactor: 2,
-            height: 90,
-            onRefresh: () async {
-              widget.refresh(this);
-            },
-            child: _contentBuilder(wrapPage),
-          ),
+      body: LiquidPullToRefresh(
+        color: FlutterTypeConstant.parseColor(
+          getWidgetData("pullToRefreshBackgroundColor"),
         ),
+        showChildOpacityTransition: false,
+        springAnimationDurationInMilliseconds: 500,
+        animSpeedFactor: 2,
+        height: 90,
+        onRefresh: () async {
+          widget.refresh(this);
+        },
+        child: _contentBuilder(wrapPage),
       ),
     );
     if (gradient == true) {
