@@ -19,7 +19,7 @@ import 'AppStore.dart';
 
 class AppStoreData {
   bool syncSocket;
-  final Store store;
+  final Store? store;
   final Map<String, dynamic> _map = {};
   int _indexRevision = 0;
 
@@ -292,7 +292,7 @@ class AppStoreData {
 
   void apply() {
     //AppStore.print("apply");
-    store.dispatch(null);
+    store!.dispatch(null);
   }
 
   void destroy() {

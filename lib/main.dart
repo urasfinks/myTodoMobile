@@ -8,6 +8,7 @@ import 'package:myTODO/DynamicPage/DynamicFn.dart';
 
 import 'AppStore/AppStore.dart';
 import 'Cache.dart';
+import 'SliversApp.dart';
 import 'TabScope.dart';
 import 'TabWrap.dart';
 import 'package:uni_links/uni_links.dart';
@@ -48,6 +49,7 @@ void main() async {
   _handleIncomingLinks();
   _handleInitialUri();
   runApp(const LifecycleApp());
+  //runApp(const SliversApp());
 }
 
 class LifecycleApp extends StatefulWidget {

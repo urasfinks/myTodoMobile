@@ -9,9 +9,15 @@ import 'package:myTODO/DynamicUI/FlutterTypeConstant.dart';
 import 'dart:developer' as developer;
 
 import 'AppMetric.dart';
+import 'AppStore/AppStoreData.dart';
+import 'SliversApp.dart';
 
 class Util {
-  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
+  static dynamic getListView(AppStoreData appStoreData, ScrollPhysics physics,{bool reverse = false}) {
+    return ShrinkWrapSlivers(appStoreData);
+  }
+
+  static ListView getListView2(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
       {bool reverse = false}) {
     //AppStore.print("SEPARATED: ${separated}");
     if (separated == true) {

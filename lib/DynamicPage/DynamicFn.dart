@@ -360,7 +360,14 @@ class DynamicFn {
   static dynamic getAppStore(AppStoreData appStoreData, dynamic data) {
     //AppStore.print("getAppStore: ${data}");
     //AppStore.print("return getAppStore: ${appStoreData.get(data["key"], data["defaultValue"])}");
-    return appStoreData.get(data["key"], data["defaultValue"]);
+    if(data != null){
+      Map x = data;
+      if(x.containsKey("key")){
+        return appStoreData.get(data["key"], data["defaultValue"]);
+      }
+      return data["defaultValue"];
+    }
+    return null;
   }
 
   static dynamic appStoreOperator(AppStoreData appStoreData, dynamic data) {
@@ -438,8 +445,7 @@ class DynamicFn {
     //print("IMAGE: ${image}");
   }
 
-  static dynamic wrapVisibility(
-      Map<String, dynamic> data, AppStoreData appStoreData, int index, Map<String, dynamic>? extraData) {
+  static dynamic wrapVisibility(Map<String, dynamic> data, AppStoreData appStoreData, int index, Map<String, dynamic>? extraData) {
     dynamic w = DynamicUI.mainJson(data, appStoreData, index, 'Data');
     if (extraData != null &&
         extraData.containsKey("onVisibility") &&
@@ -461,14 +467,13 @@ class DynamicFn {
     return w;
   }
 
-  static Widget Function(int index) getFutureList(AppStoreData appStoreData, dynamic data) {
+  static Widget Function(int index) getFutureList(AppStoreData appStoreData) {
     //print("getFutureList");
     if (appStoreData.getServerResponse().isNotEmpty) {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       List<Widget> ret = [];
       for (int i = 0; i < response['list'].length; i++) {
-        ret.add(wrapVisibility(
-            response['list'][i], appStoreData, i, response['Data'] != null ? response['Data'][i]["data"] : null));
+        ret.add(wrapVisibility(response['list'][i], appStoreData, i, response['Data'] != null ? response['Data'][i]["data"] : null));
       }
       return (int index) {
         return ret[index];
@@ -499,15 +504,14 @@ class DynamicFn {
       Map cfg = appStoreData.getWidgetDataConfig({"reverse": false});
       if (withoutListView == true) {
         //print("WithoutListView: ${response['list']}");
-        return getFutureList(appStoreData, data)(0);
+        return getFutureList(appStoreData)(0);
       }
       if (grid == false) {
         return Util.getListView(
-            appStoreData.getWidgetData("separated"),
+            appStoreData,
             const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            response['list'].length,
-            getFutureList(appStoreData, data),
-            reverse: cfg["reverse"]);
+            reverse: cfg["reverse"]
+        );
       } else {
         Map x = appStoreData.getWidgetDataConfig(
             {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
@@ -517,7 +521,7 @@ class DynamicFn {
           childAspectRatio: x["childAspectRatio"],
           mainAxisSpacing: x["mainAxisSpacing"],
           crossAxisSpacing: x["crossAxisSpacing"],
-          children: List.generate(response['list'].length, getFutureList(appStoreData, data)),
+          children: List.generate(response['list'].length, getFutureList(appStoreData)),
         );
       }
     }

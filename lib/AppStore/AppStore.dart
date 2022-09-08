@@ -12,7 +12,7 @@ import 'dart:developer';
 
 class AppStore {
 
-  static bool isDebug = false;
+  static bool isDebug = true;
   static Cache? cache;
   static String host = "https://jamsys.ru:8443";
   static String promo = "/project/to-do/promo";
@@ -95,14 +95,18 @@ class AppStore {
 
   static dynamic connect(AppStoreData appStoreData, Widget Function(dynamic defaultValue) builder,
       {defaultValue = ""}) {
-    //AppStore.print("connect");
-    return StoreConnector<AppStore, AppStoreData>(
-      converter: (store) => appStoreData,
+    AppStore.debug("connect");
+    /*return StoreConnector<AppStore, AppStoreData>(
+      converter: (store){
+        //print("Coverter: ${store}");
+        return appStoreData;
+      },
       builder: (context, state) {
-        //AppStore.print("Build StoreConnector: ${state}");
+        //AppStore.debug("Build StoreConnector: ${state} ${context}");
         return Function.apply(builder, [defaultValue]);
       },
-    );
+    );*/
+    return Function.apply(builder, [defaultValue]);
   }
 
   final Map<BuildContext, AppStoreData> _map = {};

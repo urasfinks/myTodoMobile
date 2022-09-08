@@ -31,34 +31,32 @@ class TabWrapState extends State<TabWrap> {
     AppStore.tabWrapState = this;
     int lastClick = DateTime.now().millisecondsSinceEpoch;
 
-    CupertinoTabBar cupertinoTabBar = CupertinoTabBar(
-      onTap: (index) {
-        int x = DateTime.now().millisecondsSinceEpoch;
-        if (x - lastClick < 200) {
-          //NICE!) IT's Double Tap!)
-          TabScope.getInstance().popHistory({"url": ""});
-        }
-        lastClick = x;
-        _tabScope.setTabIndex(index);
-      },
-      backgroundColor: FlutterTypeConstant.parseColor("#fafafa"),
-      activeColor: Colors.blue[600],
-      border: const Border(),
-      items: const [
-        BottomNavigationBarItem(
-          label: 'Главная',
-          icon: Icon(Icons.dashboard),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle),
-          label: 'Аккаунт',
-        ),
-      ],
-    );
-
     return CupertinoTabScaffold(
       controller: CupertinoTabController(initialIndex: _tabScope.tabIndex),
-      tabBar: cupertinoTabBar,
+      tabBar: CupertinoTabBar(
+        onTap: (index) {
+          int x = DateTime.now().millisecondsSinceEpoch;
+          if (x - lastClick < 200) {
+            //NICE!) IT's Double Tap!)
+            TabScope.getInstance().popHistory({"url": ""});
+          }
+          lastClick = x;
+          _tabScope.setTabIndex(index);
+        },
+        backgroundColor: FlutterTypeConstant.parseColor("#fafafa"),
+        activeColor: Colors.blue[600],
+        border: const Border(),
+        items: const [
+          BottomNavigationBarItem(
+            label: 'Главная',
+            icon: Icon(Icons.dashboard),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Аккаунт',
+          ),
+        ],
+      ),
       tabBuilder: (context, index) {
         return CupertinoTabView(
           builder: (context) {
