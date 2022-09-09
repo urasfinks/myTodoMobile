@@ -6,8 +6,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
 
-import 'AppStore/AppStore.dart';
+import 'AppStore/GlobalData.dart';
 import 'Cache.dart';
+import 'SliversApp.dart';
 import 'TabScope.dart';
 import 'TabWrap.dart';
 import 'package:uni_links/uni_links.dart';
@@ -18,7 +19,7 @@ void _handleIncomingLinks() {
         DynamicFn.openUri(null, {"uri": uri.toString()});
       }
     }, onError: (Object err) {
-      AppStore.debug(err);
+      GlobalData.debug(err);
     });
 }
 
@@ -30,15 +31,15 @@ Future<void> _handleInitialUri() async {
 }
 
 Future<void> loadPref() async {
-  AppStore.cache = await Cache.getInstance();
+  GlobalData.cache = await Cache.getInstance();
 
   //AppStore.cache.remove('key');
-  final String? key = AppStore.cache?.get('key');
+  final String? key = GlobalData.cache?.get('key');
   if (key == null || "" == key) {
-    AppStore.firstStart = true;
-    await AppStore.registerPerson();
+    GlobalData.firstStart = true;
+    await GlobalData.registerPerson();
   } else {
-    AppStore.setPersonKey(key);
+    GlobalData.setPersonKey(key);
   }
 }
 
@@ -47,7 +48,8 @@ void main() async {
   await loadPref();
   _handleIncomingLinks();
   _handleInitialUri();
-  runApp(const Center(child: LifecycleApp()));
+  runApp(const LifecycleApp());
+  //runApp(const SliversApp());
 }
 
 class LifecycleApp extends StatefulWidget {
@@ -78,26 +80,23 @@ class _LifecycleAppState extends State<LifecycleApp> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider(
-      store: AppStore.store,
-      child: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: MaterialApp(
-          navigatorObservers: [ClearFocusOnPush()],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          debugShowCheckedModeBanner: false,
-          home: WillPopScope(
-            onWillPop: () async {
-              //Замена события
-              return !TabScope.getInstance().popHistory(null);
-            },
-            child: TabWrap(context),
-          ),
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: MaterialApp(
+        navigatorObservers: [ClearFocusOnPush()],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        debugShowCheckedModeBanner: false,
+        home: WillPopScope(
+          onWillPop: () async {
+            //Замена события
+            return !TabScope.getInstance().popHistory(null);
+          },
+          child: TabWrap(context),
         ),
       ),
     );
@@ -107,7 +106,7 @@ class _LifecycleAppState extends State<LifecycleApp> with WidgetsBindingObserver
 void testCacheRemove() async {
   for (int i = 0; i < 25; i++) {
     await Future.delayed(const Duration(milliseconds: 1000), () {});
-    AppStore.cache?.pageAdd("p_$i", "0");
+    GlobalData.cache?.pageAdd("p_$i", "0");
   }
 }
 

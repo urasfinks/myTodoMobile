@@ -1,4 +1,4 @@
-import 'package:myTODO/AppStore/AppStore.dart';
+import 'package:myTODO/AppStore/GlobalData.dart';
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 
 class Ex {
@@ -26,15 +26,15 @@ class AppMetric {
   activate(String token) {
     if (_connect == false) {
       AppMetrica.runZoneGuarded(() {
-        AppMetrica.activate(AppMetricaConfig(token, logs: AppStore.isDebug));
+        AppMetrica.activate(AppMetricaConfig(token, logs: GlobalData.isDebug));
         _connect = true;
       });
     }
   }
 
   exception(dynamic e, dynamic stacktrace) async {
-    AppStore.debug(e);
-    AppStore.debug(stacktrace);
+    GlobalData.debug(e);
+    GlobalData.debug(stacktrace);
     listException.add(Ex(e, stacktrace));
     if (listException.length > maxStack) {
       listException.remove(listException.first);
@@ -64,8 +64,8 @@ class AppMetric {
           AppMetricaErrorDescription.fromObjectAndStackTrace(s.e, s.stacktrace),
         );
       } catch (e, stacktrace) {
-        AppStore.debug(e);
-        AppStore.debug(stacktrace);
+        GlobalData.debug(e);
+        GlobalData.debug(stacktrace);
       }
       if (count > 100) {
         break;
@@ -81,8 +81,8 @@ class AppMetric {
       try {
         AppMetrica.reportEvent(s);
       } catch (e, stacktrace) {
-        AppStore.debug(e);
-        AppStore.debug(stacktrace);
+        GlobalData.debug(e);
+        GlobalData.debug(stacktrace);
       }
       if (count > 100) {
         break;

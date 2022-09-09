@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:myTODO/AppStore/AppStore.dart';
+import 'package:myTODO/AppStore/GlobalData.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -8,7 +8,8 @@ import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 
 import 'AppMetric.dart';
-import 'AppStore/AppStoreData.dart';
+import 'AppStore/PageData.dart';
+import 'AppStore/ListPageData.dart';
 
 class WebSocketService {
   static final WebSocketService _singleton = WebSocketService._internal();
@@ -26,7 +27,7 @@ class WebSocketService {
 
   void subscribe(String dataUID) {
     if (dataUID != null && dataUID.isNotEmpty) {
-      AppStore.debug("Subscribe: $dataUID");
+      GlobalData.debug("Subscribe: $dataUID");
       if (!_subscribeListDataUID.contains(dataUID)) {
         _subscribeListDataUID.add(dataUID);
         sendToServer(dataUID, "SUBSCRIBE");
@@ -45,11 +46,11 @@ class WebSocketService {
 
   sendToServer(String dataUID, String action, {dynamic data}) {
     String toSend = json.encode({"DataUID": dataUID, "Action": action, if (data != null) "Data": data});
-    AppStore.debug("prepare sendToServer: $toSend");
+    GlobalData.debug("prepare sendToServer: $toSend");
     if (_subscribeListDataUID.contains(dataUID)) {
       listToSend.add(toSend);
     } else {
-      AppStore.debug("prepare sendToServer not fount $dataUID");
+      GlobalData.debug("prepare sendToServer not fount $dataUID");
     }
     _deferredSend();
   }
@@ -61,7 +62,7 @@ class WebSocketService {
         while (listToSend.isNotEmpty) {
           String data = listToSend.last;
           if (_connect == true && _channel != null) {
-            AppStore.debug("Send to WebSocket: $data");
+            GlobalData.debug("Send to WebSocket: $data");
             _channel!.sink.add(data);
             listToSend.removeLast();
           } else {
@@ -76,30 +77,30 @@ class WebSocketService {
 
   _startListener() {
     _channel!.stream.listen((message) {
-      AppStore.debug("Recive: $message");
+      GlobalData.debug("Recive: $message");
       Map<String, dynamic> jsonDecoded = json.decode(message);
       if (check(
           jsonDecoded, {"Action": "UPDATE_REVISION", "Revision": null, "DataUID": null, "Time": null, "Key": null})) {
         //AppStore().getByDataUID(jsonDecoded["DataUID"])?.setIndexRevision(jsonDecoded["Revision"]);
-        AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
+        PageData? storeData = ListPageData().getByDataUID(jsonDecoded["DataUID"]);
         if (storeData != null) {
           storeData.setIndexRevision(jsonDecoded["Revision"]);
           DynamicFn.alert(storeData, {"data": "Сохранено"});
-          storeData.set("_time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
+          storeData.pageDataState.set("_time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
           //AppStore.print("UPDATE_REVISION: ${storeData.getStringStoreState()}");
           storeData.apply();
         }
       }
       if (check(jsonDecoded, {"Action": "RELOAD_PAGE", "DataUID": null})) {
-        AppStore().getByDataUID(jsonDecoded["DataUID"])?.onIndexRevisionError();
+        ListPageData().getByDataUID(jsonDecoded["DataUID"])?.onIndexRevisionError();
       }
       if (check(jsonDecoded,
           {"Action": "UPDATE_STATE", "Revision": null, "DataUID": null, "Data": null, "Time": null, "Key": null})) {
-        AppStoreData? storeData = AppStore().getByDataUID(jsonDecoded["DataUID"]);
+        PageData? storeData = ListPageData().getByDataUID(jsonDecoded["DataUID"]);
         if (storeData != null) {
-          storeData.set("_time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
+          storeData.pageDataState.set("_time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
           if (check(jsonDecoded["Data"], {"key": null, "value": null})) {
-            storeData.set(jsonDecoded["Data"]["key"], jsonDecoded["Data"]["value"], notify: false);
+            storeData.pageDataState.set(jsonDecoded["Data"]["key"], jsonDecoded["Data"]["value"], notify: false);
           }
           //AppStore.print("UPDATE_STATE: ${storeData.getStringStoreState()}");
           storeData.apply();
@@ -107,7 +108,7 @@ class WebSocketService {
         }
       }
     }, onDone: () {
-      AppStore.debug("Socket Done");
+      GlobalData.debug("Socket Done");
       _connect = false;
       if (_subscribeListDataUID.isNotEmpty && _isStop == false) {
         reconnect();
@@ -123,7 +124,7 @@ class WebSocketService {
 
   _onListen() {
     if (_subscribeListDataUID.isEmpty) {
-      AppStore.debug("_onListen _subscribeListDataUID.isEmpty");
+      GlobalData.debug("_onListen _subscribeListDataUID.isEmpty");
       return;
     }
     //AppStore.debug("_onListen 1");
@@ -134,10 +135,10 @@ class WebSocketService {
         _connectProcess = true;
         //AppStore.debug("Open connection: ${AppStore.getUriWebSocket()}");
         try {
-          WebSocket.connect(AppStore.getUriWebSocket()).timeout(const Duration(seconds: 5)).then((ws) {
+          WebSocket.connect(GlobalData.getUriWebSocket()).timeout(const Duration(seconds: 5)).then((ws) {
             try {
               _channel = IOWebSocketChannel(ws);
-              AppStore.debug('WebSocket connect');
+              GlobalData.debug('WebSocket connect');
               _connect = true;
               _startListener();
               _deferredSend();
@@ -160,7 +161,7 @@ class WebSocketService {
         });
       }
     } else {
-      AppStore.debug("Pass becouse connect = true");
+      GlobalData.debug("Pass becouse connect = true");
     }
   }
 
@@ -177,7 +178,7 @@ class WebSocketService {
   void reconnect() async {
     await Future.delayed(Duration(milliseconds: delay), () {});
     if (_connect == false) {
-      AppStore.debug("Reconnect WebSocket");
+      GlobalData.debug("Reconnect WebSocket");
       try {
         if (_channel != null) {
           _channel!.sink.close(status.goingAway);
@@ -210,7 +211,7 @@ class WebSocketService {
   }
 
   void start() {
-    AppStore.debug("Start WebSocket");
+    GlobalData.debug("Start WebSocket");
     _isStop = false;
     _onListen();
     _restoreSubscribe();
@@ -219,7 +220,7 @@ class WebSocketService {
   bool _isStop = false;
 
   void stop() {
-    AppStore.debug("Stop WebSocket; connect: $_connect");
+    GlobalData.debug("Stop WebSocket; connect: $_connect");
     _isStop = true;
     if (_channel != null && _connect == true) {
       _channel!.sink.close(status.goingAway);
@@ -228,6 +229,6 @@ class WebSocketService {
   }
 
   void checkConnection() {
-    AppStore.debug("Connect: $_connect; ConnectProcess: $_connectProcess; Chanel: $_channel");
+    GlobalData.debug("Connect: $_connect; ConnectProcess: $_connectProcess; Chanel: $_channel");
   }
 }

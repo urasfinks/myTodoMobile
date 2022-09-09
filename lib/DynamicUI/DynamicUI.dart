@@ -2,28 +2,28 @@ import 'dart:core';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:myTODO/AppStore/AppStoreData.dart';
+import 'package:myTODO/AppStore/PageData.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
+import 'package:myTODO/DynamicUI/sw/SWSizeBox.dart';
 import 'FlutterType.dart';
 
 class DynamicUI {
-  static Widget main(String jsonData, AppStoreData appStoreData, int index, String originKeyData) {
+  static Widget main(String jsonData, PageData appStoreData, int index, String originKeyData) {
     if (jsonData.isEmpty) {
-      return FlutterType.defaultWidget;
+      return SWSizeBox(null, appStoreData, index, originKeyData);
     }
     final parsedJson = jsonDecode(jsonData);
-    return def(parsedJson, null, FlutterType.defaultWidget, appStoreData, index, originKeyData);
+    return def(parsedJson, null, SWSizeBox(null, appStoreData, index, originKeyData), appStoreData, index, originKeyData);
   }
 
-  static dynamic mainJson(Map<String, dynamic> jsonData, AppStoreData appStoreData, int index, String originKeyData) {
+  static dynamic mainJson(Map<String, dynamic> jsonData, PageData appStoreData, int index, String originKeyData) {
     if (jsonData.isEmpty) {
-      return FlutterType.defaultWidget;
+      return SWSizeBox(jsonData, appStoreData, index, originKeyData);
     }
-    return def(jsonData, null, FlutterType.defaultWidget, appStoreData, index, originKeyData);
+    return def(jsonData, null, SWSizeBox(jsonData, appStoreData, index, originKeyData), appStoreData, index, originKeyData);
   }
 
-  static dynamic getByType(
-      String containsKey, map, dynamic def, AppStoreData appStoreData, int index, String? originKeyData) {
+  static dynamic getByType(String containsKey, map, dynamic def, PageData appStoreData, int index, String? originKeyData) {
     Map<String, Function> map1 = {
       "TextStyle": FlutterType.pTextStyle,
       "Column": FlutterType.pColumn,
@@ -85,48 +85,48 @@ class DynamicUI {
       "PageViewModel": FlutterType.pPageViewModel,
     };
     //AppStore.print("${[map, appStoreData, index, originKeyData]}");
-    return map1.containsKey(containsKey)
-        ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData])
-        : def;
+    return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData]) : def;
   }
 
-  static dynamic def(map, key, def, AppStoreData appStoreData, int index, String originKeyData) {
+  static dynamic def(map, key, def, PageData appStoreData, int index, String originKeyData) {
     dynamic ret;
     if (key != null) {
-      ret = map.containsKey(key) ? map[key] : def;
+      ret = (map != null && map.containsKey(key)) ? map[key] : def;
     } else {
       ret = map;
     }
-    if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
-      return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData, index, originKeyData);
-    }
-    //AppStore.print(ret);
-    if (DynamicFn.isTextFunction(ret)) {
-      return DynamicFn.evalTextFunction(ret, map, appStoreData, index, originKeyData);
+    if (map != null) {
+      if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
+        return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData, index, originKeyData);
+      }
+      //AppStore.print(ret);
+      if (DynamicFn.isTextFunction(ret)) {
+        return DynamicFn.evalTextFunction(ret, map, appStoreData, index, originKeyData);
+      }
     }
     return ret;
   }
 
-  static List<Widget> defList(parsedJson, String key, AppStoreData appStoreData, int index, String originKeyData) {
+  static List<Widget> defList(parsedJson, String key, PageData appStoreData, int index, String originKeyData) {
     List<Widget> list = [];
     dynamic l2 = def(parsedJson, key, [], appStoreData, index, originKeyData);
     if (l2 != null && l2.runtimeType.toString().contains("List")) {
       for (int i = 0; i < l2.length; i++) {
-        list.add(def(l2[i], null, FlutterType.defaultWidget, appStoreData, index, originKeyData));
+        list.add(def(l2[i], null, SWSizeBox(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData));
       }
     }
     return list;
   }
 
-  static List<PageViewModel> defListPageViewModel(parsedJson, String key, AppStoreData appStoreData, int index, String originKeyData) {
+  static List<PageViewModel> defListPageViewModel(
+      parsedJson, String key, PageData appStoreData, int index, String originKeyData) {
     List<PageViewModel> list = [];
     dynamic l2 = def(parsedJson, key, [], appStoreData, index, originKeyData);
     if (l2 != null && l2.runtimeType.toString().contains("List")) {
       for (int i = 0; i < l2.length; i++) {
-        list.add(def(l2[i], null, FlutterType.defaultWidget, appStoreData, index, originKeyData));
+        list.add(def(l2[i], null, SWSizeBox(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData));
       }
     }
     return list;
   }
-
 }

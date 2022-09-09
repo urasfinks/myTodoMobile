@@ -4,14 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:myTODO/AppStore/AppStore.dart';
+import 'package:myTODO/AppStore/GlobalData.dart';
 import 'package:myTODO/DynamicUI/FlutterTypeConstant.dart';
 import 'dart:developer' as developer;
 
 import 'AppMetric.dart';
+import 'AppStore/PageData.dart';
+import 'SliversApp.dart';
 
 class Util {
-  static ListView getListView(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
+  static dynamic getListView(PageData appStoreData, ScrollPhysics physics,{bool reverse = false}) {
+    return ShrinkWrapSlivers(appStoreData);
+  }
+
+  static ListView getListView2(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
       {bool reverse = false}) {
     //AppStore.print("SEPARATED: ${separated}");
     if (separated == true) {
@@ -96,7 +102,7 @@ class Util {
 
     request.files.add(http.MultipartFile('avatar', stream, length, filename: basename(image.path)));
 
-    request.headers.addAll(AppStore.requestHeader);
+    request.headers.addAll(GlobalData.requestHeader);
     return await request.send().then((response) async {
       //AppStore.print("RESPONSE: ${response}");
       /*response.stream.transform(utf8.decoder).listen((value) {

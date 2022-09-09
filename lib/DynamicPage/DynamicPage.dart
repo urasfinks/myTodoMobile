@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myTODO/AppStore/AppStore.dart';
+import 'package:myTODO/AppStore/GlobalData.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
 import '../AppMetric.dart';
-import '../AppStore/AppStoreData.dart';
+import '../AppStore/PageData.dart';
+import '../AppStore/ListPageData.dart';
 import '../TabScope.dart';
 
 class DynamicPage extends StatefulWidget {
@@ -109,7 +110,7 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  void refresh(AppStoreData appStoreData) {
+  void refresh(PageData appStoreData) {
     if (TabScope.getInstance().iamActivePage(appStoreData)) {
       //AppStore.print("DynamicPage.refresh now: ${url}");
       DynamicPageUtil.loadData(appStoreData);
@@ -121,14 +122,14 @@ class DynamicPage extends StatefulWidget {
 }
 
 class DynamicPageState extends State<DynamicPage> {
-  AppStoreData? saveStore;
+  PageData? saveStore;
 
   @override
   void dispose() {
     //AppStore.print("Dispose");
     if (saveStore != null) {
       TabScope.getInstance().onDestroyPage(saveStore!);
-      AppStore().remove(saveStore!);
+      ListPageData().remove(saveStore!);
     }
     super.dispose();
   }
@@ -136,7 +137,7 @@ class DynamicPageState extends State<DynamicPage> {
   @override
   Widget build(BuildContext context) {
     //AppStore.print("DynPage build");
-    AppStoreData appStoreData = AppStore.getStore(context);
+    PageData appStoreData = ListPageData().createPageData(context);
     appStoreData.setPageState(this);
     saveStore = appStoreData;
     appStoreData.initPage(widget, context);
