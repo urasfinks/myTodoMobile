@@ -6,7 +6,7 @@ import '../AppStore/PageData.dart';
 import '../AppStore/ListPageData.dart';
 import '../TabScope.dart';
 
-class DynamicPage extends StatefulWidget {
+class DynamicPageWidget extends StatefulWidget {
   final String title;
   final bool root;
   final String url;
@@ -25,7 +25,7 @@ class DynamicPage extends StatefulWidget {
   final dynamic config;
   final dynamic bridgeState;
 
-  const DynamicPage(
+  const DynamicPageWidget(
       {Key? key,
       required this.title,
       required this.url,
@@ -46,7 +46,7 @@ class DynamicPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<DynamicPage> createState() => DynamicPageState();
+  State<DynamicPageWidget> createState() => DynamicPageWidgetState();
 
   static fromMap(Map<String, dynamic>? data) {
     try {
@@ -76,7 +76,7 @@ class DynamicPage extends StatefulWidget {
         }
       }
 
-      DynamicPage ret = DynamicPage(
+      DynamicPageWidget ret = DynamicPageWidget(
         title: def['title'],
         url: def['url'],
         parentState: def['parentState'],
@@ -97,7 +97,7 @@ class DynamicPage extends StatefulWidget {
       return ret;
     } catch (e, stacktrace) {
       AppMetric().exception(e, stacktrace);
-      return DynamicPage.fromMap(
+      return DynamicPageWidget.fromMap(
         {
           "title": 'Ошибка ',
           "url": '/project/system/error',
@@ -110,37 +110,35 @@ class DynamicPage extends StatefulWidget {
     }
   }
 
-  void refresh(PageData appStoreData) {
-    if (TabScope.getInstance().iamActivePage(appStoreData)) {
-      //AppStore.print("DynamicPage.refresh now: ${url}");
-      DynamicPageUtil.loadData(appStoreData);
+  void load(PageData pageData) {
+    if (TabScope.getInstance().iamActivePage(pageData)) {
+      //GlobalData.debug("DynamicPage.refresh now: ${url}");
+      DynamicPageUtil.loadData(pageData);
     } else {
-      //AppStore.print("DynamicPage.refresh lazy: ${url}");
-      appStoreData.needUpdateOnActive = true;
+      //GlobalData.debug("DynamicPage.refresh lazy: ${url}");
+      pageData.needUpdateOnActive = true;
     }
   }
 }
 
-class DynamicPageState extends State<DynamicPage> {
-  PageData? saveStore;
+class DynamicPageWidgetState extends State<DynamicPageWidget> {
+  late PageData saveStore;
 
   @override
   void dispose() {
-    //AppStore.print("Dispose");
-    if (saveStore != null) {
-      TabScope.getInstance().onDestroyPage(saveStore!);
-      ListPageData().remove(saveStore!);
-    }
+    //GlobalData.debug("Dispose");
+    TabScope.getInstance().onDestroyPage(saveStore!);
+    ListPageData().remove(saveStore);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    //AppStore.print("DynPage build");
-    PageData appStoreData = ListPageData().createPageData(context);
-    appStoreData.setPageState(this);
-    saveStore = appStoreData;
-    appStoreData.initPage(widget, context);
-    return appStoreData.getCompiledWidget();
+    //GlobalData.debug("DynPage build");
+    PageData pageData = ListPageData().createPageData(context);
+    pageData.setPageState(this);
+    saveStore = pageData;
+    pageData.initPage(widget, context);
+    return pageData.getCompiledWidget();
   }
 }

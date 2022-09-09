@@ -12,7 +12,7 @@ import '../AppStore/PageData.dart';
 import '../AppStore/ListPageData.dart';
 import '../DynamicUI/DynamicUI.dart';
 import '../TabScope.dart';
-import '../DynamicUI/FlutterTypeConstant.dart';
+import '../DynamicUI/TypeParser.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../Util.dart';
@@ -75,14 +75,14 @@ class DynamicFn {
     //value = '=>getAppStore(getAppStoreDataTime)|timestampToDate(timestampToDateData)';
     String del = value.toString().startsWith("=>") ? "=>" : ":";
     localFunction() {
-      //AppStore.print("evalTextFunction: ${value}");
+      //GlobalData.debug("evalTextFunction: ${value}");
       List<String> exp = value.toString().split("|");
       exp[0] = exp[0].split(del)[1];
       List<dynamic> listFn = [];
       for (String item in exp) {
         listFn.add(parseNameAndArguments(item));
       }
-      //AppStore.print(listFn);
+      //GlobalData.debug(listFn);
       Map<String, dynamic> originData =
           _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
@@ -100,7 +100,7 @@ class DynamicFn {
             args.add(null);
           }
         }
-        //AppStore.print("args: $args");
+        //GlobalData.debug("args: $args");
         if (args[1] != null && args[1].runtimeType.toString().contains("Map<")) {
           Map f = args[1];
           if (f.containsKey("metric")) {
@@ -147,9 +147,9 @@ class DynamicFn {
   }
 
   static dynamic closeWindow(PageData appStoreData, dynamic data) {
-    //AppStore.print("DATA: ${data}");
+    //GlobalData.debug("DATA: ${data}");
     if (data != null && data["delay"] != null) {
-      Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {
+      Future.delayed(Duration(milliseconds: TypeParser.parseInt(data["delay"]) ?? delay), () {
         //Navigator.pop(appStoreData.getCtx()!);
         TabScope.getInstance().popHistory(data);
       });
@@ -176,7 +176,7 @@ class DynamicFn {
 
   static dynamic openWindow(PageData appStoreData, dynamic data) async {
     if (data["delay"] != null) {
-      await Future.delayed(Duration(milliseconds: FlutterTypeConstant.parseInt(data["delay"]) ?? delay), () {});
+      await Future.delayed(Duration(milliseconds: TypeParser.parseInt(data["delay"]) ?? delay), () {});
     }
     String st = appStoreData.pageDataState.getStringStoreState();
     if (st.isNotEmpty) {
@@ -191,7 +191,7 @@ class DynamicFn {
         lastPage.getCtx()!,
         CupertinoPageRoute(
           settings: RouteSettings(name: data["url"]),
-          builder: (context) => DynamicPage.fromMap(data),
+          builder: (context) => DynamicPageWidget.fromMap(data),
         ),
       );
     } else {
@@ -225,12 +225,12 @@ class DynamicFn {
     if (st.isNotEmpty) {
       data["parentState"] = st;
     }
-    //AppStore.print("openDialog: ${data}");
+    //GlobalData.debug("openDialog: ${data}");
     showDialog(
       useSafeArea: false,
       barrierDismissible: false,
       context: appStoreData.getCtx()!,
-      builder: (context) => DynamicPage.fromMap(data),
+      builder: (context) => DynamicPageWidget.fromMap(data),
     );
   }
 
@@ -272,7 +272,7 @@ class DynamicFn {
 
     SnackBarAction? action = config["action"] == true
         ? SnackBarAction(
-            textColor: FlutterTypeConstant.parseColor(config["actionColor"]),
+            textColor: TypeParser.parseColor(config["actionColor"]),
             label: config["actionTitle"],
             onPressed: DynamicFn.evalTextFunction(data['onPressed'], data, appStoreData, 0, 'no-origin-data'),
           )
@@ -281,8 +281,8 @@ class DynamicFn {
     ScaffoldMessenger.of(appStoreData.getCtx()!).showSnackBar(
       SnackBar(
         duration: Duration(milliseconds: config["duration"]),
-        content: Text(config["data"], style: TextStyle(color: FlutterTypeConstant.parseColor(config["color"]))),
-        backgroundColor: FlutterTypeConstant.parseColor(config["backgroundColor"]),
+        content: Text(config["data"], style: TextStyle(color: TypeParser.parseColor(config["color"]))),
+        backgroundColor: TypeParser.parseColor(config["backgroundColor"]),
         elevation: 0,
         behavior: SnackBarBehavior.floating,
         action: action,
@@ -345,22 +345,22 @@ class DynamicFn {
   }
 
   static dynamic selectTab(PageData? appStoreData, dynamic data) {
-    int? index = FlutterTypeConstant.parseInt(data["index"]);
+    int? index = TypeParser.parseInt(data["index"]);
     if (index != null) {
       GlobalData.tabWrapState?.selectTab(index);
     }
   }
 
   static dynamic setAppStore(PageData appStoreData, dynamic data) {
-    //AppStore.print("setAppStore: ${data}");
+    //GlobalData.debug("setAppStore: ${data}");
     dynamic now = appStoreData.pageDataState.get(data["key"], null);
     appStoreData.pageDataState.set(data["key"], data["value"] == now ? null : data["value"]);
     appStoreData.apply();
   }
 
   static dynamic getAppStore(PageData appStoreData, dynamic data) {
-    //AppStore.print("getAppStore: ${data}");
-    //AppStore.print("return getAppStore: ${appStoreData.get(data["key"], data["defaultValue"])}");
+    //GlobalData.debug("getAppStore: ${data}");
+    //GlobalData.debug("return getAppStore: ${appStoreData.get(data["key"], data["defaultValue"])}");
     if(data != null){
       Map x = data;
       if(x.containsKey("key")){
@@ -372,7 +372,7 @@ class DynamicFn {
   }
 
   static dynamic appStoreOperator(PageData appStoreData, dynamic data) {
-    //AppStore.print("appStoreOperator: ${data}");
+    //GlobalData.debug("appStoreOperator: ${data}");
     if (data["value"] != null) {
       dynamic value = appStoreData.pageDataState.get(data["key"], null);
       List x = Util.getListFromMapOrString(data["value"]);
@@ -412,7 +412,7 @@ class DynamicFn {
   }
 
   static dynamic openGallery(PageData appStoreData, dynamic data) async {
-    //AppStore.print("OPEN GALLERY");
+    //GlobalData.debug("OPEN GALLERY");
     var image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 600);
     if (image != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
@@ -494,8 +494,6 @@ class DynamicFn {
   }
 
   static Widget getFutureBuilder(PageData appStoreData, dynamic data) {
-    //print("FB resp length: ${appStoreData.getServerResponse().length}");
-    //if (appStoreData.getServerResponse().isNotEmpty && appStoreData.nowDownloadContent == false) { //BEFORE
     if (appStoreData.getServerResponse().isNotEmpty) {
       //AppStore.fullDebug(appStoreData.getServerResponse());
       //AFTER
@@ -544,8 +542,8 @@ class DynamicFn {
 
     return Center(
       child: CircularProgressIndicator(
-        backgroundColor: FlutterTypeConstant.parseColor(appStoreData.pageDataWidget.getWidgetData("progressIndicatorBackgroundColor")),
-        color: FlutterTypeConstant.parseColor(appStoreData.pageDataWidget.getWidgetData("progressIndicatorColor")),
+        backgroundColor: TypeParser.parseColor(appStoreData.pageDataWidget.getWidgetData("progressIndicatorBackgroundColor")),
+        color: TypeParser.parseColor(appStoreData.pageDataWidget.getWidgetData("progressIndicatorColor")),
       ),
     );
   }

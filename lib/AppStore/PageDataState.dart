@@ -44,7 +44,7 @@ class PageDataState {
   }
 
   void set(String key, dynamic value, {bool notify = true}) {
-    //AppStore.print("Set: $key = $value");
+    //GlobalData.debug("Set: $key = $value");
     _mapState[key] = value;
     pageData.onChange(key, notify);
   }

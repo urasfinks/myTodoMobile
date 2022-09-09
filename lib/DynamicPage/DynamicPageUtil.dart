@@ -20,11 +20,6 @@ import 'dart:async';
 class DynamicPageUtil {
   static int delay = 350; //Animation open new page!!!
 
-  static Future<void> loadDataTest(DynamicPage widget, PageData appStoreData) async {
-    await Future.delayed(Duration(milliseconds: delay), () {});
-    //dataUpdate(TextEditRowJsonObject.getPage(), appStoreData);
-  }
-
   static Future<void> loadData(PageData appStoreData) async {
     //return;
 
@@ -35,11 +30,6 @@ class DynamicPageUtil {
 
     if (!appStoreData.pageDataWidget.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
-    }
-    try{
-      throw Exception();
-    } catch(e, stacktrace){
-      print(stacktrace);
     }
     GlobalData.debug('Prepare download: ${appStoreData.pageDataWidget.getWidgetDates()}');
     try {
@@ -165,7 +155,7 @@ class DynamicPageUtil {
       appStoreData.setIndexRevisionWithoutReload(data['RevisionState']);
     }
     if (data['WidgetData'] != null && data['WidgetData'] != "") {
-      //AppStore.print("SET NEW WIDGET DATA(${data['WidgetData']})");
+      //GlobalData.debug("SET NEW WIDGET DATA(${data['WidgetData']})");
       appStoreData.pageDataWidget.addWidgetDataByMap(data['WidgetData']);
     }
 
@@ -195,7 +185,7 @@ class DynamicPageUtil {
 
     parseTemplate(data, "Data", "list");
     parseTemplate(data, "AppBarActions", "actions");
-    //AppStore.print(data);
+    //GlobalData.debug(data);
 
     /*Избежание рекурсивного переопредления _build статуса
      Поймал проблему, когда rebuild -> _build = true,

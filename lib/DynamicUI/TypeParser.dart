@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../AppMetric.dart';
 
-class FlutterTypeConstant {
+class TypeParser {
   static dynamic parseFontStyle(String? value) {
     if (value == null || value.trim() == '') {
       return null;

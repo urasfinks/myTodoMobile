@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../FlutterType.dart';
-import '../FlutterTypeConstant.dart';
+import '../TypeParser.dart';
 import 'SWSizeBox.dart';
 
 class SWExpanded extends StatelessWidget {
@@ -11,7 +11,7 @@ class SWExpanded extends StatelessWidget {
 
   SWExpanded(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = Expanded(
-      flex: FlutterTypeConstant.parseInt(
+      flex: TypeParser.parseInt(
         DynamicUI.def(parsedJson, 'flex', 1, appStoreData, index, originKeyData),
       )!,
       child: DynamicUI.def(parsedJson, 'child', SWSizeBox(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),

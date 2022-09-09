@@ -11,9 +11,10 @@ class ListPageData{
   final Map<BuildContext, PageData> _mapPage = {};
 
   PageData createPageData(BuildContext context, {bool syncSocket = false}) {
-    PageData ret = PageData();
-    _mapPage[context] = ret;
-    return ret;
+    if(!_mapPage.containsKey(context)){
+      _mapPage[context] = PageData();
+    }
+    return _mapPage[context]!;
   }
 
   List<PageData> getByKey(String key, String value) {

@@ -96,7 +96,7 @@ class _LifecycleAppState extends State<LifecycleApp> with WidgetsBindingObserver
             //Замена события
             return !TabScope.getInstance().popHistory(null);
           },
-          child: TabWrap(context),
+          child: const TabWrap(),
         ),
       ),
     );

@@ -1,9 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
-
 import 'AppStore/GlobalData.dart';
 import 'AppStore/PageData.dart';
 import 'DynamicPage/DynamicPageUtil.dart';
@@ -31,13 +28,20 @@ class ShrinkWrapSlivers_f extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //appStoreData = AppStoreData(null);
-    return ShrinkWrapSlivers(null);
+    PageData pd = PageData();
+    String? cachedDataPage = GlobalData.cache?.pageGet("/project/to-do/list?uid_data=46d119c9-d7d2-4f6c-9a71-c25b4eac18cd");
+    Map<String, dynamic> data = jsonDecode(cachedDataPage!);
+    DynamicPageUtil.parseTemplate(data, "Data", "list");
+    pd.setServerResponse(data);
+    return ShrinkWrapSlivers(pd);
   }
-
 }
+
 class ShrinkWrapSlivers extends StatefulWidget {
-  PageData? appStoreData;
-  ShrinkWrapSlivers(this.appStoreData, {
+  PageData pageData;
+
+  ShrinkWrapSlivers(
+    this.pageData, {
     Key? key,
   }) : super(key: key);
 
@@ -46,6 +50,38 @@ class ShrinkWrapSlivers extends StatefulWidget {
 }
 
 class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
+  List<Widget> list = [];
+
+  @override
+  void initState() {
+    dynamic data = widget.pageData!.getServerResponse();
+    for (int i = 0; i < data["list"].length; i++) {
+      list.add(DynamicUI.mainJson(data["list"][i], widget.pageData!, i, 'Data'));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        return SingleChildScrollView(
+
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          scrollDirection: Axis.vertical,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: viewportConstraints.maxHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: list,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ShrinkWrapSliversState2 extends State<ShrinkWrapSlivers> {
   List<SliverList> sliverLists = [];
 
   @override
@@ -54,12 +90,12 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
 
     //String? cachedDataPage = AppStore.cache?.pageGet("/project/to-do/list?uid_data=46d119c9-d7d2-4f6c-9a71-c25b4eac18cd");
     //dynamic data = jsonDecode(cachedDataPage!);
-    dynamic data = widget.appStoreData!.getServerResponse();
+    dynamic data = widget.pageData!.getServerResponse();
 
-    int each = 10;
+    int each = 100;
     List listItem = [];
     for (int i = 0; i < data["list"].length; i++) {
-      listItem.add(DynamicUI.mainJson(data["list"][i], widget.appStoreData!, i, 'Data'));
+      listItem.add(DynamicUI.mainJson(data["list"][i], widget.pageData!, i, 'Data'));
       if (listItem.length > each) {
         _put(listItem);
         listItem = [];

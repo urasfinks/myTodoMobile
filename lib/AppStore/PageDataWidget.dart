@@ -9,7 +9,7 @@ class PageDataWidget {
 
   Map<String, dynamic> widgetData = {};
 
-  void addWidgetDataByPage(DynamicPage widget) {
+  void addWidgetDataByPage(DynamicPageWidget widget) {
     addWidgetData("title", widget.title);
     addWidgetData("root", widget.root);
     addWidgetData("url", widget.url);
@@ -29,7 +29,7 @@ class PageDataWidget {
   }
 
   void addWidgetData(String key, dynamic value) {
-    //AppStore.print("addWidgetData(${key}) = ${value}");
+    //GlobalData.debug("addWidgetData(${key}) = ${value}");
     widgetData[key] = value;
     if (key == "parentRefresh") {
       try {
