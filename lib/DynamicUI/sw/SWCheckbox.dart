@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../AppStore/AppStoreData.dart';
+import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../FlutterTypeConstant.dart';
 
 class SWCheckbox extends StatelessWidget {
   late final Widget render;
 
-  SWCheckbox(parsedJson, AppStoreData appStoreData, int index, String originKeyData, {super.key}) {
+  SWCheckbox(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     bool value = FlutterTypeConstant.parseBool(
       DynamicUI.def(parsedJson, 'value', false, appStoreData, index, originKeyData),
@@ -46,7 +46,7 @@ class SWCheckbox extends StatelessWidget {
       )!,
       splashRadius: DynamicUI.def(parsedJson, 'splashRadius', null, appStoreData, index, originKeyData),
       onChanged: (bool? value) {
-        appStoreData.set(key, value);
+        appStoreData.pageDataState.set(key, value);
         //print("onChanged: ${value}; ${appStoreData.getStringStoreState()}");
         appStoreData.apply();
       },

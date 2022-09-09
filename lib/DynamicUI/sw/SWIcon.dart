@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../AppStore/AppStoreData.dart';
+import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../FlutterTypeConstant.dart';
 import '../icon.dart';
@@ -8,7 +8,7 @@ import '../icon.dart';
 class SWIcon extends StatelessWidget {
   late final Widget render;
 
-  SWIcon(parsedJson, AppStoreData appStoreData, int index, String originKeyData, {super.key}) {
+  SWIcon(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = Icon(
       iconsMap[DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData)],
       color: FlutterTypeConstant.parseColor(

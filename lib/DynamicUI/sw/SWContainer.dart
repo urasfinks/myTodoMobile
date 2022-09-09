@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../AppStore/AppStoreData.dart';
+import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../FlutterType.dart';
 import '../FlutterTypeConstant.dart';
@@ -9,7 +9,7 @@ import 'SWSizeBox.dart';
 class SWContainer extends StatelessWidget{
   late final Widget render;
 
-  SWContainer(parsedJson, AppStoreData appStoreData, int index, String originKeyData, {super.key}){
+  SWContainer(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}){
     render = Container(
       margin: FlutterTypeConstant.parseEdgeInsets(
         DynamicUI.def(parsedJson, 'margin', null, appStoreData, index, originKeyData),

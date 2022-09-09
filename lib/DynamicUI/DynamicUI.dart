@@ -2,13 +2,13 @@ import 'dart:core';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:myTODO/AppStore/AppStoreData.dart';
+import 'package:myTODO/AppStore/PageData.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
 import 'package:myTODO/DynamicUI/sw/SWSizeBox.dart';
 import 'FlutterType.dart';
 
 class DynamicUI {
-  static Widget main(String jsonData, AppStoreData appStoreData, int index, String originKeyData) {
+  static Widget main(String jsonData, PageData appStoreData, int index, String originKeyData) {
     if (jsonData.isEmpty) {
       return SWSizeBox(null, appStoreData, index, originKeyData);
     }
@@ -16,14 +16,14 @@ class DynamicUI {
     return def(parsedJson, null, SWSizeBox(null, appStoreData, index, originKeyData), appStoreData, index, originKeyData);
   }
 
-  static dynamic mainJson(Map<String, dynamic> jsonData, AppStoreData appStoreData, int index, String originKeyData) {
+  static dynamic mainJson(Map<String, dynamic> jsonData, PageData appStoreData, int index, String originKeyData) {
     if (jsonData.isEmpty) {
       return SWSizeBox(jsonData, appStoreData, index, originKeyData);
     }
     return def(jsonData, null, SWSizeBox(jsonData, appStoreData, index, originKeyData), appStoreData, index, originKeyData);
   }
 
-  static dynamic getByType(String containsKey, map, dynamic def, AppStoreData appStoreData, int index, String? originKeyData) {
+  static dynamic getByType(String containsKey, map, dynamic def, PageData appStoreData, int index, String? originKeyData) {
     Map<String, Function> map1 = {
       "TextStyle": FlutterType.pTextStyle,
       "Column": FlutterType.pColumn,
@@ -88,7 +88,7 @@ class DynamicUI {
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData]) : def;
   }
 
-  static dynamic def(map, key, def, AppStoreData appStoreData, int index, String originKeyData) {
+  static dynamic def(map, key, def, PageData appStoreData, int index, String originKeyData) {
     dynamic ret;
     if (key != null) {
       ret = (map != null && map.containsKey(key)) ? map[key] : def;
@@ -107,7 +107,7 @@ class DynamicUI {
     return ret;
   }
 
-  static List<Widget> defList(parsedJson, String key, AppStoreData appStoreData, int index, String originKeyData) {
+  static List<Widget> defList(parsedJson, String key, PageData appStoreData, int index, String originKeyData) {
     List<Widget> list = [];
     dynamic l2 = def(parsedJson, key, [], appStoreData, index, originKeyData);
     if (l2 != null && l2.runtimeType.toString().contains("List")) {
@@ -119,7 +119,7 @@ class DynamicUI {
   }
 
   static List<PageViewModel> defListPageViewModel(
-      parsedJson, String key, AppStoreData appStoreData, int index, String originKeyData) {
+      parsedJson, String key, PageData appStoreData, int index, String originKeyData) {
     List<PageViewModel> list = [];
     dynamic l2 = def(parsedJson, key, [], appStoreData, index, originKeyData);
     if (l2 != null && l2.runtimeType.toString().contains("List")) {

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myTODO/TabPageHistory.dart';
-import 'AppStore/AppStore.dart';
-import 'AppStore/AppStoreData.dart';
+import 'AppStore/GlobalData.dart';
+import 'AppStore/PageData.dart';
 import 'DynamicPage/DynamicPage.dart';
 import 'DynamicPage/DynamicPageUtil.dart';
 
@@ -53,7 +53,7 @@ class TabScope {
   ];
   int tabIndex = 0;
 
-  AppStoreData? getLast() {
+  PageData? getLast() {
     if (tabs[tabIndex].history.isNotEmpty) {
       return tabs[tabIndex].history.last;
     }
@@ -64,14 +64,14 @@ class TabScope {
     return tabs[tabIndex].history.length > 1;
   }
 
-  void addHistory(AppStoreData appStoreData) {
+  void addHistory(PageData appStoreData) {
     //AppStore.print("addHistory: tabIndex: ${tabIndex};  AppStore: ${appStoreData}");
     if (!tabs[tabIndex].history.contains(appStoreData)) {
       tabs[tabIndex].history.add(appStoreData);
     }
   }
 
-  void onDestroyPage(AppStoreData appStoreData) {
+  void onDestroyPage(PageData appStoreData) {
     if (tabs[tabIndex].history.length > 1) {
       if (tabs[tabIndex].history.last == appStoreData) {
         tabs[tabIndex].history.removeLast();
@@ -79,7 +79,7 @@ class TabScope {
     }
   }
 
-  bool iamActivePage(AppStoreData appStoreData) {
+  bool iamActivePage(PageData appStoreData) {
     if (tabs[tabIndex].history.isNotEmpty) {
       return tabs[tabIndex].history.last == appStoreData;
     }
@@ -89,9 +89,9 @@ class TabScope {
   bool popHistory(dynamic data) {
     if (tabs[tabIndex].history.length > 1) {
       if (data != null && data["url"] != null) {
-        AppStoreData? last;
+        PageData? last;
         while (tabs[tabIndex].history.length > 1) {
-          if (tabs[tabIndex].history.last.getWidgetData("url") == data["url"]) {
+          if (tabs[tabIndex].history.last.pageDataWidget.getWidgetData("url") == data["url"]) {
             break;
           }
           last = tabs[tabIndex].history.removeLast();
@@ -101,7 +101,7 @@ class TabScope {
           checkReload(tabs[tabIndex].history.last, last);
         }
       } else if (data != null && data["count"] != null) {
-        AppStoreData? last;
+        PageData? last;
         for (int i = 0; i < data["count"]; i++) {
           last = tabs[tabIndex].history.removeLast();
           Navigator.pop(last.getCtx()!);
@@ -110,7 +110,7 @@ class TabScope {
           checkReload(tabs[tabIndex].history.last, last);
         }
       } else {
-        AppStoreData last = tabs[tabIndex].history.removeLast();
+        PageData last = tabs[tabIndex].history.removeLast();
         Navigator.pop(last.getCtx()!);
         if (tabs[tabIndex].history.isNotEmpty) {
           checkReload(tabs[tabIndex].history.last, last);
@@ -121,18 +121,18 @@ class TabScope {
     return false;
   }
 
-  void checkReload(AppStoreData viewPage, AppStoreData? removePage) {
+  void checkReload(PageData viewPage, PageData? removePage) {
     bool forwardState = false;
     //Если страница, которую мы открывали была с параметра bridgeState, то надо её состояния партировать в страницу к которой мы переключаемся обратно
     if (removePage != null) {
-      dynamic mapBridgeState = removePage.getWidgetData("bridgeState");
+      dynamic mapBridgeState = removePage.pageDataWidget.getWidgetData("bridgeState");
       if (mapBridgeState != null &&
           mapBridgeState.runtimeType.toString().contains("Map<") &&
           mapBridgeState.isNotEmpty) {
         for (var item in mapBridgeState.entries) {
-          dynamic value = removePage.get(item.key, null);
+          dynamic value = removePage.pageDataState.get(item.key, null);
           if (value != null) {
-            viewPage.set(item.key, value, notify: false);
+            viewPage.pageDataState.set(item.key, value, notify: false);
             forwardState = true;
           }
         }
@@ -155,7 +155,7 @@ class TabScope {
   void setTabIndex(int index) {
     //AppStore.print("SELECTED TAB: ${index}");
     //AppStore.print(tabs[index].history);
-    AppStore.selectedTabIndex = index;
+    GlobalData.selectedTabIndex = index;
     if (tabs[index].history.isNotEmpty) {
       checkReload(tabs[index].history.last, null);
     }

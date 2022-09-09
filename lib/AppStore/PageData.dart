@@ -1,8 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:myTODO/AppStore/PageDataState.dart';
+import 'package:myTODO/AppStore/PageDataWidget.dart';
 import 'package:myTODO/DynamicPage/DynamicPage.dart';
 import '../AppMetric.dart';
 import '../DynamicPage/DynamicFn.dart';
@@ -13,21 +14,33 @@ import '../DynamicUI/FlutterTypeConstant.dart';
 import '../TabScope.dart';
 import '../Util.dart';
 import '../WebSocket.dart';
-import 'package:redux/redux.dart';
 
-import 'AppStore.dart';
+import 'GlobalData.dart';
 
-class AppStoreData {
+class PageData {
+
   bool syncSocket;
-  final Store? store;
-  final Map<String, dynamic> _map = {};
+  late final PageDataWidget pageDataWidget;
+  late final PageDataState pageDataState;
+
+  PageData({this.syncSocket = false}){
+    pageDataWidget = PageDataWidget(this);
+    pageDataState = PageDataState(this);
+  }
+
   int _indexRevision = 0;
-
   Map<String, bool> alreadyVisible = {};
-
-  AppStoreData(this.store, {this.syncSocket = false});
-
   bool needUpdateOnActive = false;
+  Widget? compiledWidget;
+  bool firstLoad = true;
+  Widget wrapPage = const Text("Undefined WrapPage in Templates");
+  bool nowDownloadContent = false;
+  BuildContext? _ctx;
+  State? pageState;
+  Map<String, dynamic> serverResponse = {};
+  bool _build = true;
+  bool _parentUpdate = false;
+  void Function()? _onIndexRevisionError;
 
   void setIndexRevisionWithoutReload(int index) {
     _indexRevision = index;
@@ -36,7 +49,7 @@ class AppStoreData {
   int inactiveTimestamp = 0;
 
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    dynamic refreshOnResume = getWidgetData("refreshOnResume");
+    dynamic refreshOnResume = pageDataWidget.getWidgetData("refreshOnResume");
     //AppStore.print("didChangeAppLifecycleState: ${widgetData}");
     /*
     * Если явно установлено, что надо страницу перезагружать при восстановлении
@@ -58,92 +71,6 @@ class AppStoreData {
     }
   }
 
-  BuildContext? _ctx;
-  Map<String, TextEditingController> listController = {};
-  State? pageState;
-
-  Map<String, dynamic> widgetData = {};
-
-  String getStringStoreState() {
-    if (_map.isNotEmpty) {
-      dynamic sendPrivateState = getWidgetData("sendPrivateState");
-      if (sendPrivateState != null && sendPrivateState == true) {
-        return jsonEncode(_map);
-      } else {
-        Map<String, dynamic> mapRet = {};
-        for (var item in _map.entries) {
-          if (!item.key.startsWith("_")) {
-            mapRet[item.key] = item.value;
-          }
-        }
-        return jsonEncode(mapRet);
-      }
-    }
-    return "";
-  }
-
-  void addWidgetDataByMap(Map<String, dynamic> obj) {
-    for (var item in obj.entries) {
-      if (item.key != "dataUID") {
-        addWidgetData(item.key, item.value);
-      }
-    }
-  }
-
-  void addWidgetDataByPage(DynamicPage widget) {
-    addWidgetData("title", widget.title);
-    addWidgetData("root", widget.root);
-    addWidgetData("url", widget.url);
-    addWidgetData("parentState", widget.parentState);
-    addWidgetData("dataUID", widget.dataUID);
-    addWidgetData("wrapPage", widget.wrapPage);
-    addWidgetData("pullToRefreshBackgroundColor", widget.pullToRefreshBackgroundColor);
-    addWidgetData("appBarBackgroundColor", widget.appBarBackgroundColor);
-    addWidgetData("backgroundColor", widget.backgroundColor);
-    addWidgetData("progressIndicatorBackgroundColor", widget.progressIndicatorBackgroundColor);
-    addWidgetData("progressIndicatorColor", widget.progressIndicatorColor);
-    addWidgetData("dialog", widget.dialog);
-    addWidgetData("separated", widget.separated);
-    addWidgetData("grid", widget.grid);
-    addWidgetData("config", widget.config);
-    addWidgetData("bridgeState", widget.bridgeState);
-  }
-
-  void addWidgetData(String key, dynamic value) {
-    //AppStore.print("addWidgetData(${key}) = ${value}");
-    widgetData[key] = value;
-    if (key == "parentRefresh") {
-      try {
-        setParentRefresh(value);
-      } catch (e, stacktrace) {
-        AppMetric().exception(e, stacktrace);
-      }
-    }
-  }
-
-  Map<String, dynamic> getWidgetDates() {
-    return widgetData;
-  }
-
-  void setWidgetDataConfig(String key, dynamic value) {
-    dynamic x = widgetData["config"];
-    x[key] = value;
-  }
-
-  dynamic getWidgetDataConfig(Map<String, dynamic> def) {
-    dynamic x = widgetData["config"];
-    if (x != null && x.runtimeType.toString().contains("Map")) {
-      for (var item in x.entries) {
-        def[item.key] = item.value;
-      }
-    }
-    return def;
-  }
-
-  dynamic getWidgetData(String key) {
-    return widgetData.containsKey(key) ? widgetData[key] : null;
-  }
-
   void setPageState(State x) {
     pageState = x;
   }
@@ -156,8 +83,6 @@ class AppStoreData {
     _ctx = value;
   }
 
-  Map<String, dynamic> serverResponse = {};
-
   void setServerResponse(Map<String, dynamic> input) {
     serverResponse = input;
   }
@@ -167,29 +92,7 @@ class AppStoreData {
   }
 
   void clearState() {
-    _map.clear();
-    listController.clear();
-  }
-
-  void unFocusTextController() {
-    for (var item in listController.entries) {
-      item.value.clear();
-    }
-  }
-
-  TextEditingController? getTextController(String key, String def) {
-    if (!listController.containsKey(key)) {
-      TextEditingController textController = TextEditingController();
-      if (_map.containsKey(key) && _map[key] != null) {
-        textController.text = _map[key];
-      } else {
-        textController.text = def;
-      }
-      listController[key] = textController;
-      return textController;
-    } else {
-      return listController[key];
-    }
+    pageDataState.clear();
   }
 
   BuildContext? getCtx() => _ctx;
@@ -198,7 +101,7 @@ class AppStoreData {
     this.syncSocket = syncSocket;
   }
 
-  void Function()? _onIndexRevisionError;
+
 
   void setOnIndexRevisionError(void Function()? fn) {
     _onIndexRevisionError = fn;
@@ -223,104 +126,44 @@ class AppStoreData {
     }
   }
 
-  dynamic get(String key, dynamic defValue) {
-    if (_map[key] == null) {
-      _map[key] = defValue;
-    }
-    return _map[key];
-  }
-
-  void set(String key, dynamic value, {bool notify = true}) {
-    //AppStore.print("Set: $key = $value");
-    _map[key] = value;
-    onChange(key, notify);
-  }
-
-  void join(String key, String appendString, {bool notify = true}) {
-    if (_map[key] == null) {
-      _map[key] = "";
-    }
-    _map[key] = _map[key] + Util.template(_map, appendString);
-    onChange(key, notify);
-  }
-
-  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
-    _map[key] = double.parse("${_map[key]}") + step;
-    if (_map[key] < min) {
-      _map[key] = min;
-    }
-    if (_map[key] > max) {
-      _map[key] = max;
-    }
-    _map[key] = (_map[key]).toStringAsFixed(fixed);
-    onChange(key, notify);
-  }
-
-  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
-    _map[key] = double.parse("${_map[key]}") - step;
-    if (_map[key] < min) {
-      _map[key] = min;
-    }
-    if (_map[key] > max) {
-      _map[key] = max;
-    }
-    _map[key] = (_map[key]).toStringAsFixed(fixed);
-    onChange(key, notify);
-  }
-
-  void toggle(String key, {bool notify = true}) {
-    String x = "${_map[key]}".toLowerCase();
-    if (x == "true" || x == "1") {
-      _map[key] = true;
-    } else {
-      _map[key] = false;
-    }
-    onChange(key, notify);
-  }
-
   void onChange(String key, bool notify) {
-    dynamic x = getWidgetDataConfig({"parentRefreshOnChangeStateData": false});
+    dynamic x = pageDataWidget.getWidgetDataConfig({"parentRefreshOnChangeStateData": false});
     if (x["parentRefreshOnChangeStateData"] == true) {
       setParentRefresh(true);
     }
     if (notify == true) {
       if (syncSocket) {
-        WebSocketService().sendToServer(getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": _map[key]});
+        WebSocketService().sendToServer(pageDataWidget.getWidgetData("dataUID"), "UPDATE_STATE", data: {"key": key, "value": pageDataState.get(key, null)});
       }
     }
   }
 
   void apply() {
-    //AppStore.print("apply");
-    store!.dispatch(null);
+    GlobalData.debug("apply");
   }
 
   void destroy() {
     if (syncSocket) {
-      WebSocketService().unsubscribe(getWidgetData("dataUID"));
+      WebSocketService().unsubscribe(pageDataWidget.getWidgetData("dataUID"));
     }
   }
 
   Widget getCompiledWidget() {
-    if (getWidgetData("root") == true && AppStore.firstStart == true) {
-      AppStore.firstStart = false;
+    if (pageDataWidget.getWidgetData("root") == true && GlobalData.firstStart == true) {
+      GlobalData.firstStart = false;
       Map<String, dynamic> conf = {};
-      conf["url"] = AppStore.promo;
+      conf["url"] = GlobalData.promo;
       DynamicFn.promo(this, conf);
     }
+    print("GetCompiletWidget");
     return compiledWidget!;
   }
-
-  bool _build = true;
 
   void reBuild() {
     _build = true;
   }
 
-  Widget? compiledWidget;
-  bool firstLoad = true;
-  Widget wrapPage = const Text("Undefined WrapPage in Templates");
-  bool nowDownloadContent = false;
+
 
   void initPage(DynamicPage widget, BuildContext context) {
     try {
@@ -331,17 +174,17 @@ class AppStoreData {
           widget.refresh(this);
         });
         if (firstLoad == true) {
-          addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
+          pageDataWidget.addWidgetDataByPage(widget); //!!!! DON'T REMOVE!!!!!! (Page Load replace this property)
           TabScope.getInstance().addHistory(this);
-          widget.refresh(this);
+          //widget.refresh(this);
           firstLoad = false;
         }
         setCtx(context);
 
         if (getServerResponse().containsKey("Template") &&
-            getWidgetData("wrapPage").isNotEmpty &&
-            (getServerResponse()["Template"] as Map).containsKey(getWidgetData("wrapPage"))) {
-          wrapPage = DynamicUI.main((getServerResponse()["Template"] as Map)[getWidgetData("wrapPage")], this, 0, '');
+            pageDataWidget.getWidgetData("wrapPage").isNotEmpty &&
+            (getServerResponse()["Template"] as Map).containsKey(pageDataWidget.getWidgetData("wrapPage"))) {
+          wrapPage = DynamicUI.main((getServerResponse()["Template"] as Map)[pageDataWidget.getWidgetData("wrapPage")], this, 0, '');
         }
 
         BackButton? back = (widget.root == false)
@@ -351,7 +194,7 @@ class AppStoreData {
                 },
               )
             : null;
-        if (getWidgetData("dialog") == true) {
+        if (pageDataWidget.getWidgetData("dialog") == true) {
           createDialog();
         } else {
           createSimplePage(widget, back);
@@ -365,10 +208,10 @@ class AppStoreData {
   }
 
   createDialog() {
-    Map config = getWidgetDataConfig({"padding": 0, "elevation": 0.0, "borderRadius": 20, "height": -1});
-    bool? withoutListView = getWidgetData("WithoutListView");
+    Map config = pageDataWidget.getWidgetDataConfig({"padding": 0, "elevation": 0.0, "borderRadius": 20, "height": -1});
+    bool? withoutListView = pageDataWidget.getWidgetData("WithoutListView");
     if (withoutListView == null) {
-      widgetData["WithoutListView"] = true;
+      pageDataWidget.widgetData["WithoutListView"] = true;
     }
     Widget ch;
     if (config["height"] == -1) {
@@ -383,7 +226,7 @@ class AppStoreData {
     }
     compiledWidget = Dialog(
       backgroundColor: FlutterTypeConstant.parseColor(
-        getWidgetData("backgroundColor"),
+        pageDataWidget.getWidgetData("backgroundColor"),
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(FlutterTypeConstant.parseDouble(config["borderRadius"])!),
@@ -395,7 +238,7 @@ class AppStoreData {
   }
 
   createSimplePage(DynamicPage widget, BackButton? back) {
-    Map conf = getWidgetDataConfig({"gradient": null});
+    Map conf = pageDataWidget.getWidgetDataConfig({"gradient": null});
     //AppStore.print("AllWidgetData: ${getWidgetData("config")}");
     bool gradient = conf["gradient"] != null;
     //AppStore.print("FLAG grad: ${gradient}");
@@ -403,12 +246,12 @@ class AppStoreData {
       backgroundColor: gradient == true
           ? Colors.transparent
           : FlutterTypeConstant.parseColor(
-              getWidgetData("backgroundColor"),
+        pageDataWidget.getWidgetData("backgroundColor"),
             ),
-      appBar: _getAppBar(back, getWidgetData("title")),
+      appBar: _getAppBar(back, pageDataWidget.getWidgetData("title")),
       body: LiquidPullToRefresh(
         color: FlutterTypeConstant.parseColor(
-          getWidgetData("pullToRefreshBackgroundColor"),
+          pageDataWidget.getWidgetData("pullToRefreshBackgroundColor"),
         ),
         showChildOpacityTransition: false,
         springAnimationDurationInMilliseconds: 500,
@@ -466,12 +309,12 @@ class AppStoreData {
       leading: back,
       elevation: 0,
       backgroundColor: FlutterTypeConstant.parseColor(
-        getWidgetData("appBarBackgroundColor"),
+        pageDataWidget.getWidgetData("appBarBackgroundColor"),
       ),
       systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // Status bar
           statusBarBrightness: Brightness.dark),
-      title: !TabScope.getInstance().isBack() || getWidgetData("root") == true
+      title: !TabScope.getInstance().isBack() || pageDataWidget.getWidgetData("root") == true
           ? Text(
               title,
               style: const TextStyle(fontSize: 19),
@@ -490,10 +333,8 @@ class AppStoreData {
   }
 
   _contentBuilder(dynamic wrapPage) {
-    return getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicFn.getFutureBuilder(this, null);
+    return pageDataWidget.getWidgetData("wrapPage").isNotEmpty ? wrapPage : DynamicFn.getFutureBuilder(this, null);
   }
-
-  bool _parentUpdate = false;
 
   void setParentRefresh(bool upd) {
     _parentUpdate = upd;
@@ -505,6 +346,6 @@ class AppStoreData {
 
   @override
   String toString() {
-    return 'AppStoreData{url: ${widgetData["url"]}';
+    return 'AppStoreData{url: ${pageDataWidget.widgetData["url"]}';
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'AppStoreData.dart';
+import 'PageData.dart';
 
 class Invoke{
   final Function fn;
@@ -8,11 +8,11 @@ class Invoke{
   final List<String> extra;
   Invoke(this.fn, this.arg, this.extra);
 
-  static void apply(AppStoreData appStoreData, String jsonControl){
+  static void apply(PageData appStoreData, String jsonControl){
     Map<String, Invoke> map = {
-      "inc": Invoke(appStoreData.inc, ["key"], ["step", "min", "max", "fixed"]),
-      "dec": Invoke(appStoreData.dec, ["key"], ["step", "min", "max", "fixed"]),
-      "set": Invoke(appStoreData.set, ["key", "value"], []),
+      "inc": Invoke(appStoreData.pageDataState.inc, ["key"], ["step", "min", "max", "fixed"]),
+      "dec": Invoke(appStoreData.pageDataState.dec, ["key"], ["step", "min", "max", "fixed"]),
+      "set": Invoke(appStoreData.pageDataState.set, ["key", "value"], []),
     };
     final parsedJson = jsonDecode(jsonControl);
     List<dynamic> args = [];

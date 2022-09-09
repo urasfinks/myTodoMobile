@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-import 'AppStore/AppStore.dart';
-import 'AppStore/AppStoreData.dart';
+import 'AppStore/GlobalData.dart';
+import 'AppStore/PageData.dart';
 import 'DynamicPage/DynamicPageUtil.dart';
 import 'DynamicUI/DynamicUI.dart';
 
@@ -36,7 +36,7 @@ class ShrinkWrapSlivers_f extends StatelessWidget {
 
 }
 class ShrinkWrapSlivers extends StatefulWidget {
-  AppStoreData? appStoreData;
+  PageData? appStoreData;
   ShrinkWrapSlivers(this.appStoreData, {
     Key? key,
   }) : super(key: key);
@@ -56,7 +56,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
     //dynamic data = jsonDecode(cachedDataPage!);
     dynamic data = widget.appStoreData!.getServerResponse();
 
-    int each = 6;
+    int each = 10;
     List listItem = [];
     for (int i = 0; i < data["list"].length; i++) {
       listItem.add(DynamicUI.mainJson(data["list"][i], widget.appStoreData!, i, 'Data'));

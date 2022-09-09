@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myTODO/DynamicUI/Addon.dart';
 import '../AppMetric.dart';
-import '../AppStore/AppStore.dart';
-import '../AppStore/AppStoreData.dart';
+import '../AppStore/GlobalData.dart';
+import '../AppStore/PageData.dart';
 import 'package:flutter/material.dart';
 import '../Cache.dart';
 import '../Util.dart';
@@ -20,12 +20,12 @@ import 'dart:async';
 class DynamicPageUtil {
   static int delay = 350; //Animation open new page!!!
 
-  static Future<void> loadDataTest(DynamicPage widget, AppStoreData appStoreData) async {
+  static Future<void> loadDataTest(DynamicPage widget, PageData appStoreData) async {
     await Future.delayed(Duration(milliseconds: delay), () {});
     //dataUpdate(TextEditRowJsonObject.getPage(), appStoreData);
   }
 
-  static Future<void> loadData(AppStoreData appStoreData) async {
+  static Future<void> loadData(PageData appStoreData) async {
     //return;
 
     appStoreData.nowDownloadContent = true;
@@ -33,24 +33,29 @@ class DynamicPageUtil {
 
     //await Future.delayed(Duration(milliseconds: 5000), () {}); //Для тестирования загрузки из cache
 
-    if (!appStoreData.getWidgetData('root')) {
+    if (!appStoreData.pageDataWidget.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
     }
-    AppStore.debug('Prepare download: ${appStoreData.getWidgetDates()}');
+    try{
+      throw Exception();
+    } catch(e, stacktrace){
+      print(stacktrace);
+    }
+    GlobalData.debug('Prepare download: ${appStoreData.pageDataWidget.getWidgetDates()}');
     try {
-      final response = await http.post(Uri.parse("${AppStore.host}${appStoreData.getWidgetData('url')}"),
-          headers: AppStore.requestHeader, body: appStoreData.getWidgetData('parentState'));
+      final response = await http.post(Uri.parse("${GlobalData.host}${appStoreData.pageDataWidget.getWidgetData('url')}"),
+          headers: GlobalData.requestHeader, body: appStoreData.pageDataWidget.getWidgetData('parentState'));
 
       appStoreData.clearState();
 
       //AppStore.fullDebug(response.body);
-      AppStore.debug("Download complete");
+      GlobalData.debug("Download complete");
       //AppStore.fullDebug(response.body);
       if (response.statusCode == 200) {
         Map<String, dynamic> resp = jsonDecode(response.body);
         if (resp["Cache"] != null && resp["Cache"] == true) {
           Cache.getInstance().then((Cache cache) {
-            cache.pageAdd(appStoreData.getWidgetData('url'), response.body);
+            cache.pageAdd(appStoreData.pageDataWidget.getWidgetData('url'), response.body);
           });
         }
         if (resp["AppMetricToken"] != null) {
@@ -70,7 +75,7 @@ class DynamicPageUtil {
       AppMetric().exception(e, stacktrace);
       setErrorStyle(appStoreData);
       if (e.toString().contains("Failed host lookup:")) {
-        String? cachedDataPage = AppStore.cache?.pageGet(appStoreData.getWidgetData("url"));
+        String? cachedDataPage = GlobalData.cache?.pageGet(appStoreData.pageDataWidget.getWidgetData("url"));
         if (cachedDataPage != null) {
           DynamicPageUtil.dataUpdate(jsonDecode(cachedDataPage), appStoreData, native: false);
           DynamicFn.alert(appStoreData, {"data": "Локальная версия"});
@@ -84,13 +89,13 @@ class DynamicPageUtil {
     appStoreData.nowDownloadContent = false;
   }
 
-  static void setErrorStyle(AppStoreData appStoreData) {
-    appStoreData.addWidgetData("title", "Ошибка");
-    appStoreData.addWidgetData("dialog", false);
-    appStoreData.addWidgetData('grid', false); //А то не влезает
+  static void setErrorStyle(PageData appStoreData) {
+    appStoreData.pageDataWidget.addWidgetData("title", "Ошибка");
+    appStoreData.pageDataWidget.addWidgetData("dialog", false);
+    appStoreData.pageDataWidget.addWidgetData('grid', false); //А то не влезает
   }
 
-  static List<Widget>? getListAppBarActions(AppStoreData appStoreData) {
+  static List<Widget>? getListAppBarActions(PageData appStoreData) {
     List<Widget> list = [];
     try {
       Map<String, dynamic> response = appStoreData.getServerResponse();
@@ -146,7 +151,7 @@ class DynamicPageUtil {
     }
   }
 
-  static dataUpdate(Map<String, dynamic> data, AppStoreData appStoreData, {bool native = true}) {
+  static dataUpdate(Map<String, dynamic> data, PageData appStoreData, {bool native = true}) {
     appStoreData.setServerResponse(data);
 
     List<dynamic>? action = data['Actions'];
@@ -161,21 +166,21 @@ class DynamicPageUtil {
     }
     if (data['WidgetData'] != null && data['WidgetData'] != "") {
       //AppStore.print("SET NEW WIDGET DATA(${data['WidgetData']})");
-      appStoreData.addWidgetDataByMap(data['WidgetData']);
+      appStoreData.pageDataWidget.addWidgetDataByMap(data['WidgetData']);
     }
 
     if (data['State'] != null && data['State'] != "") {
       Map<String, dynamic> map = data['State'];
       for (var item in map.entries) {
-        appStoreData.set(item.key, item.value, notify: false);
+        appStoreData.pageDataState.set(item.key, item.value, notify: false);
       }
       appStoreData.apply(); //Maybe setState refresh Data on UI?
     }
 
-    dynamic mapBridgeState = appStoreData.getWidgetData("bridgeState");
+    dynamic mapBridgeState = appStoreData.pageDataWidget.getWidgetData("bridgeState");
     if (mapBridgeState != null && mapBridgeState.runtimeType.toString().contains("Map<") && mapBridgeState.isNotEmpty) {
       for (var item in mapBridgeState.entries) {
-        appStoreData.set(item.key, item.value, notify: false);
+        appStoreData.pageDataState.set(item.key, item.value, notify: false);
       }
       appStoreData.apply();
     }
@@ -183,9 +188,9 @@ class DynamicPageUtil {
     if (native == true &&
         data['SyncSocket'] != null &&
         data['SyncSocket'] == true &&
-        (appStoreData.getWidgetData("dataUID") as String).isNotEmpty) {
+        (appStoreData.pageDataWidget.getWidgetData("dataUID") as String).isNotEmpty) {
       appStoreData.setSyncSocket(true);
-      WebSocketService().subscribe(appStoreData.getWidgetData("dataUID"));
+      WebSocketService().subscribe(appStoreData.pageDataWidget.getWidgetData("dataUID"));
     }
 
     parseTemplate(data, "Data", "list");
@@ -203,7 +208,7 @@ class DynamicPageUtil {
 
     if (native == true && data['ParentPersonKey'] != null) {
       Future.delayed(Duration(milliseconds: delay), () {
-        AppStore.changePersonKey(data['ParentPersonKey']);
+        GlobalData.changePersonKey(data['ParentPersonKey']);
       });
     }
   }
