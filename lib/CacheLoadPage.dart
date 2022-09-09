@@ -7,7 +7,7 @@ class CacheLoadPage {
   List<CacheLoadPageItem> list = [];
 
   void add(String url, String data) {
-    //AppStore.print("CacheLoadPage.add: ${url}");
+    //GlobalData.debug("CacheLoadPage.add: ${url}");
     CacheLoadPageItem? item = get(url);
     if(item != null){ //Сумарно получается замещение
       list.remove(item);
@@ -17,7 +17,7 @@ class CacheLoadPage {
       list.sort((CacheLoadPageItem a, CacheLoadPageItem b) {
         return a.time > b.time ? -1 : 1;
       });
-      //AppStore.print("remove not find: ${list.last.url}");
+      //GlobalData.debug("remove not find: ${list.last.url}");
       list.remove(list.last);
     }
   }
@@ -32,7 +32,7 @@ class CacheLoadPage {
       to.add(x);
     }
     String x = jsonEncode(to);
-    //AppStore.print("getState: ${x}");
+    //GlobalData.debug("getState: ${x}");
     return x;
   }
 
@@ -40,7 +40,7 @@ class CacheLoadPage {
     if (json == null) {
       return;
     }
-    //AppStore.print("fromState: ${json}");
+    //GlobalData.debug("fromState: ${json}");
     try {
       dynamic lst = jsonDecode(json);
       for (Map item in lst) {

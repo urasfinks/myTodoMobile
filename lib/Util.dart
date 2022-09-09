@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:myTODO/AppStore/GlobalData.dart';
-import 'package:myTODO/DynamicUI/FlutterTypeConstant.dart';
+import 'package:myTODO/DynamicUI/TypeParser.dart';
 import 'dart:developer' as developer;
 
 import 'AppMetric.dart';
@@ -14,12 +14,12 @@ import 'SliversApp.dart';
 
 class Util {
   static dynamic getListView(PageData appStoreData, ScrollPhysics physics,{bool reverse = false}) {
-    return ShrinkWrapSlivers(appStoreData);
+    return ShrinkWrapSlivers(appStoreData, reverse: reverse,);
   }
 
   static ListView getListView2(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
       {bool reverse = false}) {
-    //AppStore.print("SEPARATED: ${separated}");
+    //GlobalData.debug("SEPARATED: ${separated}");
     if (separated == true) {
       return ListView.separated(
         reverse: reverse,
@@ -30,7 +30,7 @@ class Util {
         },
         separatorBuilder: (BuildContext context, int index) => Divider(
           height: 1,
-          color: FlutterTypeConstant.parseColor("#f5f5f5")!,
+          color: TypeParser.parseColor("#f5f5f5")!,
         ),
       );
     } else {
@@ -61,7 +61,7 @@ class Util {
   }
 
   static String path(dynamic data, String path) {
-    //AppStore.print("PATH: '${path}'");
+    //GlobalData.debug("PATH: '${path}'");
     List<String> exp = path.split(".");
     dynamic cur = data;
     for (String key in exp) {
@@ -104,9 +104,9 @@ class Util {
 
     request.headers.addAll(GlobalData.requestHeader);
     return await request.send().then((response) async {
-      //AppStore.print("RESPONSE: ${response}");
+      //GlobalData.debug("RESPONSE: ${response}");
       /*response.stream.transform(utf8.decoder).listen((value) {
-        AppStore.print("VALUE: ${value}");
+        GlobalData.debug("VALUE: ${value}");
       });*/
     }).catchError((e) {
       AppMetric().exception(e, null);

@@ -27,7 +27,7 @@ class TabScope {
       ),*/
   final List<TabPageHistory> tabs = [
     TabPageHistory(
-      DynamicPage.fromMap(
+      DynamicPageWidget.fromMap(
         {
           "title": 'Главная',
           "url": '/project/to-do',
@@ -39,7 +39,7 @@ class TabScope {
       ),
     ),
     TabPageHistory(
-      DynamicPage.fromMap(
+      DynamicPageWidget.fromMap(
         {
           "title": 'Аккаунт',
           "url": '/project/system/account',
@@ -65,7 +65,7 @@ class TabScope {
   }
 
   void addHistory(PageData appStoreData) {
-    //AppStore.print("addHistory: tabIndex: ${tabIndex};  AppStore: ${appStoreData}");
+    //GlobalData.debug("addHistory: tabIndex: ${tabIndex};  AppStore: ${appStoreData}");
     if (!tabs[tabIndex].history.contains(appStoreData)) {
       tabs[tabIndex].history.add(appStoreData);
     }
@@ -153,8 +153,8 @@ class TabScope {
   }
 
   void setTabIndex(int index) {
-    //AppStore.print("SELECTED TAB: ${index}");
-    //AppStore.print(tabs[index].history);
+    //GlobalData.debug("SELECTED TAB: ${index}");
+    //GlobalData.debug(tabs[index].history);
     GlobalData.selectedTabIndex = index;
     if (tabs[index].history.isNotEmpty) {
       checkReload(tabs[index].history.last, null);

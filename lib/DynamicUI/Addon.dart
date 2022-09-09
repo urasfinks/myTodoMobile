@@ -40,7 +40,7 @@ class Addon{
   }
 
   static void _containerBottomRadius(parsedJson) {
-    //AppStore.print("_containerBottomRadius: ${parsedJson["color"]}");
+    //GlobalData.debug("_containerBottomRadius: ${parsedJson["color"]}");
     String saveColor = parsedJson["color"] ?? parsedJson["decoration"]["color"];
     parsedJson["color"] = null;
     if (parsedJson["decoration"] == null){

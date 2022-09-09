@@ -87,7 +87,7 @@ class WebSocketService {
           storeData.setIndexRevision(jsonDecoded["Revision"]);
           DynamicFn.alert(storeData, {"data": "Сохранено"});
           storeData.pageDataState.set("_time_${jsonDecoded["Key"]}", jsonDecoded["Time"], notify: false);
-          //AppStore.print("UPDATE_REVISION: ${storeData.getStringStoreState()}");
+          //GlobalData.debug("UPDATE_REVISION: ${storeData.getStringStoreState()}");
           storeData.apply();
         }
       }
@@ -102,7 +102,7 @@ class WebSocketService {
           if (check(jsonDecoded["Data"], {"key": null, "value": null})) {
             storeData.pageDataState.set(jsonDecoded["Data"]["key"], jsonDecoded["Data"]["value"], notify: false);
           }
-          //AppStore.print("UPDATE_STATE: ${storeData.getStringStoreState()}");
+          //GlobalData.debug("UPDATE_STATE: ${storeData.getStringStoreState()}");
           storeData.apply();
           storeData.setIndexRevision(jsonDecoded["Revision"]);
         }
@@ -191,7 +191,7 @@ class WebSocketService {
   }
 
   bool check(dynamic object, Map<String, dynamic> map) {
-    //AppStore.print(map.keys);
+    //GlobalData.debug(map.keys);
     for (String key in map.keys) {
       if (object[key] == null) {
         return false;

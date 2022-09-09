@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
-import '../FlutterTypeConstant.dart';
+import '../TypeParser.dart';
 
 class SWCheckbox extends StatelessWidget {
   late final Widget render;
 
   SWCheckbox(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
-    bool value = FlutterTypeConstant.parseBool(
+    bool value = TypeParser.parseBool(
       DynamicUI.def(parsedJson, 'value', false, appStoreData, index, originKeyData),
     )!;
     //appStoreData.set(key, defValue);
@@ -18,30 +18,30 @@ class SWCheckbox extends StatelessWidget {
       side: MaterialStateBorderSide.resolveWith(
             (states) => BorderSide(
           width: 2.0,
-          color: FlutterTypeConstant.parseColor(value == false
+          color: TypeParser.parseColor(value == false
               ? DynamicUI.def(parsedJson, 'borderColor', 'grey', appStoreData, index, originKeyData)
               : 'transparent')!,
         ),
       ),
-      value: FlutterTypeConstant.parseBool(
+      value: TypeParser.parseBool(
         DynamicUI.def(parsedJson, 'value', false, appStoreData, index, originKeyData),
       ),
-      tristate: FlutterTypeConstant.parseBool(
+      tristate: TypeParser.parseBool(
         DynamicUI.def(parsedJson, 'tristate', false, appStoreData, index, originKeyData),
       )!,
-      activeColor: FlutterTypeConstant.parseColor(
+      activeColor: TypeParser.parseColor(
         DynamicUI.def(parsedJson, 'activeColor', null, appStoreData, index, originKeyData),
       ),
-      focusColor: FlutterTypeConstant.parseColor(
+      focusColor: TypeParser.parseColor(
         DynamicUI.def(parsedJson, 'focusColor', null, appStoreData, index, originKeyData),
       ),
-      hoverColor: FlutterTypeConstant.parseColor(
+      hoverColor: TypeParser.parseColor(
         DynamicUI.def(parsedJson, 'hoverColor', null, appStoreData, index, originKeyData),
       ),
-      checkColor: FlutterTypeConstant.parseColor(
+      checkColor: TypeParser.parseColor(
         DynamicUI.def(parsedJson, 'checkColor', null, appStoreData, index, originKeyData),
       ),
-      autofocus: FlutterTypeConstant.parseBool(
+      autofocus: TypeParser.parseBool(
         DynamicUI.def(parsedJson, 'autofocus', false, appStoreData, index, originKeyData),
       )!,
       splashRadius: DynamicUI.def(parsedJson, 'splashRadius', null, appStoreData, index, originKeyData),

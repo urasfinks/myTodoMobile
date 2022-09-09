@@ -84,7 +84,7 @@ class DynamicUI {
       "IntroductionScreen": FlutterType.pIntroductionScreen,
       "PageViewModel": FlutterType.pPageViewModel,
     };
-    //AppStore.print("${[map, appStoreData, index, originKeyData]}");
+    //GlobalData.debug("${[map, appStoreData, index, originKeyData]}");
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData]) : def;
   }
 
@@ -99,7 +99,7 @@ class DynamicUI {
       if (ret.runtimeType.toString().startsWith('_InternalLinkedHashMap<String,') && ret.containsKey('flutterType')) {
         return DynamicUI.getByType(ret['flutterType'] as String, ret, def, appStoreData, index, originKeyData);
       }
-      //AppStore.print(ret);
+      //GlobalData.debug(ret);
       if (DynamicFn.isTextFunction(ret)) {
         return DynamicFn.evalTextFunction(ret, map, appStoreData, index, originKeyData);
       }
