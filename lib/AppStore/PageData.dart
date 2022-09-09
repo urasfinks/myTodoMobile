@@ -138,6 +138,8 @@ class PageData {
 
   void apply() {
     GlobalData.debug("apply");
+    reBuild();
+    getPageState()?.setState(() {});
   }
 
   void destroy() {

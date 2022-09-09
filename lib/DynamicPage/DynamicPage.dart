@@ -127,14 +127,14 @@ class DynamicPageWidgetState extends State<DynamicPageWidget> {
   @override
   void dispose() {
     //GlobalData.debug("Dispose");
-    TabScope.getInstance().onDestroyPage(saveStore!);
+    TabScope.getInstance().onDestroyPage(saveStore);
     ListPageData().remove(saveStore);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    //GlobalData.debug("DynPage build");
+    GlobalData.debug("DynPage build");
     PageData pageData = ListPageData().createPageData(context);
     pageData.setPageState(this);
     saveStore = pageData;

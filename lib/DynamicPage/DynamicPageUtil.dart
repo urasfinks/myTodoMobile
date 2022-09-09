@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import '../Cache.dart';
 import '../Util.dart';
 import 'DynamicFn.dart';
-import 'DynamicPage.dart';
 import '../DynamicUI/DynamicUI.dart';
 import '../DynamicUI/page/ErrorPageJsonObject.dart';
 import '../WebSocket.dart';
@@ -141,46 +140,46 @@ class DynamicPageUtil {
     }
   }
 
-  static dataUpdate(Map<String, dynamic> data, PageData appStoreData, {bool native = true}) {
-    appStoreData.setServerResponse(data);
+  static dataUpdate(Map<String, dynamic> data, PageData pageData, {bool native = true}) {
+    pageData.setServerResponse(data);
 
     List<dynamic>? action = data['Actions'];
     if (action != null && action.isNotEmpty) {
       for (Map item in action) {
-        DynamicUI.def(item, "method", null, appStoreData, 0, "Data");
+        DynamicUI.def(item, "method", null, pageData, 0, "Data");
       }
     }
 
     if (data['RevisionState'] != null && data['RevisionState'] != "") {
-      appStoreData.setIndexRevisionWithoutReload(data['RevisionState']);
+      pageData.setIndexRevisionWithoutReload(data['RevisionState']);
     }
     if (data['WidgetData'] != null && data['WidgetData'] != "") {
       //GlobalData.debug("SET NEW WIDGET DATA(${data['WidgetData']})");
-      appStoreData.pageDataWidget.addWidgetDataByMap(data['WidgetData']);
+      pageData.pageDataWidget.addWidgetDataByMap(data['WidgetData']);
     }
 
     if (data['State'] != null && data['State'] != "") {
       Map<String, dynamic> map = data['State'];
       for (var item in map.entries) {
-        appStoreData.pageDataState.set(item.key, item.value, notify: false);
+        pageData.pageDataState.set(item.key, item.value, notify: false);
       }
-      appStoreData.apply(); //Maybe setState refresh Data on UI?
+      pageData.apply(); //Maybe setState refresh Data on UI?
     }
 
-    dynamic mapBridgeState = appStoreData.pageDataWidget.getWidgetData("bridgeState");
+    dynamic mapBridgeState = pageData.pageDataWidget.getWidgetData("bridgeState");
     if (mapBridgeState != null && mapBridgeState.runtimeType.toString().contains("Map<") && mapBridgeState.isNotEmpty) {
       for (var item in mapBridgeState.entries) {
-        appStoreData.pageDataState.set(item.key, item.value, notify: false);
+        pageData.pageDataState.set(item.key, item.value, notify: false);
       }
-      appStoreData.apply();
+      pageData.apply();
     }
 
     if (native == true &&
         data['SyncSocket'] != null &&
         data['SyncSocket'] == true &&
-        (appStoreData.pageDataWidget.getWidgetData("dataUID") as String).isNotEmpty) {
-      appStoreData.setSyncSocket(true);
-      WebSocketService().subscribe(appStoreData.pageDataWidget.getWidgetData("dataUID"));
+        (pageData.pageDataWidget.getWidgetData("dataUID") as String).isNotEmpty) {
+      pageData.setSyncSocket(true);
+      WebSocketService().subscribe(pageData.pageDataWidget.getWidgetData("dataUID"));
     }
 
     parseTemplate(data, "Data", "list");
@@ -192,8 +191,8 @@ class DynamicPageUtil {
      но инициатор процесса initPage, в конце определяет build = false
      и на момент setState и повторного build мы не перекомпилируем отображение*/
     Future.delayed(const Duration(milliseconds: 1), () {
-      appStoreData.reBuild();
-      appStoreData.getPageState()?.setState(() {});
+      pageData.reBuild();
+      pageData.getPageState()?.setState(() {});
     });
 
     if (native == true && data['ParentPersonKey'] != null) {

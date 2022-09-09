@@ -14,7 +14,7 @@ import 'SliversApp.dart';
 
 class Util {
   static dynamic getListView(PageData appStoreData, ScrollPhysics physics,{bool reverse = false}) {
-    return ShrinkWrapSlivers(appStoreData, reverse: reverse,);
+    return ShrinkWrapSlivers(appStoreData, reverse: reverse, true);
   }
 
   static ListView getListView2(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
