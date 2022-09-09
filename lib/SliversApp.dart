@@ -39,10 +39,12 @@ class ShrinkWrapSlivers_f extends StatelessWidget {
 
 class ShrinkWrapSlivers extends StatefulWidget {
   PageData pageData;
+  bool reverse = false;
 
   ShrinkWrapSlivers(
     this.pageData, {
     Key? key,
+    this.reverse = false
   }) : super(key: key);
 
   @override
@@ -65,7 +67,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) {
         return SingleChildScrollView(
-
+          reverse: widget.reverse,
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           scrollDirection: Axis.vertical,
           child: ConstrainedBox(
