@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
 import '../AppMetric.dart';
+import '../AppStore/GlobalData.dart';
 import '../AppStore/PageData.dart';
 import '../AppStore/ListPageData.dart';
 import '../TabScope.dart';
@@ -109,10 +110,10 @@ class DynamicPageWidget extends StatefulWidget {
     }
   }
 
-  Future<void> load(PageData pageData, {pause = true}) async {
+  Future<void> load(PageData pageData, {pause = true, prepareDelay = false}) async {
     if (TabScope.getInstance().iamActivePage(pageData)) {
       //GlobalData.debug("DynamicPage.refresh now: ${url}");
-      await DynamicPageUtil.loadData(pageData, pause: pause);
+      await DynamicPageUtil.loadData(pageData, pause: pause, prepareDelay: prepareDelay);
     } else {
       //GlobalData.debug("DynamicPage.refresh lazy: ${url}");
       pageData.needUpdateOnActive = true;
@@ -121,22 +122,26 @@ class DynamicPageWidget extends StatefulWidget {
 }
 
 class DynamicPageWidgetState extends State<DynamicPageWidget> {
-  late PageData saveStore;
+  late PageData savePageData;
 
   @override
   void dispose() {
     //GlobalData.debug("Dispose");
-    TabScope.getInstance().onDestroyPage(saveStore);
-    ListPageData().remove(saveStore);
+    TabScope.getInstance().onDestroyPage(savePageData);
+    ListPageData().remove(savePageData);
     super.dispose();
+  }
+
+  Future<void> load({pause = true, prepareDelay = false}) async {
+    await widget.load(savePageData, pause: pause, prepareDelay: prepareDelay);
   }
 
   @override
   Widget build(BuildContext context) {
-    //GlobalData.debug("DynPage build");
+    GlobalData.debug("DynamicPageWidget build");
     PageData pageData = ListPageData().createPageData(context);
     pageData.setPageState(this);
-    saveStore = pageData;
+    savePageData = pageData;
     pageData.initPage(widget, context);
     return pageData.getCompiledWidget();
   }

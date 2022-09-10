@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:myTODO/AppStore/PageDataState.dart';
 import 'package:myTODO/AppStore/PageDataWidget.dart';
-import 'package:myTODO/DynamicPage/DynamicPage.dart';
+import 'package:myTODO/DynamicPage/DynamicPageWidget.dart';
 import '../AppMetric.dart';
 import '../DynamicPage/DynamicFn.dart';
 import '../DynamicPage/DynamicPageUtil.dart';
@@ -35,7 +35,7 @@ class PageData {
   Widget wrapPage = const Text("Undefined WrapPage in Templates");
   bool nowDownloadContent = false;
   BuildContext? _ctx;
-  State? pageState;
+  DynamicPageWidgetState? pageState;
   Map<String, dynamic> serverResponse = {};
   bool _build = true;
   bool _parentUpdate = false;
@@ -72,11 +72,11 @@ class PageData {
     }
   }
 
-  void setPageState(State x) {
+  void setPageState(DynamicPageWidgetState x) {
     pageState = x;
   }
 
-  State? getPageState() {
+  DynamicPageWidgetState? getPageState() {
     return pageState;
   }
 
@@ -255,7 +255,7 @@ class PageData {
               pageDataWidget.getWidgetData("backgroundColor"),
             ),
       appBar: _getAppBar(back, pageDataWidget.getWidgetData("title")),
-      body: _getContent(),
+      body:  _getContent(),
     );
     /*LiquidPullToRefresh(
         color: TypeParser.parseColor(

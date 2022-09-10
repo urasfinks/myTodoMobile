@@ -1,5 +1,5 @@
 import '../AppMetric.dart';
-import '../DynamicPage/DynamicPage.dart';
+import '../DynamicPage/DynamicPageWidget.dart';
 import 'PageData.dart';
 
 class PageDataWidget {

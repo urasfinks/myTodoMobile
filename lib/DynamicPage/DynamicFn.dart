@@ -17,7 +17,7 @@ import '../DynamicUI/TypeParser.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../Util.dart';
-import 'DynamicPage.dart';
+import 'DynamicPageWidget.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';

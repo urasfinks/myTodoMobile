@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myTODO/TabPageHistory.dart';
 import 'AppStore/GlobalData.dart';
 import 'AppStore/PageData.dart';
-import 'DynamicPage/DynamicPage.dart';
+import 'DynamicPage/DynamicPageWidget.dart';
 import 'DynamicPage/DynamicPageUtil.dart';
 
 class TabScope {
@@ -33,7 +33,7 @@ class TabScope {
           "url": '/project/to-do',
           "backgroundColor": "#f5f5f5",
           "pullToRefreshBackgroundColor": "blue.600",
-          "progressIndicatorBackgroundColor": "#ffffff",
+          "progressIndicatorBackgroundColor": "transparent",
           "root": true
         },
       ),
@@ -45,7 +45,7 @@ class TabScope {
           "url": '/project/system/account',
           "backgroundColor": "blue.600",
           "pullToRefreshBackgroundColor": "blue.600",
-          "progressIndicatorBackgroundColor": "#ffffff",
+          "progressIndicatorBackgroundColor": "transparent",
           "root": true,
         },
       ),

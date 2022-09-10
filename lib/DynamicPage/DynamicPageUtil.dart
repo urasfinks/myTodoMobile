@@ -19,7 +19,36 @@ import 'dart:async';
 class DynamicPageUtil {
   static int delay = 350; //Animation open new page!!!
 
-  static Future<void> loadData(PageData appStoreData, {pause = true}) async {
+  static Future<void> _asyncPrepare(dynamic response, PageData appStoreData) async {
+    appStoreData.clearState();
+
+    //AppStore.fullDebug(response.body);
+    GlobalData.debug("Download complete");
+    //AppStore.fullDebug(response.body);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> resp = jsonDecode(response.body);
+      if (resp["Cache"] != null && resp["Cache"] == true) {
+        Cache.getInstance().then((Cache cache) {
+          cache.pageAdd(appStoreData.pageDataWidget.getWidgetData('url'), response.body);
+        });
+      }
+      if (resp["AppMetricToken"] != null) {
+        AppMetric().activate(resp["AppMetricToken"]);
+      }
+      dataUpdate(resp, appStoreData);
+    } else {
+      setErrorStyle(appStoreData);
+      if (response.statusCode == 401) {
+        //Получается персону удалили, повторный перезапуск приклада заного создат новую, понимаю - это как-то не человечно, однако не будет deadlock
+        final prefs = await SharedPreferences.getInstance();
+        prefs.remove('key');
+      }
+      dataUpdate(
+          ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
+    }
+  }
+
+  static Future<void> loadData(PageData appStoreData, {pause = true, prepareDelay = false}) async {
     //return;
 
     appStoreData.nowDownloadContent = true;
@@ -32,33 +61,17 @@ class DynamicPageUtil {
     }
     GlobalData.debug('Prepare download: ${appStoreData.pageDataWidget.getWidgetDates()}');
     try {
-      final response = await http.post(Uri.parse("${GlobalData.host}${appStoreData.pageDataWidget.getWidgetData('url')}"),
-          headers: GlobalData.requestHeader, body: appStoreData.pageDataWidget.getWidgetData('parentState'));
+      final response = await http.post(
+          Uri.parse("${GlobalData.host}${appStoreData.pageDataWidget.getWidgetData('url')}"),
+          headers: GlobalData.requestHeader,
+          body: appStoreData.pageDataWidget.getWidgetData('parentState'));
 
-      appStoreData.clearState();
-
-      //AppStore.fullDebug(response.body);
-      GlobalData.debug("Download complete");
-      //AppStore.fullDebug(response.body);
-      if (response.statusCode == 200) {
-        Map<String, dynamic> resp = jsonDecode(response.body);
-        if (resp["Cache"] != null && resp["Cache"] == true) {
-          Cache.getInstance().then((Cache cache) {
-            cache.pageAdd(appStoreData.pageDataWidget.getWidgetData('url'), response.body);
-          });
-        }
-        if (resp["AppMetricToken"] != null) {
-          AppMetric().activate(resp["AppMetricToken"]);
-        }
-        dataUpdate(resp, appStoreData);
+      if (prepareDelay == false) {
+        _asyncPrepare(response, appStoreData);
       } else {
-        setErrorStyle(appStoreData);
-        if (response.statusCode == 401) {
-          //Получается персону удалили, повторный перезапуск приклада заного создат новую, понимаю - это как-то не человечно, однако не будет deadlock
-          final prefs = await SharedPreferences.getInstance();
-          prefs.remove('key');
-        }
-        dataUpdate(ErrorPageJsonObject.getPage(response.statusCode.toString(), "Ошибка сервера", response.body), appStoreData);
+        Future.delayed(Duration(milliseconds: delay), () {
+          _asyncPrepare(response, appStoreData);
+        });
       }
     } catch (e, stacktrace) {
       AppMetric().exception(e, stacktrace);

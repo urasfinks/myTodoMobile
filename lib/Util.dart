@@ -14,8 +14,8 @@ import 'package:uni_links/uni_links.dart';
 
 class Util {
   static ScrollPhysics? getPhysics(){
-    return null;
-    //return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+    //return null;
+    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 
   static ListView getListView2(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,
