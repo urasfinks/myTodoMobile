@@ -11,6 +11,7 @@ import '../AppStore/GlobalData.dart';
 import '../AppStore/PageData.dart';
 import '../AppStore/ListPageData.dart';
 import '../DynamicUI/DynamicUI.dart';
+import '../SliversApp.dart';
 import '../TabScope.dart';
 import '../DynamicUI/TypeParser.dart';
 import 'dart:io';
@@ -506,16 +507,12 @@ class DynamicFn {
         return getFutureList(appStoreData)(0);
       }
       if (grid == false) {
-        return Util.getListView(
-            appStoreData,
-            const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            reverse: cfg["reverse"]
-        );
+        return ShrinkWrapSlivers(appStoreData, reverse: cfg["reverse"], true);
       } else {
         Map x = appStoreData.pageDataWidget.getWidgetDataConfig(
             {"crossAxisCount": 2, "childAspectRatio": 1.0, "mainAxisSpacing": 0.0, "crossAxisSpacing": 0.0});
         return GridView.count(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: Util.getPhysics(),
           crossAxisCount: x["crossAxisCount"],
           childAspectRatio: x["childAspectRatio"],
           mainAxisSpacing: x["mainAxisSpacing"],

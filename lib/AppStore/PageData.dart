@@ -255,7 +255,9 @@ class PageData {
               pageDataWidget.getWidgetData("backgroundColor"),
             ),
       appBar: _getAppBar(back, pageDataWidget.getWidgetData("title")),
-      body: LiquidPullToRefresh(
+      body: _getContent(),
+    );
+    /*LiquidPullToRefresh(
         color: TypeParser.parseColor(
           pageDataWidget.getWidgetData("pullToRefreshBackgroundColor"),
         ),
@@ -267,8 +269,7 @@ class PageData {
           await widget.load(this, pause: false);
         },
         child: _getContent(),
-      ),
-    );
+      )*/
     if (gradient == true) {
       //GlobalData.debug("GRAD: ${FlutterType.pLinearGradient(conf["gradient"], this, 0, "")}");
       compiledWidget = Container(
@@ -306,6 +307,7 @@ class PageData {
   }
 
   _getAppBar(BackButton? back, String title) {
+    //print("AppBar rebuild");
     //print("!!!${getWidgetData("url")} ${TabScope.getInstance().isBack()}");
     return AppBar(
       leading: back,

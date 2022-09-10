@@ -9,14 +9,13 @@ import 'package:myTODO/DynamicUI/TypeParser.dart';
 import 'dart:developer' as developer;
 
 import 'AppMetric.dart';
-import 'AppStore/PageData.dart';
 import 'DynamicPage/DynamicFn.dart';
-import 'SliversApp.dart';
 import 'package:uni_links/uni_links.dart';
 
 class Util {
-  static dynamic getListView(PageData appStoreData, ScrollPhysics physics,{bool reverse = false}) {
-    return ShrinkWrapSlivers(appStoreData, reverse: reverse, true);
+  static ScrollPhysics? getPhysics(){
+    return null;
+    //return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 
   static ListView getListView2(bool separated, ScrollPhysics physics, int itemCount, Widget Function(int index) itemBuilder,

@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'AppStore/GlobalData.dart';
 import 'Cache.dart';
+import 'SliversApp.dart';
 import 'TabScope.dart';
 import 'TabWrap.dart';
 import 'Util.dart';

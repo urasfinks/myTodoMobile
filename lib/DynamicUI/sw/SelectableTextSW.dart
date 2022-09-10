@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../AppStore/PageData.dart';
+import '../../Util.dart';
 import '../DynamicUI.dart';
-import '../FlutterType.dart';
 import '../TypeParser.dart';
 
 class SelectableTextSW extends StatelessWidget {
@@ -41,7 +41,7 @@ class SelectableTextSW extends StatelessWidget {
       textWidthBasis: TypeParser.parseTextWidthBasis(
         DynamicUI.def(parsedJson, 'textWidthBasis', null, appStoreData, index, originKeyData),
       ),
-      scrollPhysics: FlutterType.pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
+      scrollPhysics: Util.getPhysics(),
     );
   }
 

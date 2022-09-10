@@ -29,6 +29,7 @@ import 'package:myTODO/DynamicUI/sw/TextFieldSW.dart';
 import 'package:myTODO/DynamicUI/sw/TextSW.dart';
 import '../AppMetric.dart';
 import '../AppStore/GlobalData.dart';
+import '../Util.dart';
 import 'DynamicUI.dart';
 import 'TypeParser.dart';
 
@@ -343,7 +344,7 @@ class FlutterType {
       padding: TypeParser.parseEdgeInsets(
         DynamicUI.def(parsedJson, 'padding', null, appStoreData, index, originKeyData),
       )!,
-      physics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
+      physics: Util.getPhysics(),
       children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
     );
   }
@@ -366,7 +367,7 @@ class FlutterType {
         reverse: TypeParser.parseBool(
           DynamicUI.def(parsedJson, 'reverse', false, appStoreData, parentindex, originKeyData),
         )!,
-        physics: pBouncingScrollPhysics(parsedJson, appStoreData, parentindex, originKeyData),
+        physics: Util.getPhysics(),
         itemCount: TypeParser.parseInt(
           DynamicUI.def(parsedJson, 'itemCount', 0, appStoreData, parentindex, originKeyData),
         )!,
@@ -391,7 +392,7 @@ class FlutterType {
         reverse: TypeParser.parseBool(
           DynamicUI.def(parsedJson, 'reverse', false, appStoreData, parentindex, originKeyData),
         )!,
-        physics: pBouncingScrollPhysics(parsedJson, appStoreData, parentindex, originKeyData),
+        physics: Util.getPhysics(),
         itemCount: TypeParser.parseInt(
           DynamicUI.def(parsedJson, 'itemCount', 0, appStoreData, parentindex, originKeyData),
         )!,
@@ -402,12 +403,6 @@ class FlutterType {
     }
   }
 
-  static dynamic pBouncingScrollPhysics(parsedJson, PageData appStoreData, int parentindex, originKeyData) {
-    return const BouncingScrollPhysics(
-      parent: AlwaysScrollableScrollPhysics(),
-    );
-  }
-
   static dynamic pPageView(parsedJson, PageData appStoreData, int index, String originKeyData) {
     return PageView(
       scrollDirection: TypeParser.parseAxis(
@@ -416,7 +411,7 @@ class FlutterType {
       reverse: TypeParser.parseBool(
         DynamicUI.def(parsedJson, 'reverse', false, appStoreData, index, originKeyData),
       )!,
-      physics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
+      physics: Util.getPhysics(),
       pageSnapping: TypeParser.parseBool(
         DynamicUI.def(parsedJson, 'pageSnapping', true, appStoreData, index, originKeyData),
       )!,
@@ -845,7 +840,7 @@ class FlutterType {
       options.add(S2Choice<String>(value: w["value"], title: w["title"]));
     }
     return SmartSelect<String>.single(
-      choiceConfig: S2ChoiceConfig(physics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData)),
+      choiceConfig: Util.getPhysics() != null ? S2ChoiceConfig(physics: Util.getPhysics()!) : null,
       title: DynamicUI.def(parsedJson, 'title', '', appStoreData, index, originKeyData),
       selectedValue: value,
       choiceItems: options,

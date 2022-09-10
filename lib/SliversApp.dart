@@ -5,6 +5,7 @@ import 'AppStore/GlobalData.dart';
 import 'AppStore/PageData.dart';
 import 'DynamicPage/DynamicPageUtil.dart';
 import 'DynamicUI/DynamicUI.dart';
+import 'Util.dart';
 
 class SliversApp extends StatelessWidget {
   const SliversApp({super.key});
@@ -29,7 +30,8 @@ class ShrinkWrapSlivers_f extends StatelessWidget {
   Widget build(BuildContext context) {
     //appStoreData = AppStoreData(null);
     PageData pd = PageData();
-    String? cachedDataPage = GlobalData.cache?.pageGet("/project/to-do/list?uid_data=46d119c9-d7d2-4f6c-9a71-c25b4eac18cd");
+    String? cachedDataPage =
+        GlobalData.cache?.pageGet("/project/to-do/list?uid_data=46d119c9-d7d2-4f6c-9a71-c25b4eac18cd");
     Map<String, dynamic> data = jsonDecode(cachedDataPage!);
     DynamicPageUtil.parseTemplate(data, "Data", "list");
     pd.setServerResponse(data);
@@ -42,17 +44,13 @@ class ShrinkWrapSlivers extends StatefulWidget {
   bool reverse = false;
   bool rebuild = false;
 
-  ShrinkWrapSlivers(
-    this.pageData, this.rebuild, {
-    Key? key,
-    this.reverse = false
-  }) : super(key: key);
+  ShrinkWrapSlivers(this.pageData, this.rebuild, {Key? key, this.reverse = false}) : super(key: key);
 
   @override
   _ShrinkWrapSliversState createState() => _ShrinkWrapSliversState();
 }
 
-class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
+class _ShrinkWrapSliversState2 extends State<ShrinkWrapSlivers> {
   List<Widget> list = [];
 
   @override
@@ -61,13 +59,14 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
     dynamic data = widget.pageData.getServerResponse();
     for (int i = 0; i < data["list"].length; i++) {
       list.add(DynamicUI.mainJson(data["list"][i], widget.pageData, i, 'Data'));
+      //list.add(const Text("Очень большой текст Очень большой текст Очень большой текст Очень большой текст Очень большой текст Очень большой текст Очень большой текст Очень большой текст Очень большой текст "));
     }
     widget.rebuild = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    if(widget.rebuild == true){
+    if (widget.rebuild == true) {
       initState();
     }
     //print("Sliver build");
@@ -75,7 +74,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
       builder: (BuildContext context, BoxConstraints viewportConstraints) {
         return SingleChildScrollView(
           reverse: widget.reverse,
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: Util.getPhysics(),
           scrollDirection: Axis.vertical,
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: viewportConstraints.maxHeight),
@@ -90,7 +89,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
   }
 }
 
-class _ShrinkWrapSliversState2 extends State<ShrinkWrapSlivers> {
+class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
   List<SliverList> sliverLists = [];
 
   @override
@@ -101,7 +100,7 @@ class _ShrinkWrapSliversState2 extends State<ShrinkWrapSlivers> {
     //dynamic data = jsonDecode(cachedDataPage!);
     dynamic data = widget.pageData.getServerResponse();
 
-    int each = 100;
+    int each = 7;
     List listItem = [];
     for (int i = 0; i < data["list"].length; i++) {
       listItem.add(DynamicUI.mainJson(data["list"][i], widget.pageData, i, 'Data'));
@@ -128,6 +127,12 @@ class _ShrinkWrapSliversState2 extends State<ShrinkWrapSlivers> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(slivers: sliverLists);
+    print("rebuild");
+    return CustomScrollView(
+      reverse: widget.reverse,
+      slivers: sliverLists,
+      cacheExtent: 2000,
+      physics: Util.getPhysics(),
+    );
   }
 }
