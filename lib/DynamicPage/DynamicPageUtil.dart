@@ -19,7 +19,7 @@ import 'dart:async';
 class DynamicPageUtil {
   static int delay = 350; //Animation open new page!!!
 
-  static Future<void> loadData(PageData appStoreData) async {
+  static Future<void> loadData(PageData appStoreData, {pause = true}) async {
     //return;
 
     appStoreData.nowDownloadContent = true;
@@ -27,7 +27,7 @@ class DynamicPageUtil {
 
     //await Future.delayed(Duration(milliseconds: 5000), () {}); //Для тестирования загрузки из cache
 
-    if (!appStoreData.pageDataWidget.getWidgetData('root')) {
+    if (pause == true && !appStoreData.pageDataWidget.getWidgetData('root')) {
       await Future.delayed(Duration(milliseconds: delay), () {});
     }
     GlobalData.debug('Prepare download: ${appStoreData.pageDataWidget.getWidgetDates()}');

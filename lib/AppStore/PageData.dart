@@ -264,7 +264,7 @@ class PageData {
         animSpeedFactor: 2,
         height: 90,
         onRefresh: () async {
-          await widget.load(this);
+          await widget.load(this, pause: false);
         },
         child: _getContent(),
       ),

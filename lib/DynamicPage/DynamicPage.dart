@@ -109,10 +109,10 @@ class DynamicPageWidget extends StatefulWidget {
     }
   }
 
-  Future<void> load(PageData pageData) async {
+  Future<void> load(PageData pageData, {pause = true}) async {
     if (TabScope.getInstance().iamActivePage(pageData)) {
       //GlobalData.debug("DynamicPage.refresh now: ${url}");
-      await DynamicPageUtil.loadData(pageData);
+      await DynamicPageUtil.loadData(pageData, pause: pause);
     } else {
       //GlobalData.debug("DynamicPage.refresh lazy: ${url}");
       pageData.needUpdateOnActive = true;
