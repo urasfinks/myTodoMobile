@@ -5,10 +5,10 @@ import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
-class SWCheckbox extends StatelessWidget {
+class CheckboxSW extends StatelessWidget {
   late final Widget render;
 
-  SWCheckbox(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+  CheckboxSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     bool value = TypeParser.parseBool(
       DynamicUI.def(parsedJson, 'value', false, appStoreData, index, originKeyData),

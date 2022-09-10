@@ -61,7 +61,9 @@ class PageData {
         ((refreshOnResume != null && refreshOnResume == true) || syncSocket == true || veryLong == true)) {
       onIndexRevisionError();
     }
-    if (state == AppLifecycleState.detached || state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
       inactiveTimestamp = Util.getTimestamp();
       WebSocketService().stop();
     }
@@ -130,8 +132,12 @@ class PageData {
     }
     if (notify == true) {
       if (syncSocket) {
-        WebSocketService().sendToServer(pageDataWidget.getWidgetData("dataUID"), "UPDATE_STATE",
-            data: {"key": key, "value": pageDataState.get(key, null)});
+        if (WebSocketService().isConnect()) {
+          WebSocketService().sendToServer(pageDataWidget.getWidgetData("dataUID"), "UPDATE_STATE",
+              data: {"key": key, "value": pageDataState.get(key, null)});
+        } else {
+          DynamicFn.alert(this, {"backgroundColor": "red", "data": "Нет подключения к серверу"});
+        }
       }
     }
   }
@@ -182,8 +188,8 @@ class PageData {
         if (getServerResponse().containsKey("Template") &&
             pageDataWidget.getWidgetData("wrapPage").isNotEmpty &&
             (getServerResponse()["Template"] as Map).containsKey(pageDataWidget.getWidgetData("wrapPage"))) {
-          wrapPage =
-              DynamicUI.main((getServerResponse()["Template"] as Map)[pageDataWidget.getWidgetData("wrapPage")], this, 0, '');
+          wrapPage = DynamicUI.main(
+              (getServerResponse()["Template"] as Map)[pageDataWidget.getWidgetData("wrapPage")], this, 0, '');
         }
 
         BackButton? back = (widget.root == false)
@@ -258,7 +264,7 @@ class PageData {
         animSpeedFactor: 2,
         height: 90,
         onRefresh: () async {
-          widget.load(this);
+          await widget.load(this);
         },
         child: _getContent(),
       ),
@@ -277,26 +283,22 @@ class PageData {
   createErrorCompilation(DynamicPageWidget widget, String error) {
     compiledWidget = Scaffold(
       appBar: _getAppBar(null, "Ошибка компиляции"),
-      body: SafeArea(
-        child: Center(
-          child: LiquidPullToRefresh(
-            showChildOpacityTransition: false,
-            springAnimationDurationInMilliseconds: 500,
-            animSpeedFactor: 2,
-            height: 90,
-            onRefresh: () async {
-              widget.load(this);
-            },
-            child: ListView.separated(
-              itemCount: 1,
-              itemBuilder: (BuildContext context, int index) {
-                return Text(error);
-              },
-              separatorBuilder: (BuildContext context, int index) => Divider(
-                height: 1,
-                color: TypeParser.parseColor("#f5f5f5")!,
-              ),
-            ),
+      body: LiquidPullToRefresh(
+        showChildOpacityTransition: true,
+        springAnimationDurationInMilliseconds: 500,
+        animSpeedFactor: 2,
+        height: 90,
+        onRefresh: () async {
+          await widget.load(this);
+        },
+        child: ListView.separated(
+          itemCount: 1,
+          itemBuilder: (BuildContext context, int index) {
+            return Text(error);
+          },
+          separatorBuilder: (BuildContext context, int index) => Divider(
+            height: 1,
+            color: TypeParser.parseColor("#f5f5f5")!,
           ),
         ),
       ),

@@ -4,10 +4,10 @@ import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
-class SWSizeBox extends StatelessWidget {
+class SizedBoxSW extends StatelessWidget {
   late final Widget render;
 
-  SWSizeBox(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+  SizedBoxSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = SizedBox(
       width: TypeParser.parseDouble(
         DynamicUI.def(parsedJson, 'width', null, appStoreData, index, originKeyData),

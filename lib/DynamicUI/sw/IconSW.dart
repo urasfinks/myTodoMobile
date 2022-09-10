@@ -5,10 +5,10 @@ import '../DynamicUI.dart';
 import '../TypeParser.dart';
 import '../icon.dart';
 
-class SWIcon extends StatelessWidget {
+class IconSW extends StatelessWidget {
   late final Widget render;
 
-  SWIcon(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+  IconSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = Icon(
       iconsMap[DynamicUI.def(parsedJson, 'src', null, appStoreData, index, originKeyData)],
       color: TypeParser.parseColor(

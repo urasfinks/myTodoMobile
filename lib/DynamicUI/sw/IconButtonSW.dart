@@ -6,10 +6,10 @@ import '../../DynamicPage/DynamicFn.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
-class SWIconButton extends StatelessWidget {
+class IconButtonSW extends StatelessWidget {
   late final Widget render;
 
-  SWIconButton(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+  IconButtonSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = IconButton(
       icon: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index, originKeyData),
       iconSize: TypeParser.parseDouble(

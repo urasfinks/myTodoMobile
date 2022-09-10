@@ -4,14 +4,11 @@ import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
-class SWColumn extends StatelessWidget {
+class RowSW extends StatelessWidget {
   late final Widget render;
 
-  SWColumn(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
-    render = Column(
-      mainAxisSize: TypeParser.parseMainAxisSize(
-        DynamicUI.def(parsedJson, 'mainAxisSize', 'max', appStoreData, index, originKeyData),
-      )!,
+  RowSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+    render = Row(
       crossAxisAlignment: TypeParser.parseCrossAxisAlignment(
         DynamicUI.def(parsedJson, 'crossAxisAlignment', 'center', appStoreData, index, originKeyData),
       )!,

@@ -4,10 +4,10 @@ import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
-class SWText extends StatelessWidget {
+class TextSW extends StatelessWidget {
   late final Widget render;
 
-  SWText(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+  TextSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = Text(
       DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData).toString(),
       textDirection: TypeParser.parseTextDirection(

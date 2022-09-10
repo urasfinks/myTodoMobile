@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
-import '../FlutterType.dart';
 import '../TypeParser.dart';
-import 'SWSizeBox.dart';
+import 'SizeBoxSW.dart';
 
-class SWContainer extends StatelessWidget{
+class ContainerSW extends StatelessWidget{
   late final Widget render;
 
-  SWContainer(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}){
+  ContainerSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}){
     render = Container(
       margin: TypeParser.parseEdgeInsets(
         DynamicUI.def(parsedJson, 'margin', null, appStoreData, index, originKeyData),
@@ -23,7 +22,7 @@ class SWContainer extends StatelessWidget{
       height: TypeParser.parseDouble(
         DynamicUI.def(parsedJson, 'height', null, appStoreData, index, originKeyData),
       ),
-      child: DynamicUI.def(parsedJson, 'child', SWSizeBox(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),
+      child: DynamicUI.def(parsedJson, 'child', SizedBoxSW(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),
       decoration: DynamicUI.def(parsedJson, 'decoration', null, appStoreData, index, originKeyData),
       alignment: TypeParser.parseAlignment(
         DynamicUI.def(parsedJson, 'alignment', null, appStoreData, index, originKeyData),

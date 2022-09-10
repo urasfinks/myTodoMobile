@@ -4,10 +4,10 @@ import '../../AppStore/PageData.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
-class SWDivider extends StatelessWidget{
+class DividerSW extends StatelessWidget{
   late final Widget render;
 
-  SWDivider(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+  DividerSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = Divider(
       height: TypeParser.parseDouble(
         DynamicUI.def(parsedJson, 'height', null, appStoreData, index, originKeyData),

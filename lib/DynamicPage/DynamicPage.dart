@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myTODO/AppStore/GlobalData.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
 import '../AppMetric.dart';
 import '../AppStore/PageData.dart';
@@ -110,10 +109,10 @@ class DynamicPageWidget extends StatefulWidget {
     }
   }
 
-  void load(PageData pageData) {
+  Future<void> load(PageData pageData) async {
     if (TabScope.getInstance().iamActivePage(pageData)) {
       //GlobalData.debug("DynamicPage.refresh now: ${url}");
-      DynamicPageUtil.loadData(pageData);
+      await DynamicPageUtil.loadData(pageData);
     } else {
       //GlobalData.debug("DynamicPage.refresh lazy: ${url}");
       pageData.needUpdateOnActive = true;

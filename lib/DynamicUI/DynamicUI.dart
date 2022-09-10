@@ -4,23 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:myTODO/AppStore/PageData.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
-import 'package:myTODO/DynamicUI/sw/SWSizeBox.dart';
+import 'package:myTODO/DynamicUI/sw/SizeBoxSW.dart';
 import 'FlutterType.dart';
 
 class DynamicUI {
   static Widget main(String jsonData, PageData appStoreData, int index, String originKeyData) {
     if (jsonData.isEmpty) {
-      return SWSizeBox(null, appStoreData, index, originKeyData);
+      return SizedBoxSW(null, appStoreData, index, originKeyData);
     }
     final parsedJson = jsonDecode(jsonData);
-    return def(parsedJson, null, SWSizeBox(null, appStoreData, index, originKeyData), appStoreData, index, originKeyData);
+    return def(parsedJson, null, SizedBoxSW(null, appStoreData, index, originKeyData), appStoreData, index, originKeyData);
   }
 
   static dynamic mainJson(Map<String, dynamic> jsonData, PageData appStoreData, int index, String originKeyData) {
     if (jsonData.isEmpty) {
-      return SWSizeBox(jsonData, appStoreData, index, originKeyData);
+      return SizedBoxSW(jsonData, appStoreData, index, originKeyData);
     }
-    return def(jsonData, null, SWSizeBox(jsonData, appStoreData, index, originKeyData), appStoreData, index, originKeyData);
+    return def(jsonData, null, SizedBoxSW(jsonData, appStoreData, index, originKeyData), appStoreData, index, originKeyData);
   }
 
   static dynamic getByType(String containsKey, map, dynamic def, PageData appStoreData, int index, String? originKeyData) {
@@ -112,7 +112,7 @@ class DynamicUI {
     dynamic l2 = def(parsedJson, key, [], appStoreData, index, originKeyData);
     if (l2 != null && l2.runtimeType.toString().contains("List")) {
       for (int i = 0; i < l2.length; i++) {
-        list.add(def(l2[i], null, SWSizeBox(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData));
+        list.add(def(l2[i], null, SizedBoxSW(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData));
       }
     }
     return list;
@@ -124,7 +124,7 @@ class DynamicUI {
     dynamic l2 = def(parsedJson, key, [], appStoreData, index, originKeyData);
     if (l2 != null && l2.runtimeType.toString().contains("List")) {
       for (int i = 0; i < l2.length; i++) {
-        list.add(def(l2[i], null, SWSizeBox(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData));
+        list.add(def(l2[i], null, SizedBoxSW(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData));
       }
     }
     return list;

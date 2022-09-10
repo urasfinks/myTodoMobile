@@ -9,23 +9,21 @@ import 'package:introduction_screen/introduction_screen.dart';
 
 import 'package:myTODO/AppStore/PageData.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
-import 'package:myTODO/DynamicUI/sw/SWAppStore.dart';
-import 'package:myTODO/DynamicUI/sw/SWCheckbox.dart';
-import 'package:myTODO/DynamicUI/sw/SWColumn.dart';
-import 'package:myTODO/DynamicUI/sw/SWContainer.dart';
-import 'package:myTODO/DynamicUI/sw/SWDivider.dart';
-import 'package:myTODO/DynamicUI/sw/SWExpanded.dart';
-import 'package:myTODO/DynamicUI/sw/SWIcon.dart';
-import 'package:myTODO/DynamicUI/sw/SWIconButton.dart';
-import 'package:myTODO/DynamicUI/sw/SWRow.dart';
-import 'package:myTODO/DynamicUI/sw/SWSizeBox.dart';
-import 'package:myTODO/DynamicUI/sw/SWText.dart';
+import 'package:myTODO/DynamicUI/sw/CheckboxSW.dart';
+import 'package:myTODO/DynamicUI/sw/ColumnSW.dart';
+import 'package:myTODO/DynamicUI/sw/ContainerSW.dart';
+import 'package:myTODO/DynamicUI/sw/DividerSW.dart';
+import 'package:myTODO/DynamicUI/sw/ExpandedSW.dart';
+import 'package:myTODO/DynamicUI/sw/IconSW.dart';
+import 'package:myTODO/DynamicUI/sw/IconButtonSW.dart';
+import 'package:myTODO/DynamicUI/sw/RowSW.dart';
+import 'package:myTODO/DynamicUI/sw/SizeBoxSW.dart';
+import 'package:myTODO/DynamicUI/sw/TextSW.dart';
 import '../AppMetric.dart';
 import '../AppStore/GlobalData.dart';
 import '../Util.dart';
 import 'DynamicUI.dart';
 import 'TypeParser.dart';
-import 'icon.dart';
 
 class FlutterType {
 
@@ -47,15 +45,15 @@ class FlutterType {
   }
 
   static dynamic pColumn(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWColumn(parsedJson, appStoreData, index, originKeyData);
+    return ColumnSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pRow(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWRow(parsedJson, appStoreData, index, originKeyData);
+    return RowSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pExpanded(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWExpanded(parsedJson, appStoreData, index, originKeyData);
+    return ExpandedSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pPadding(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -63,21 +61,21 @@ class FlutterType {
       padding: TypeParser.parseEdgeInsets(
         DynamicUI.def(parsedJson, 'padding', null, appStoreData, index, originKeyData),
       )!,
-      child: DynamicUI.def(parsedJson, 'child', SWSizeBox(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),
+      child: DynamicUI.def(parsedJson, 'child', SizedBoxSW(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),
     );
   }
 
   static dynamic pSizedBox(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWSizeBox(parsedJson, appStoreData, index, originKeyData);
+    return SizedBoxSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pContainer(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWContainer(parsedJson, appStoreData, index, originKeyData);
+    return ContainerSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pCenter(parsedJson, PageData appStoreData, int index, String originKeyData) {
     return Center(
-      child: DynamicUI.def(parsedJson, 'child', SWSizeBox(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),
+      child: DynamicUI.def(parsedJson, 'child', SizedBoxSW(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),
     );
   }
 
@@ -95,7 +93,7 @@ class FlutterType {
   }
 
   static dynamic pIcon(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWIcon(parsedJson, appStoreData, index, originKeyData);
+    return IconSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pAssetImage(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -284,7 +282,7 @@ class FlutterType {
   }
 
   static dynamic pText(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWText(parsedJson, appStoreData, index, originKeyData);
+    return TextSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pSelectableText(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -810,7 +808,7 @@ class FlutterType {
   }
 
   static dynamic pDivider(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWDivider(parsedJson, appStoreData, index, originKeyData);
+    return DividerSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pRotatedBox(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -823,12 +821,12 @@ class FlutterType {
   }
 
   static dynamic pIconButton(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWIconButton(parsedJson, appStoreData, index, originKeyData);
+    return IconButtonSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pCheckbox(parsedJson, PageData appStoreData, int index, String originKeyData) {
     //print("BUILD pCheckbox");
-    return SWCheckbox(parsedJson, appStoreData, index, originKeyData);
+    return CheckboxSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pDecorationImage(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -943,12 +941,12 @@ class FlutterType {
   }
 
   static dynamic pNothing(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SWSizeBox(parsedJson, appStoreData, index, originKeyData);
+    return SizedBoxSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pAppStore(parsedJson, PageData appStoreData, int index, String originKeyData) {
     //return const Text("!");
-    return SWSizeBox(parsedJson, appStoreData, index, originKeyData);
+    return SizedBoxSW(parsedJson, appStoreData, index, originKeyData);
     //return SWAppStore(parsedJson, appStoreData, index, originKeyData);
   }
 

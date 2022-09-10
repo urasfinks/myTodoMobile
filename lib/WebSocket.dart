@@ -219,6 +219,10 @@ class WebSocketService {
 
   bool _isStop = false;
 
+  bool isConnect(){
+    return _channel != null && _connect == true;
+  }
+
   void stop() {
     GlobalData.debug("Stop WebSocket; connect: $_connect");
     _isStop = true;
