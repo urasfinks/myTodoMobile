@@ -10,7 +10,9 @@ import 'dart:developer' as developer;
 
 import 'AppMetric.dart';
 import 'AppStore/PageData.dart';
+import 'DynamicPage/DynamicFn.dart';
 import 'SliversApp.dart';
+import 'package:uni_links/uni_links.dart';
 
 class Util {
   static dynamic getListView(PageData appStoreData, ScrollPhysics physics,{bool reverse = false}) {
@@ -183,5 +185,22 @@ class Util {
 
   static int getTimestamp() {
     return DateTime.now().millisecondsSinceEpoch;
+  }
+
+  static void handleIncomingLinks() {
+    uriLinkStream.listen((Uri? uri) {
+      if(uri != null){
+        DynamicFn.openUri(null, {"uri": uri.toString()});
+      }
+    }, onError: (Object err) {
+      GlobalData.debug(err);
+    });
+  }
+
+  static Future<void> handleInitialUri() async {
+    final uri = await getInitialUri();
+    if(uri != null){
+      DynamicFn.openUri(null, {"uri": uri.toString()});
+    }
   }
 }

@@ -4,29 +4,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_awesome_select/flutter_awesome_select.dart';
-import 'package:intl/intl.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import 'package:myTODO/AppStore/PageData.dart';
 import 'package:myTODO/DynamicPage/DynamicFn.dart';
+import 'package:myTODO/DynamicUI/sw/CenterSW.dart';
 import 'package:myTODO/DynamicUI/sw/CheckboxSW.dart';
+import 'package:myTODO/DynamicUI/sw/CircleAvatarSW.dart';
 import 'package:myTODO/DynamicUI/sw/ColumnSW.dart';
 import 'package:myTODO/DynamicUI/sw/ContainerSW.dart';
 import 'package:myTODO/DynamicUI/sw/DividerSW.dart';
 import 'package:myTODO/DynamicUI/sw/ExpandedSW.dart';
 import 'package:myTODO/DynamicUI/sw/IconSW.dart';
 import 'package:myTODO/DynamicUI/sw/IconButtonSW.dart';
+import 'package:myTODO/DynamicUI/sw/InkWellSW.dart';
+import 'package:myTODO/DynamicUI/sw/MaterialSW.dart';
+import 'package:myTODO/DynamicUI/sw/PaddingSW.dart';
+import 'package:myTODO/DynamicUI/sw/RawMaterialButtonSW.dart';
 import 'package:myTODO/DynamicUI/sw/RowSW.dart';
+import 'package:myTODO/DynamicUI/sw/SelectableTextSW.dart';
 import 'package:myTODO/DynamicUI/sw/SizeBoxSW.dart';
+import 'package:myTODO/DynamicUI/sw/SlidableSW.dart';
+import 'package:myTODO/DynamicUI/sw/TextFieldSW.dart';
 import 'package:myTODO/DynamicUI/sw/TextSW.dart';
 import '../AppMetric.dart';
 import '../AppStore/GlobalData.dart';
-import '../Util.dart';
 import 'DynamicUI.dart';
 import 'TypeParser.dart';
 
 class FlutterType {
-
   static dynamic pTextStyle(parsedJson, PageData appStoreData, int index, String originKeyData) {
     return TextStyle(
       color: TypeParser.parseColor(
@@ -57,12 +63,7 @@ class FlutterType {
   }
 
   static dynamic pPadding(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return Padding(
-      padding: TypeParser.parseEdgeInsets(
-        DynamicUI.def(parsedJson, 'padding', null, appStoreData, index, originKeyData),
-      )!,
-      child: DynamicUI.def(parsedJson, 'child', SizedBoxSW(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),
-    );
+    return PaddingSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pSizedBox(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -74,22 +75,11 @@ class FlutterType {
   }
 
   static dynamic pCenter(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return Center(
-      child: DynamicUI.def(parsedJson, 'child', SizedBoxSW(parsedJson, appStoreData, index, originKeyData), appStoreData, index, originKeyData),
-    );
+    return CenterSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pCircleAvatar(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return CircleAvatar(
-      backgroundImage: DynamicUI.def(parsedJson, 'backgroundImage', null, appStoreData, index, originKeyData),
-      backgroundColor: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'backgroundColor', null, appStoreData, index, originKeyData),
-      ),
-      radius: TypeParser.parseDouble(
-        DynamicUI.def(parsedJson, 'radius', null, appStoreData, index, originKeyData),
-      ),
-      child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
-    );
+    return CircleAvatarSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pIcon(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -159,15 +149,7 @@ class FlutterType {
   }
 
   static dynamic pMaterial(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return Material(
-      color: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
-      ),
-      borderRadius: TypeParser.parseBorderRadius(
-        DynamicUI.def(parsedJson, 'borderRadius', null, appStoreData, index, originKeyData),
-      ),
-      child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
-    );
+    return MaterialSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static void dynamicFunction(parsedJson, PageData appStoreData, String key, int index, String originKeyData) {
@@ -194,11 +176,7 @@ class FlutterType {
 
   static dynamic pRawMaterialButton(parsedJson, PageData appStoreData, int index, String originKeyData) {
     //GlobalData.debug("pRawMaterialButton: ${parsedJson}");
-    return RawMaterialButton(
-      constraints: const BoxConstraints(minWidth: 10, maxHeight: 10),
-      onPressed: DynamicFn.evalTextFunction(parsedJson['onPressed'], parsedJson, appStoreData, index, originKeyData),
-      child: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index, originKeyData),
-    );
+    return RawMaterialButtonSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pElevatedButton(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -213,7 +191,8 @@ class FlutterType {
     double borderRadius = TypeParser.parseDouble(
       DynamicUI.def(parsedJson, 'borderRadius', 0, appStoreData, index, originKeyData),
     )!;
-    String buttonStyleType = DynamicUI.def(parsedJson, 'buttonStyle', 'ElevatedButton', appStoreData, index, originKeyData);
+    String buttonStyleType =
+        DynamicUI.def(parsedJson, 'buttonStyle', 'ElevatedButton', appStoreData, index, originKeyData);
     String shapeType = DynamicUI.def(parsedJson, 'shape', 'StadiumBorder', appStoreData, index, originKeyData);
     OutlinedBorder? shape;
 
@@ -260,17 +239,7 @@ class FlutterType {
   }
 
   static dynamic pInkWell(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return InkWell(
-      customBorder: DynamicUI.def(parsedJson, 'customBorder', null, appStoreData, index, originKeyData),
-      splashColor: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'splashColor', null, appStoreData, index, originKeyData),
-      ),
-      highlightColor: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'highlightColor', null, appStoreData, index, originKeyData),
-      ),
-      child: DynamicUI.def(parsedJson, 'child', null, appStoreData, index, originKeyData),
-      onTap: DynamicFn.evalTextFunction(parsedJson['onTap'], parsedJson, appStoreData, index, originKeyData),
-    );
+    return InkWellSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pRoundedRectangleBorder(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -286,172 +255,11 @@ class FlutterType {
   }
 
   static dynamic pSelectableText(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return SelectableText(
-      DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData),
-      style: DynamicUI.def(parsedJson, 'style', null, appStoreData, index, originKeyData),
-      textAlign: TypeParser.parseTextAlign(
-        DynamicUI.def(parsedJson, 'textAlign', 'start', appStoreData, index, originKeyData),
-      )!,
-      textDirection: TypeParser.parseTextDirection(
-        DynamicUI.def(parsedJson, 'textDirection', null, appStoreData, index, originKeyData),
-      ),
-      textScaleFactor: TypeParser.parseDouble(
-        DynamicUI.def(parsedJson, 'textScaleFactor', null, appStoreData, index, originKeyData),
-      ),
-      showCursor: DynamicUI.def(parsedJson, 'showCursor', null, appStoreData, index, originKeyData),
-      autofocus: TypeParser.parseBool(
-        DynamicUI.def(parsedJson, 'autofocus', false, appStoreData, index, originKeyData),
-      )!,
-      minLines: TypeParser.parseInt(
-        DynamicUI.def(parsedJson, 'minLines', 1, appStoreData, index, originKeyData),
-      ),
-      maxLines: TypeParser.parseInt(
-        DynamicUI.def(parsedJson, 'maxLines', 1, appStoreData, index, originKeyData),
-      ),
-      cursorColor: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'cursorColor', null, appStoreData, index, originKeyData),
-      ),
-      enableInteractiveSelection: TypeParser.parseBool(
-        DynamicUI.def(parsedJson, 'enableInteractiveSelection', true, appStoreData, index, originKeyData),
-      )!,
-      textWidthBasis: TypeParser.parseTextWidthBasis(
-        DynamicUI.def(parsedJson, 'textWidthBasis', null, appStoreData, index, originKeyData),
-      ),
-      scrollPhysics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
-    );
+    return SelectableTextSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pTextField(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
-    String defData = DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData);
-    String formattedDate = defData;
-    String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
-    bool readOnly = TypeParser.parseBool(
-        DynamicUI.def(parsedJson, 'readOnly', (type == "datetime" || type == "time"), appStoreData, index, originKeyData))!;
-
-    String? defAppStoreData = appStoreData.pageDataState.get(key, null);
-
-    TextEditingController? textController = appStoreData.pageDataState.getTextController(key, defAppStoreData ?? defData);
-    String? tmp = defAppStoreData ?? defData;
-    //AppStore.debug(appStoreData.getStringStoreState());
-    if(tmp != null){
-      textController?.text = tmp;
-      //AppStore.debug("BUILD TextField: ${textController?.text}");
-      int? x = textController?.text.length;
-      if (x != null && x > 0) {
-        textController?.selection = TextSelection.fromPosition(TextPosition(offset: x));
-      }
-    }
-
-    appStoreData.pageDataState.set(key, textController?.text);
-
-    List<TextInputFormatter> f = [];
-    String regExp = DynamicUI.def(parsedJson, 'regexp', '', appStoreData, index, originKeyData);
-    if (regExp.isNotEmpty) {
-      f.add(FilteringTextInputFormatter.allow(RegExp('^[a-z0-9_-]{3,16}\$')));
-    }
-
-    return TextField(
-      onSubmitted: (String x) {
-        dynamic c = DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);
-        if (c != null && x.isNotEmpty) {
-          Function.apply(c, []);
-        }
-      },
-      onEditingComplete:
-          DynamicFn.evalTextFunction(parsedJson['onEditingComplete'], parsedJson, appStoreData, index, originKeyData),
-      inputFormatters: f,
-      textCapitalization: TypeParser.parseTextCapitalization(
-        DynamicUI.def(parsedJson, 'textCapitalization', 'sentences', appStoreData, index, originKeyData),
-      )!,
-      minLines: TypeParser.parseInt(
-        DynamicUI.def(parsedJson, 'minLines', 1, appStoreData, index, originKeyData),
-      ),
-      maxLines: TypeParser.parseInt(
-        DynamicUI.def(parsedJson, 'maxLines', null, appStoreData, index, originKeyData),
-      ),
-      maxLength: TypeParser.parseInt(
-        DynamicUI.def(parsedJson, 'maxLength', null, appStoreData, index, originKeyData),
-      ),
-      textAlign: TypeParser.parseTextAlign(
-        DynamicUI.def(parsedJson, 'textAlign', 'start', appStoreData, index, originKeyData),
-      )!,
-      textAlignVertical: TypeParser.parseTextAlignVertical(
-        DynamicUI.def(parsedJson, 'textAlignVertical', null, appStoreData, index, originKeyData),
-      ),
-      clipBehavior: TypeParser.parseClip(
-        DynamicUI.def(parsedJson, 'clipBehavior', 'hardEdge', appStoreData, index, originKeyData),
-      )!,
-      showCursor: DynamicUI.def(parsedJson, 'showCursor', null, appStoreData, index, originKeyData),
-      autocorrect: TypeParser.parseBool(
-        DynamicUI.def(parsedJson, 'autocorrect', true, appStoreData, index, originKeyData),
-      )!,
-      autofocus: TypeParser.parseBool(
-        DynamicUI.def(parsedJson, 'autofocus', false, appStoreData, index, originKeyData),
-      )!,
-      expands: TypeParser.parseBool(
-        DynamicUI.def(parsedJson, 'expands', false, appStoreData, index, originKeyData),
-      )!,
-      enabled: DynamicUI.def(parsedJson, 'enabled', null, appStoreData, index, originKeyData),
-      cursorColor: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'cursorColor', null, appStoreData, index, originKeyData),
-      ),
-      readOnly: readOnly,
-      controller: textController,
-      obscureText: TypeParser.parseBool(
-        DynamicUI.def(parsedJson, 'obscureText', false, appStoreData, index, originKeyData),
-      )!,
-      obscuringCharacter: DynamicUI.def(parsedJson, 'obscureText', '*', appStoreData, index, originKeyData),
-      keyboardType: TypeParser.parseTextInputType(type)!,
-      decoration: DynamicUI.def(parsedJson, 'decoration', null, appStoreData, index, originKeyData),
-      style: DynamicUI.def(parsedJson, 'style', null, appStoreData, index, originKeyData),
-      onChanged: (value) {
-        appStoreData.pageDataState.set(key, value);
-      },
-      onTap: () async {
-        if (type == "datetime") {
-
-          DateTime? pickedDate = await showDatePicker(
-            locale: const Locale('ru', 'ru_Ru'),
-            context: appStoreData.getCtx()!,
-            initialDate: textController?.text != "" ? DateFormat("dd.MM.yyyy").parse(textController!.text) : DateTime.now(),
-            firstDate: DateTime(1931),
-            lastDate: DateTime(2101),
-          );
-          if (pickedDate != null) {
-            formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
-            appStoreData.pageDataState.set(key, formattedDate);
-            textController?.text = formattedDate;
-          } else {
-            textController?.text = "";
-          }
-        } else if (type == "time") {
-          String? t = textController?.text;
-          TimeOfDay tod = TimeOfDay.now();
-          if (t != null && t != "") {
-            List<String> exp = t.split(":");
-            tod = TimeOfDay(hour: TypeParser.parseInt(exp[0])!, minute: TypeParser.parseInt(exp[1])!);
-          }
-          final TimeOfDay? result = await showTimePicker(
-            builder: (context, child) {
-              return Localizations.override(
-                context: context,
-                locale: const Locale('ru', 'ru_Ru'),
-                child: child,
-              );
-            },
-            initialEntryMode: TimePickerEntryMode.input,
-            initialTime: tod,
-            context: appStoreData.getCtx()!,
-          );
-          if (result != null) {
-            formattedDate = "${Util.intLPad(result.hour, pad: 2)}:${Util.intLPad(result.minute, pad: 2)}";
-            appStoreData.pageDataState.set(key, formattedDate);
-            textController?.text = formattedDate;
-          }
-        }
-      },
-    );
+    return TextFieldSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static dynamic pInputDecoration(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -536,7 +344,7 @@ class FlutterType {
         DynamicUI.def(parsedJson, 'padding', null, appStoreData, index, originKeyData),
       )!,
       physics: pBouncingScrollPhysics(parsedJson, appStoreData, index, originKeyData),
-      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ,
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
     );
   }
 
@@ -621,7 +429,7 @@ class FlutterType {
       clipBehavior: TypeParser.parseClip(
         DynamicUI.def(parsedJson, 'clipBehavior', 'none', appStoreData, index, originKeyData),
       )!,
-      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ,
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
     );
   }
 
@@ -690,7 +498,7 @@ class FlutterType {
       clipBehavior: TypeParser.parseClip(
         DynamicUI.def(parsedJson, 'clipBehavior', 'hardEdge', appStoreData, index, originKeyData),
       )!,
-      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ,
+      children: DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData),
     );
   }
 
@@ -951,7 +759,7 @@ class FlutterType {
   }
 
   static dynamic pSegmentControl(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    List<Widget> children = DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData) ;
+    List<Widget> children = DynamicUI.defList(parsedJson, 'children', appStoreData, index, originKeyData);
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
     Map<int, Widget> ch = {};
     int count = 0;
@@ -1022,13 +830,15 @@ class FlutterType {
       maintainState: TypeParser.parseBool(
         DynamicUI.def(parsedJson, 'maintainState', false, appStoreData, index, originKeyData),
       )!,
-      replacement: DynamicUI.def(parsedJson, 'replacement', const SizedBox.shrink(), appStoreData, index, originKeyData),
+      replacement:
+          DynamicUI.def(parsedJson, 'replacement', const SizedBox.shrink(), appStoreData, index, originKeyData),
     );
   }
 
   static dynamic pDropdownRadio(parsedJson, PageData appStoreData, int index, String originKeyData) {
     var key = DynamicUI.def(parsedJson, 'name', '-', appStoreData, index, originKeyData);
-    String value = appStoreData.pageDataState.get(key, DynamicUI.def(parsedJson, 'value', '', appStoreData, index, originKeyData));
+    String value =
+        appStoreData.pageDataState.get(key, DynamicUI.def(parsedJson, 'value', '', appStoreData, index, originKeyData));
     appStoreData.pageDataState.set(key, value);
     List<S2Choice<String>> options = [];
     for (dynamic w in parsedJson["items"]) {
@@ -1059,7 +869,8 @@ class FlutterType {
     return IntroductionScreen(
       pages: DynamicUI.defListPageViewModel(parsedJson, 'pages', appStoreData, index, originKeyData),
       onDone: DynamicFn.evalTextFunction(parsedJson['onDone'], parsedJson, appStoreData, index, originKeyData),
-      onSkip: DynamicFn.evalTextFunction(parsedJson['onSkip'], parsedJson, appStoreData, index, originKeyData), // You can override onSkip callback
+      onSkip: DynamicFn.evalTextFunction(parsedJson['onSkip'], parsedJson, appStoreData, index, originKeyData),
+      // You can override onSkip callback
       showSkipButton: TypeParser.parseBool(
         DynamicUI.def(parsedJson, 'showSkipButton', true, appStoreData, index, originKeyData),
       )!,
@@ -1069,13 +880,15 @@ class FlutterType {
       skipOrBackFlex: 0,
       nextFlex: 0,
       back: DynamicUI.def(parsedJson, 'back', const Icon(Icons.arrow_back), appStoreData, index, originKeyData),
-      skip: DynamicUI.def(parsedJson, 'skip', const Text('Пропустить', style: TextStyle(fontWeight: FontWeight.w600)), appStoreData, index, originKeyData),
+      skip: DynamicUI.def(parsedJson, 'skip', const Text('Пропустить', style: TextStyle(fontWeight: FontWeight.w600)),
+          appStoreData, index, originKeyData),
       next: DynamicUI.def(parsedJson, 'next', const Icon(Icons.arrow_forward), appStoreData, index, originKeyData),
-      done: DynamicUI.def(parsedJson, 'done', const Text('Готово', style: TextStyle(fontWeight: FontWeight.w600)), appStoreData, index, originKeyData),
+      done: DynamicUI.def(parsedJson, 'done', const Text('Готово', style: TextStyle(fontWeight: FontWeight.w600)),
+          appStoreData, index, originKeyData),
       curve: Curves.fastLinearToSlowEaseIn,
       animationDuration: 1000,
       controlsMargin: const EdgeInsets.all(16),
-      controlsPadding:  const EdgeInsets.all(12.0),
+      controlsPadding: const EdgeInsets.all(12.0),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),
@@ -1087,4 +900,7 @@ class FlutterType {
     );
   }
 
+  static dynamic pSlidable(parsedJson, PageData appStoreData, int index, String originKeyData) {
+    return SlidableSW(parsedJson, appStoreData, index, originKeyData);
+  }
 }

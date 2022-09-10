@@ -1,34 +1,13 @@
-import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:myTODO/DynamicPage/DynamicFn.dart';
 
 import 'AppStore/GlobalData.dart';
 import 'Cache.dart';
-import 'SliversApp.dart';
 import 'TabScope.dart';
 import 'TabWrap.dart';
-import 'package:uni_links/uni_links.dart';
-
-void _handleIncomingLinks() {
-    uriLinkStream.listen((Uri? uri) {
-      if(uri != null){
-        DynamicFn.openUri(null, {"uri": uri.toString()});
-      }
-    }, onError: (Object err) {
-      GlobalData.debug(err);
-    });
-}
-
-Future<void> _handleInitialUri() async {
-  final uri = await getInitialUri();
-  if(uri != null){
-    DynamicFn.openUri(null, {"uri": uri.toString()});
-  }
-}
+import 'Util.dart';
 
 Future<void> loadPref() async {
   GlobalData.cache = await Cache.getInstance();
@@ -46,8 +25,8 @@ Future<void> loadPref() async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
   await loadPref();
-  _handleIncomingLinks();
-  _handleInitialUri();
+  Util.handleIncomingLinks();
+  Util.handleInitialUri();
   runApp(const LifecycleApp());
   //runApp(const SliversApp());
 }

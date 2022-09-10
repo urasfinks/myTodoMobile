@@ -91,7 +91,9 @@ class TabScope {
       if (data != null && data["url"] != null) {
         PageData? last;
         while (tabs[tabIndex].history.length > 1) {
-          if (tabs[tabIndex].history.last.pageDataWidget.getWidgetData("url") == data["url"]) {
+          String curUrl = tabs[tabIndex].history.last.pageDataWidget.getWidgetData("url").toString().split("?")[0];
+          GlobalData.debug("popHistory: ${curUrl} == ${data["url"]}");
+          if (curUrl == data["url"]) {
             break;
           }
           last = tabs[tabIndex].history.removeLast();

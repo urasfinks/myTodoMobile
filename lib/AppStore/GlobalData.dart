@@ -9,12 +9,12 @@ import 'dart:developer';
 
 class GlobalData {
 
-  static bool isDebug = true;
+  static bool isDebug = false;
   static Cache? cache;
   static String host = "https://jamsys.ru:8443";
   static String promo = "/project/to-do/promo";
   static String ws = "ws://jamsys.ru:8081";
-  static String version = "1";
+  static String version = "2";
   static int selectedTabIndex = 0;
 
   static bool firstStart = false;
