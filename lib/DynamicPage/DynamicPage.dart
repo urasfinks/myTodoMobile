@@ -134,7 +134,7 @@ class DynamicPageWidgetState extends State<DynamicPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalData.debug("DynPage build");
+    //GlobalData.debug("DynPage build");
     PageData pageData = ListPageData().createPageData(context);
     pageData.setPageState(this);
     saveStore = pageData;

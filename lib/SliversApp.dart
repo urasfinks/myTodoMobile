@@ -70,7 +70,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
     if(widget.rebuild == true){
       initState();
     }
-    print("Sliver build");
+    //print("Sliver build");
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) {
         return SingleChildScrollView(

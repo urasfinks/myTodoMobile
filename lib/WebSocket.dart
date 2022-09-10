@@ -161,7 +161,7 @@ class WebSocketService {
         });
       }
     } else {
-      GlobalData.debug("Pass because connect = true");
+      //GlobalData.debug("Pass because connect = true");
     }
   }
 
