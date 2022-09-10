@@ -167,38 +167,47 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
     }
   }
 
+  void _addRefresh(){
+    sliverLists.add(
+      CupertinoSliverRefreshControl(
+        refreshIndicatorExtent: 60,
+        refreshTriggerPullDistance: Util.isAndroid() ? 145 : 115,
+        builder: (
+            BuildContext context,
+            RefreshIndicatorMode refreshState,
+            double pulledExtent,
+            double refreshTriggerPullDistance,
+            double refreshIndicatorExtent,
+            ) {
+          final double percentageComplete = clampDouble(pulledExtent / refreshTriggerPullDistance, 0.0, 1.0);
+          return Center(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Positioned(
+                  top: 16,
+                  left: 0.0,
+                  right: 0.0,
+                  child: _buildIndicatorForRefreshState(refreshState, 40, percentageComplete),
+                ),
+              ],
+            ),
+          );
+        },
+        onRefresh: () async {
+          await widget.pageData.getPageState()?.load(pause: false, prepareDelay: true);
+        },
+      ),
+    );
+  }
+
   void _init() {
     GlobalData.debug("Sliver init");
     sliverLists.clear();
-    sliverLists.add(CupertinoSliverRefreshControl(
-      refreshIndicatorExtent: 145,
-      refreshTriggerPullDistance: 145,
-      builder: (
-        BuildContext context,
-        RefreshIndicatorMode refreshState,
-        double pulledExtent,
-        double refreshTriggerPullDistance,
-        double refreshIndicatorExtent,
-      ) {
-        final double percentageComplete = clampDouble(pulledExtent / refreshTriggerPullDistance, 0.0, 1.0);
-        return Center(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              Positioned(
-                top: 16,
-                left: 0.0,
-                right: 0.0,
-                child: _buildIndicatorForRefreshState(refreshState, 40, percentageComplete),
-              ),
-            ],
-          ),
-        );
-      },
-      onRefresh: () async {
-        await widget.pageData.getPageState()?.load(pause: false, prepareDelay: true);
-      },
-    ));
+    if (widget.reverse == false) {
+      _addRefresh();
+    }
+
     //String? cachedDataPage = AppStore.cache?.pageGet("/project/to-do/list?uid_data=46d119c9-d7d2-4f6c-9a71-c25b4eac18cd");
     //dynamic data = jsonDecode(cachedDataPage!);
     dynamic data = widget.pageData.getServerResponse();

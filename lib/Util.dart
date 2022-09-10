@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -13,6 +14,11 @@ import 'DynamicPage/DynamicFn.dart';
 import 'package:uni_links/uni_links.dart';
 
 class Util {
+
+  static isAndroid(){
+    return Platform.isAndroid;
+  }
+
   static ScrollPhysics? getPhysics(){
     //return null;
     return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
