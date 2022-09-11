@@ -171,7 +171,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
     sliverLists.add(
       CupertinoSliverRefreshControl(
         refreshIndicatorExtent: 60,
-        refreshTriggerPullDistance: Util.isAndroid() ? 145 : 115,
+        refreshTriggerPullDistance: Util.isAndroid() ? 125 : 115,
         builder: (
             BuildContext context,
             RefreshIndicatorMode refreshState,

@@ -28,6 +28,9 @@ class DynamicFn {
 
   static dynamic parseUtilFunction(String value) {
     Map<String, Function> map = {
+      "timestampToDate": DynamicDirective.timestampToDate,
+      "formatNumber": DynamicDirective.formatNumber,
+      "bridgeDynamicFn": DynamicDirective.bridgeDynamicFn,
       "getFutureBuilder": getFutureBuilder,
       "getFutureList": getFutureList,
       "test": test,
@@ -40,17 +43,17 @@ class DynamicFn {
       "confirm": confirm,
       "getAppStore": getAppStore,
       "setAppStore": setAppStore,
+      "removeExplodeAppStoreData": removeExplodeAppStoreData,
       "joinAppStoreData": joinAppStoreData,
       "appStoreOperator": appStoreOperator,
       "getMD5": getMD5,
       "launcher": launcher,
       "resetTextFieldValue": resetTextFieldValue,
-      "timestampToDate": DynamicDirective.timestampToDate,
-      "formatNumber": DynamicDirective.formatNumber,
       "copyToClipBoard": copyToClipBoard,
       "share": share,
       "promo": promo,
       "selectTab": selectTab,
+      "focusTextField": focusTextField,
     };
     if (map.containsKey(value)) {
       return map[value];
@@ -87,11 +90,14 @@ class DynamicFn {
       Map<String, dynamic> originData =
           _getChainObject(appStoreData.getServerResponse(), [originKeyData, index, "data"], map);
       dynamic retExec;
+      int count = 0;
       for (Map item in listFn) {
         List<dynamic> args = [appStoreData];
-        if (retExec != null) {
+        if (count > 0) {
+          //Это значит мы пошли в исполнение директив
           args.add(retExec);
         }
+        count++;
         for (String key in item["args"]) {
           if (originData.containsKey(key)) {
             args.add(originData[key]);
@@ -108,7 +114,12 @@ class DynamicFn {
             AppMetric().send(f["metric"]);
           }
         }
-        retExec = Function.apply(parseUtilFunction(item["fn"]), args);
+        try {
+          retExec = Function.apply(parseUtilFunction(item["fn"]), args);
+        } catch (e, stacktrace) {
+          GlobalData.debugFull(
+              "Function.apply ${item["fn"]} width args: ${args}; Exception: $e; Stacktrace: $stacktrace");
+        }
       }
       return retExec;
     }
@@ -214,9 +225,24 @@ class DynamicFn {
     }
   }
 
+  static dynamic removeExplodeAppStoreData(PageData appStoreData, dynamic data) {
+    GlobalData.debug("removeExplodeAppStoreData: ${data}");
+    appStoreData.pageDataState.removeExplode(data["key"], data["delimiter"], data["index"], notify: data["notify"] ?? true, reverse: data["reverse"] ?? false);
+    bool apply = data["apply"] ?? true;
+    if (apply == true) {
+      appStoreData.apply();
+    }
+  }
+
   static dynamic joinAppStoreData(PageData appStoreData, dynamic data) {
-    appStoreData.pageDataState.join(data["key"], data["append"], notify: data["notify"] ?? true);
-    appStoreData.apply();
+    String? append = data["append"];
+    if (append != null) {
+      appStoreData.pageDataState.join(data["key"], append, notify: data["notify"] ?? true, emptyJoin: data["emptyJoin"] ?? false);
+      bool apply = data["apply"] ?? true;
+      if (apply == true) {
+        appStoreData.apply();
+      }
+    }
   }
 
   static dynamic openDialog(PageData appStoreData, dynamic data) {
@@ -322,8 +348,8 @@ class DynamicFn {
   static dynamic openUri(PageData? appStoreData, dynamic data) {
     String uri = data["uri"];
     GlobalData.debug("openUri: ${data}");
-    if(uri != null){
-      if(uri.endsWith("/")){
+    if (uri != null) {
+      if (uri.endsWith("/")) {
         uri = uri.substring(0, uri.length - 1);
       }
       List<String> s = uri.split("/");
@@ -354,17 +380,19 @@ class DynamicFn {
 
   static dynamic setAppStore(PageData appStoreData, dynamic data) {
     //GlobalData.debug("setAppStore: ${data}");
-    dynamic now = appStoreData.pageDataState.get(data["key"], null);
-    appStoreData.pageDataState.set(data["key"], data["value"] == now ? null : data["value"]);
-    appStoreData.apply();
+    appStoreData.pageDataState.set(data["key"], data["value"]);
+    bool apply = data["apply"] ?? true;
+    if (apply == true) {
+      appStoreData.apply();
+    }
   }
 
   static dynamic getAppStore(PageData appStoreData, dynamic data) {
     //GlobalData.debug("getAppStore: ${data}");
     //GlobalData.debug("return getAppStore: ${appStoreData.get(data["key"], data["defaultValue"])}");
-    if(data != null){
+    if (data != null) {
       Map x = data;
-      if(x.containsKey("key")){
+      if (x.containsKey("key")) {
         return appStoreData.pageDataState.get(data["key"], data["defaultValue"]);
       }
       return data["defaultValue"];
@@ -447,7 +475,8 @@ class DynamicFn {
     //print("IMAGE: ${image}");
   }
 
-  static dynamic wrapVisibility(Map<String, dynamic> data, PageData appStoreData, int index, Map<String, dynamic>? extraData) {
+  static dynamic wrapVisibility(
+      Map<String, dynamic> data, PageData appStoreData, int index, Map<String, dynamic>? extraData) {
     dynamic w = DynamicUI.mainJson(data, appStoreData, index, 'Data');
     if (extraData != null &&
         extraData.containsKey("onVisibility") &&
@@ -475,7 +504,8 @@ class DynamicFn {
       Map<String, dynamic> response = appStoreData.getServerResponse();
       List<Widget> ret = [];
       for (int i = 0; i < response['list'].length; i++) {
-        ret.add(wrapVisibility(response['list'][i], appStoreData, i, response['Data'] != null ? response['Data'][i]["data"] : null));
+        ret.add(wrapVisibility(
+            response['list'][i], appStoreData, i, response['Data'] != null ? response['Data'][i]["data"] : null));
       }
       return (int index) {
         return ret[index];
@@ -539,9 +569,16 @@ class DynamicFn {
 
     return Center(
       child: CircularProgressIndicator(
-        backgroundColor: TypeParser.parseColor(appStoreData.pageDataWidget.getWidgetData("progressIndicatorBackgroundColor")),
+        backgroundColor:
+            TypeParser.parseColor(appStoreData.pageDataWidget.getWidgetData("progressIndicatorBackgroundColor")),
         color: TypeParser.parseColor(appStoreData.pageDataWidget.getWidgetData("progressIndicatorColor")),
       ),
     );
+  }
+
+  static dynamic focusTextField(PageData appStoreData, dynamic data) {
+    Future.delayed(const Duration(milliseconds: 1), () {
+      FocusScope.of(appStoreData.getCtx()!).requestFocus(appStoreData.pageDataState.getFocusNode(data["name"]));
+    });
   }
 }

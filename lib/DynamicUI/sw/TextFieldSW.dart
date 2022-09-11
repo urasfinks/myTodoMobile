@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:myTODO/AppStore/GlobalData.dart';
 
 import '../../AppStore/PageData.dart';
 import '../../DynamicPage/DynamicFn.dart';
@@ -19,23 +20,32 @@ class TextFieldSW extends StatelessWidget {
     String type = DynamicUI.def(parsedJson, 'keyboardType', 'text', appStoreData, index, originKeyData);
     bool readOnly = TypeParser.parseBool(DynamicUI.def(
         parsedJson, 'readOnly', (type == "datetime" || type == "time"), appStoreData, index, originKeyData))!;
+    bool rewriteState = parsedJson["rewriteState"] ?? false;
 
-    String? defAppStoreData = appStoreData.pageDataState.get(key, null);
+    if(rewriteState == true){
+      appStoreData.pageDataState.set(key, defData);
+    }
 
-    TextEditingController? textController =
-    appStoreData.pageDataState.getTextController(key, defAppStoreData ?? defData);
-    String? tmp = defAppStoreData ?? defData;
+    String? defAppStoreData = appStoreData.pageDataState.get(key, defData);
+    //GlobalData.debug("Read defAppStoreData = $defAppStoreData");
+
+
+    TextEditingController? textController = appStoreData.pageDataState.getTextController(key, defAppStoreData!);
+    if(rewriteState == false){
+      appStoreData.pageDataState.set(key, defAppStoreData);
+    }
+
+    textController?.text = defAppStoreData;
+    //GlobalData.debug("textController key: ${key}; value: ${textController?.text}");
+
     //AppStore.debug(appStoreData.getStringStoreState());
-    if (tmp != '') {
-      textController?.text = tmp;
+    if (defAppStoreData != '') {
       //AppStore.debug("BUILD TextField: ${textController?.text}");
       int? x = textController?.text.length;
       if (x != null && x > 0) {
         textController?.selection = TextSelection.fromPosition(TextPosition(offset: x));
       }
     }
-
-    appStoreData.pageDataState.set(key, textController?.text);
 
     List<TextInputFormatter> f = [];
     String regExp = DynamicUI.def(parsedJson, 'regexp', '', appStoreData, index, originKeyData);
@@ -44,6 +54,7 @@ class TextFieldSW extends StatelessWidget {
     }
 
     render =  TextField(
+      focusNode: appStoreData.pageDataState.getFocusNode(key),
       onSubmitted: (String x) {
         dynamic c =
         DynamicFn.evalTextFunction(parsedJson['onSubmitted'], parsedJson, appStoreData, index, originKeyData);

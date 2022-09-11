@@ -84,6 +84,7 @@ class DynamicUI {
       "IntroductionScreen": FlutterType.pIntroductionScreen,
       "PageViewModel": FlutterType.pPageViewModel,
       "Slidable": FlutterType.pSlidable,
+      "Loop": FlutterType.pLoop,
     };
     //GlobalData.debug("${[map, appStoreData, index, originKeyData]}");
     return map1.containsKey(containsKey) ? Function.apply(map1[containsKey]!, [map, appStoreData, index, originKeyData]) : def;

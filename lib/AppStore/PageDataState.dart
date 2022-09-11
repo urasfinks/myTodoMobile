@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../Util.dart';
+import 'GlobalData.dart';
 import 'PageData.dart';
 
 class PageDataState {
@@ -12,11 +13,7 @@ class PageDataState {
 
   final Map<String, dynamic> _mapState = {};
   Map<String, TextEditingController> listController = {};
-
-  void clear() {
-    _mapState.clear();
-    listController.clear();
-  }
+  Map<String, FocusNode> listFocusNode = {};
 
   String getStringStoreState() {
     if (_mapState.isNotEmpty) {
@@ -44,20 +41,52 @@ class PageDataState {
   }
 
   void set(String key, dynamic value, {bool notify = true}) {
-    //GlobalData.debug("Set: $key = $value");
-    _mapState[key] = value;
-    pageData.onChange(key, notify);
+    if (_mapState[key] != value) {
+      //GlobalData.debug("PageDataState Set: $key = $value");
+      _mapState[key] = value;
+      pageData.onChange(key, notify);
+    }
   }
 
-  void join(String key, String appendString, {bool notify = true}) {
+  void removeExplode(String key, String delimiter, int index, {bool notify = true, bool reverse = false}) {
+    //GlobalData.debug("removeExplode: key: $key, delimiter: $delimiter, index: $index, notify: $notify, reverse: $reverse");
     if (_mapState[key] == null) {
       _mapState[key] = "";
     }
-    _mapState[key] = _mapState[key] + Util.template(_mapState, appendString);
+    String x = _mapState[key];
+    List<String> exp = x.split(delimiter);
+    //GlobalData.debug(exp);
+    if(reverse == true){
+      index++; //[, Втрой, Первый] - в конце перенос строки \n переворачивается в начало и индексация слетает
+      // Я так полумал, что это будет работать не только на разделитель с переносом а для всех случаев,
+      // так как добавления используется всегда функцией joinAppStoreData, которая всегда в конец будет добавлять разделитель
+      // Других случаев я пока не смог придумать
+      exp = List.from(exp.reversed);
+    }
+    //GlobalData.debug(exp);
+    exp.removeAt(index);
+    //GlobalData.debug(exp);
+    if(reverse == true){
+      exp = List.from(exp.reversed);
+    }
+    //GlobalData.debug(exp);
+    _mapState[key] = exp.join(delimiter);
     pageData.onChange(key, notify);
   }
 
-  void inc(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void join(String key, String appendString, {bool notify = true, bool emptyJoin = false}) {
+    if (_mapState[key] == null) {
+      _mapState[key] = "";
+    }
+    String append = Util.template(_mapState, appendString);
+    if (append.trim().isNotEmpty || emptyJoin == true) {
+      _mapState[key] = _mapState[key] + append;
+      pageData.onChange(key, notify);
+    }
+  }
+
+  void inc(String key,
+      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _mapState[key] = double.parse("${_mapState[key]}") + step;
     if (_mapState[key] < min) {
       _mapState[key] = min;
@@ -69,7 +98,8 @@ class PageDataState {
     pageData.onChange(key, notify);
   }
 
-  void dec(String key, {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
+  void dec(String key,
+      {double step = 1.0, double min = -999.0, double max = 999.0, int fixed = 0, bool notify = true}) {
     _mapState[key] = double.parse("${_mapState[key]}") - step;
     if (_mapState[key] < min) {
       _mapState[key] = min;
@@ -91,6 +121,12 @@ class PageDataState {
     pageData.onChange(key, notify);
   }
 
+  void clear() {
+    _mapState.clear();
+    listController.clear();
+    listFocusNode.clear();
+  }
+
   TextEditingController? getTextController(String key, String def) {
     if (!listController.containsKey(key)) {
       TextEditingController textController = TextEditingController();
@@ -104,5 +140,12 @@ class PageDataState {
     } else {
       return listController[key];
     }
+  }
+
+  FocusNode? getFocusNode(String key) {
+    if (!listFocusNode.containsKey(key)) {
+      listFocusNode[key] = FocusNode();
+    }
+    return listFocusNode[key];
   }
 }

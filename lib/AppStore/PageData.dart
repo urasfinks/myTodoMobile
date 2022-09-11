@@ -126,6 +126,7 @@ class PageData {
   }
 
   void onChange(String key, bool notify) {
+    //GlobalData.debug("onChange: $key = ${pageDataState.get(key, null)}");
     dynamic x = pageDataWidget.getWidgetDataConfig({"parentRefreshOnChangeStateData": false});
     if (x["parentRefreshOnChangeStateData"] == true) {
       setParentRefresh(true);
@@ -143,7 +144,7 @@ class PageData {
   }
 
   void apply() {
-    //GlobalData.debug("apply");
+    GlobalData.debug("PageData -> apply");
     reBuild();
     getPageState()?.setState(() {});
   }

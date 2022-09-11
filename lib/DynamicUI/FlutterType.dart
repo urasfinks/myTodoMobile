@@ -18,6 +18,7 @@ import 'package:myTODO/DynamicUI/sw/ExpandedSW.dart';
 import 'package:myTODO/DynamicUI/sw/IconSW.dart';
 import 'package:myTODO/DynamicUI/sw/IconButtonSW.dart';
 import 'package:myTODO/DynamicUI/sw/InkWellSW.dart';
+import 'package:myTODO/DynamicUI/sw/LoopSW.dart';
 import 'package:myTODO/DynamicUI/sw/MaterialSW.dart';
 import 'package:myTODO/DynamicUI/sw/PaddingSW.dart';
 import 'package:myTODO/DynamicUI/sw/RawMaterialButtonSW.dart';
@@ -897,5 +898,9 @@ class FlutterType {
 
   static dynamic pSlidable(parsedJson, PageData appStoreData, int index, String originKeyData) {
     return SlidableSW(parsedJson, appStoreData, index, originKeyData);
+  }
+
+  static dynamic pLoop(parsedJson, PageData appStoreData, int index, String originKeyData) {
+    return LoopSW(parsedJson, appStoreData, index, originKeyData);
   }
 }

@@ -23,7 +23,7 @@ class GlobalData {
   static Map<String, String> requestHeader = {};
   static TabWrapState? tabWrapState;
 
-  static void fullDebug(dynamic data){
+  static void debugFull(dynamic data){
     if(isDebug) {
       log("${data}");
     }
