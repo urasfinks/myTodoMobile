@@ -94,6 +94,7 @@ class DynamicPageUtil {
   static void setErrorStyle(PageData appStoreData) {
     appStoreData.pageDataWidget.addWidgetData("title", "Ошибка");
     appStoreData.pageDataWidget.addWidgetData("dialog", false);
+    appStoreData.pageDataWidget.addWidgetData("modalBottom", false);
     appStoreData.pageDataWidget.addWidgetData('grid', false); //А то не влезает
   }
 

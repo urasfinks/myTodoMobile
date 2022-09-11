@@ -203,7 +203,9 @@ class PageData {
 
         if (pageDataWidget.getWidgetData("dialog") == true) {
           createDialog();
-        } else {
+        } if(pageDataWidget.getWidgetData("modalBottom") == true){
+          createModalBottom();
+        }else {
           createSimplePage(widget, back);
         }
         _build = false;
@@ -211,6 +213,21 @@ class PageData {
     } catch (e, stacktrace) {
       AppMetric().exception(e, stacktrace);
       createErrorCompilation(widget, e.toString());
+    }
+  }
+
+  createModalBottom() {
+    double height = MediaQuery.of(getCtx()!).size.height;
+    var padding = MediaQuery.of(getCtx()!).padding;
+    height = height - padding.top - padding.bottom;
+    Map config = pageDataWidget.getWidgetDataConfig({"height": height * 0.5});
+    if (config["height"] == -1) {
+      compiledWidget = _getContent();
+    } else {
+      compiledWidget = SizedBox(
+        height: TypeParser.parseDouble(config["height"]),
+        child: _getContent(),
+      );
     }
   }
 

@@ -20,6 +20,7 @@ class DynamicPageWidget extends StatefulWidget {
   final String progressIndicatorBackgroundColor;
   final String progressIndicatorColor;
   final bool dialog;
+  final bool modalBottom;
   final bool separated;
   final bool grid;
   final dynamic config;
@@ -39,6 +40,7 @@ class DynamicPageWidget extends StatefulWidget {
       this.progressIndicatorBackgroundColor = "transparent",
       this.progressIndicatorColor = "blue.600",
       this.dialog = false,
+      this.modalBottom = false,
       this.separated = false,
       this.grid = false,
       this.config,
@@ -63,6 +65,7 @@ class DynamicPageWidget extends StatefulWidget {
         'progressIndicatorBackgroundColor': 'transparent',
         'progressIndicatorColor': 'blue.600',
         'dialog': false,
+        'modalBottom': false,
         'separated': false,
         'grid': false,
         'config': {},
@@ -89,6 +92,7 @@ class DynamicPageWidget extends StatefulWidget {
         root: def['root'],
         appBarBackgroundColor: def['appBarBackgroundColor'],
         dialog: def['dialog'],
+        modalBottom: def['modalBottom'],
         separated: def['separated'],
         grid: def['grid'],
         config: def['config'],

@@ -54,6 +54,7 @@ class DynamicFn {
       "promo": promo,
       "selectTab": selectTab,
       "focusTextField": focusTextField,
+      "openModalBottom": openModalBottom,
     };
     if (map.containsKey(value)) {
       return map[value];
@@ -118,7 +119,7 @@ class DynamicFn {
           retExec = Function.apply(parseUtilFunction(item["fn"]), args);
         } catch (e, stacktrace) {
           GlobalData.debugFull(
-              "Function.apply ${item["fn"]} width args: ${args}; Exception: $e; Stacktrace: $stacktrace");
+              "Function.apply ${item["fn"]} width args: ${args}; argsLength: ${args.length}; Exception: $e; Stacktrace: $stacktrace");
         }
       }
       return retExec;
@@ -227,7 +228,8 @@ class DynamicFn {
 
   static dynamic removeExplodeAppStoreData(PageData appStoreData, dynamic data) {
     GlobalData.debug("removeExplodeAppStoreData: ${data}");
-    appStoreData.pageDataState.removeExplode(data["key"], data["delimiter"], data["index"], notify: data["notify"] ?? true, reverse: data["reverse"] ?? false);
+    appStoreData.pageDataState.removeExplode(data["key"], data["delimiter"], data["index"],
+        notify: data["notify"] ?? true, reverse: data["reverse"] ?? false);
     bool apply = data["apply"] ?? true;
     if (apply == true) {
       appStoreData.apply();
@@ -237,7 +239,8 @@ class DynamicFn {
   static dynamic joinAppStoreData(PageData appStoreData, dynamic data) {
     String? append = data["append"];
     if (append != null) {
-      appStoreData.pageDataState.join(data["key"], append, notify: data["notify"] ?? true, emptyJoin: data["emptyJoin"] ?? false);
+      appStoreData.pageDataState
+          .join(data["key"], append, notify: data["notify"] ?? true, emptyJoin: data["emptyJoin"] ?? false);
       bool apply = data["apply"] ?? true;
       if (apply == true) {
         appStoreData.apply();
@@ -580,5 +583,18 @@ class DynamicFn {
     Future.delayed(const Duration(milliseconds: 1), () {
       FocusScope.of(appStoreData.getCtx()!).requestFocus(appStoreData.pageDataState.getFocusNode(data["name"]));
     });
+  }
+
+  static dynamic openModalBottom(PageData appStoreData, dynamic data) {
+    data["modalBottom"] = true;
+    String st = appStoreData.pageDataState.getStringStoreState();
+    if (st.isNotEmpty) {
+      data["parentState"] = st;
+    }
+    GlobalData.debug("openModalBottom: ${data}");
+    showModalBottomSheet<void>(
+      context: appStoreData.getCtx()!,
+      builder: (context) => DynamicPageWidget.fromMap(data),
+    );
   }
 }

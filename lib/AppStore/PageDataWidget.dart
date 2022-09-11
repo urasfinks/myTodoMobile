@@ -22,6 +22,7 @@ class PageDataWidget {
     addWidgetData("progressIndicatorBackgroundColor", widget.progressIndicatorBackgroundColor);
     addWidgetData("progressIndicatorColor", widget.progressIndicatorColor);
     addWidgetData("dialog", widget.dialog);
+    addWidgetData("modalBottom", widget.modalBottom);
     addWidgetData("separated", widget.separated);
     addWidgetData("grid", widget.grid);
     addWidgetData("config", widget.config);
