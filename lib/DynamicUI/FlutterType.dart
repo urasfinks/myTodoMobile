@@ -36,20 +36,25 @@ import 'TypeParser.dart';
 
 class FlutterType {
   static dynamic pTextStyle(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return TextStyle(
-      color: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
-      ),
-      fontSize: TypeParser.parseDouble(
-        DynamicUI.def(parsedJson, 'fontSize', null, appStoreData, index, originKeyData),
-      ),
-      fontStyle: TypeParser.parseFontStyle(
-        DynamicUI.def(parsedJson, 'fontStyle', null, appStoreData, index, originKeyData),
-      ),
-      fontWeight: TypeParser.parseFontWeight(
-        DynamicUI.def(parsedJson, 'fontWeight', null, appStoreData, index, originKeyData),
-      ),
-    );
+    String textTheme = DynamicUI.def(parsedJson, 'textTheme', 'default', appStoreData, index, originKeyData);
+    if (textTheme == "headline6") {
+      return Theme.of(appStoreData.getCtx()!).textTheme.headline6;
+    } else {
+      return TextStyle(
+        color: TypeParser.parseColor(
+          DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
+        ),
+        fontSize: TypeParser.parseDouble(
+          DynamicUI.def(parsedJson, 'fontSize', null, appStoreData, index, originKeyData),
+        ),
+        fontStyle: TypeParser.parseFontStyle(
+          DynamicUI.def(parsedJson, 'fontStyle', null, appStoreData, index, originKeyData),
+        ),
+        fontWeight: TypeParser.parseFontWeight(
+          DynamicUI.def(parsedJson, 'fontWeight', null, appStoreData, index, originKeyData),
+        ),
+      );
+    }
   }
 
   static dynamic pColumn(parsedJson, PageData appStoreData, int index, String originKeyData) {
@@ -193,8 +198,7 @@ class FlutterType {
     double borderRadius = TypeParser.parseDouble(
       DynamicUI.def(parsedJson, 'borderRadius', 0, appStoreData, index, originKeyData),
     )!;
-    String buttonStyleType =
-        DynamicUI.def(parsedJson, 'buttonStyle', 'ElevatedButton', appStoreData, index, originKeyData);
+    String buttonStyleType = DynamicUI.def(parsedJson, 'buttonStyle', 'ElevatedButton', appStoreData, index, originKeyData);
     String shapeType = DynamicUI.def(parsedJson, 'shape', 'StadiumBorder', appStoreData, index, originKeyData);
     OutlinedBorder? shape;
 
@@ -826,8 +830,7 @@ class FlutterType {
       maintainState: TypeParser.parseBool(
         DynamicUI.def(parsedJson, 'maintainState', false, appStoreData, index, originKeyData),
       )!,
-      replacement:
-          DynamicUI.def(parsedJson, 'replacement', const SizedBox.shrink(), appStoreData, index, originKeyData),
+      replacement: DynamicUI.def(parsedJson, 'replacement', const SizedBox.shrink(), appStoreData, index, originKeyData),
     );
   }
 
@@ -879,8 +882,8 @@ class FlutterType {
       skip: DynamicUI.def(parsedJson, 'skip', const Text('Пропустить', style: TextStyle(fontWeight: FontWeight.w600)),
           appStoreData, index, originKeyData),
       next: DynamicUI.def(parsedJson, 'next', const Icon(Icons.arrow_forward), appStoreData, index, originKeyData),
-      done: DynamicUI.def(parsedJson, 'done', const Text('Готово', style: TextStyle(fontWeight: FontWeight.w600)),
-          appStoreData, index, originKeyData),
+      done: DynamicUI.def(parsedJson, 'done', const Text('Готово', style: TextStyle(fontWeight: FontWeight.w600)), appStoreData,
+          index, originKeyData),
       curve: Curves.fastLinearToSlowEaseIn,
       animationDuration: 1000,
       controlsMargin: const EdgeInsets.all(16),
