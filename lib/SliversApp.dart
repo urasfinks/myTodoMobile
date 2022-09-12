@@ -170,30 +170,8 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
   void _addRefresh(){
     sliverLists.add(
       CupertinoSliverRefreshControl(
-        refreshIndicatorExtent: 60,
-        refreshTriggerPullDistance: Util.isAndroid() ? 125 : 115,
-        builder: (
-            BuildContext context,
-            RefreshIndicatorMode refreshState,
-            double pulledExtent,
-            double refreshTriggerPullDistance,
-            double refreshIndicatorExtent,
-            ) {
-          final double percentageComplete = clampDouble(pulledExtent / refreshTriggerPullDistance, 0.0, 1.0);
-          return Center(
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: <Widget>[
-                Positioned(
-                  top: 16,
-                  left: 0.0,
-                  right: 0.0,
-                  child: _buildIndicatorForRefreshState(refreshState, 40, percentageComplete),
-                ),
-              ],
-            ),
-          );
-        },
+        //refreshIndicatorExtent: 60,
+        //refreshTriggerPullDistance: Util.isAndroid() ? 125 : 115,
         onRefresh: () async {
           await widget.pageData.getPageState()?.load(pause: false, prepareDelay: true);
         },
