@@ -203,7 +203,7 @@ class PageData {
 
         if (pageDataWidget.getWidgetData("dialog") == true) {
           createDialog();
-        } if(pageDataWidget.getWidgetData("modalBottom") == true){
+        } else if(pageDataWidget.getWidgetData("modalBottom") == true){
           createModalBottom();
         }else {
           createSimplePage(widget, back);
