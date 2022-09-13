@@ -180,7 +180,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
   }
 
   void _init() {
-    GlobalData.debug("Sliver init");
+    //GlobalData.debug("Sliver init");
     sliverLists.clear();
     if (widget.reverse == false) {
       _addRefresh();
@@ -218,7 +218,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalData.debug("Sliver build");
+    //GlobalData.debug("Sliver build");
     if (widget.rebuild == true) {
       _init();
     }
