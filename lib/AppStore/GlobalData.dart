@@ -1,4 +1,5 @@
 import 'package:myTODO/AppStore/ListPageData.dart';
+import 'package:myTODO/Util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Cache.dart';
 import '../TabWrap.dart';
@@ -42,11 +43,10 @@ class GlobalData {
   static void updateRequestHeader(){
     String decoded = base64.encode(utf8.encode("PersonKey_$version:$_personKey"));
     requestHeader.addAll({
-      'Authorization': "Basic $decoded"
+      'Authorization': "Basic $decoded",
+      'Platform' : Util.getPlatformName()
     });
-
     GlobalData.debug("Person key: $_personKey, header: $requestHeader");
-
   }
 
   static changePersonKey(String newPersonKey) async{

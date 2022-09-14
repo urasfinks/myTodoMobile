@@ -15,8 +15,12 @@ import 'package:uni_links/uni_links.dart';
 
 class Util {
 
-  static isAndroid(){
+  static bool isAndroid(){
     return Platform.isAndroid;
+  }
+
+  static getPlatformName(){
+    return Platform.operatingSystem;
   }
 
   static ScrollPhysics? getPhysics(){
