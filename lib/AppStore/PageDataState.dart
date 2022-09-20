@@ -40,11 +40,13 @@ class PageDataState {
     return _mapState[key];
   }
 
-  void set(String key, dynamic value, {bool notify = true}) {
+  void set(String key, dynamic value, {bool notify = true, bool isNewValue = false}) {
     if (_mapState[key] != value) {
       //GlobalData.debug("PageDataState Set: $key = $value");
       _mapState[key] = value;
-      pageData.onChange(key, notify);
+      if(isNewValue == false){
+        pageData.onChange(key, notify);
+      }
     }
   }
 

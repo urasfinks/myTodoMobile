@@ -175,7 +175,7 @@ class DynamicPageUtil {
     if (data['State'] != null && data['State'] != "") {
       Map<String, dynamic> map = data['State'];
       for (var item in map.entries) {
-        pageData.pageDataState.set(item.key, item.value, notify: false);
+        pageData.pageDataState.set(item.key, item.value, notify: false, isNewValue: true);
       }
       pageData.apply(); //Maybe setState refresh Data on UI?
     }

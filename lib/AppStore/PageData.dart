@@ -360,6 +360,7 @@ class PageData {
   }
 
   void setParentRefresh(bool upd) {
+    //GlobalData.debug("Set UPD = $upd for url: ${pageDataWidget.getWidgetData("url")}");
     _parentUpdate = upd;
   }
 

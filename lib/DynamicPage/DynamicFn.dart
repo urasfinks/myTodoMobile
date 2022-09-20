@@ -553,7 +553,7 @@ class DynamicFn {
     }
     //Я больше склонен, что бы первично отображалась всё таки актуальная информация с сервера
     //Но если через секунду содержимое не загружено, поднимать из кеша и отображать
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 3000), () {
       //print("Go1");
       if (appStoreData.nowDownloadContent == true) {
         //print("Go2");
