@@ -54,6 +54,7 @@ class TextFieldSW extends StatelessWidget {
     }
 
     render =  TextField(
+      key: Util.getKey(parsedJson, appStoreData, index, originKeyData),
       focusNode: appStoreData.pageDataState.getFocusNode(key),
       onSubmitted: (String x) {
         dynamic c =

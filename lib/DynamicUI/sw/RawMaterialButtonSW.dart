@@ -1,20 +1,22 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../AppStore/PageData.dart';
 import '../../DynamicPage/DynamicFn.dart';
+import '../../Util.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
 class RawMaterialButtonSW extends StatelessWidget {
   late final Widget render;
+  late final Color? fillColor;
 
   RawMaterialButtonSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+    fillColor = TypeParser.parseColor(
+      DynamicUI.def(parsedJson, 'fillColor', null, appStoreData, index, originKeyData),
+    );
     render = RawMaterialButton(
-      fillColor: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'fillColor', null, appStoreData, index, originKeyData),
-      ),
+      key: Util.getKey(parsedJson, appStoreData, index, originKeyData),
+      fillColor: fillColor,
       focusColor: TypeParser.parseColor(
         DynamicUI.def(parsedJson, 'focusColor', null, appStoreData, index, originKeyData),
       ),

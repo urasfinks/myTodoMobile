@@ -26,7 +26,8 @@ Future<void> loadPref() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
-  GestureBinding.instance.resamplingEnabled = true; // Set this flag.
+  //GestureBinding.instance.resamplingEnabled = true; // Set this flag.
+  GestureBinding.instance!.resamplingEnabled = true;
   await loadPref();
   Util.handleIncomingLinks();
   Util.handleInitialUri();

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../AppStore/PageData.dart';
+import '../../Util.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
@@ -9,6 +10,7 @@ class ColumnSW extends StatelessWidget {
 
   ColumnSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = Column(
+      key: Util.getKey(parsedJson, appStoreData, index, originKeyData),
       mainAxisSize: TypeParser.parseMainAxisSize(
         DynamicUI.def(parsedJson, 'mainAxisSize', 'max', appStoreData, index, originKeyData),
       )!,

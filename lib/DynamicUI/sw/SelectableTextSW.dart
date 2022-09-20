@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../AppStore/PageData.dart';
@@ -11,6 +10,7 @@ class SelectableTextSW extends StatelessWidget {
 
   SelectableTextSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = SelectableText(
+      key: Util.getKey(parsedJson, appStoreData, index, originKeyData),
       DynamicUI.def(parsedJson, 'data', '', appStoreData, index, originKeyData),
       style: DynamicUI.def(parsedJson, 'style', null, appStoreData, index, originKeyData),
       textAlign: TypeParser.parseTextAlign(

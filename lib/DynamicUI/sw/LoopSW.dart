@@ -3,6 +3,7 @@ import 'package:myTODO/AppStore/GlobalData.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
 
 import '../../AppStore/PageData.dart';
+import '../../Util.dart';
 import '../DynamicUI.dart';
 
 class LoopSW extends StatelessWidget {
@@ -42,6 +43,7 @@ class LoopSW extends StatelessWidget {
       DynamicPageUtil.parseTemplate(data, nameLoop, nameLoopResult);
 
       render = Column(
+        key: Util.getKey(parsedJson, appStoreData, index, originKeyData),
         children: _getChild(data[nameLoopResult], appStoreData),
       );
     } catch (e, stacktrace) {

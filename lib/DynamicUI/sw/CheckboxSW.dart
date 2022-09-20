@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../AppStore/PageData.dart';
+import '../../Util.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
@@ -14,9 +14,10 @@ class CheckboxSW extends StatelessWidget {
       DynamicUI.def(parsedJson, 'value', false, appStoreData, index, originKeyData),
     )!;
     //appStoreData.set(key, defValue);
-    render =  Checkbox(
+    render = Checkbox(
+      key: Util.getKey(parsedJson, appStoreData, index, originKeyData),
       side: MaterialStateBorderSide.resolveWith(
-            (states) => BorderSide(
+        (states) => BorderSide(
           width: 2.0,
           color: TypeParser.parseColor(value == false
               ? DynamicUI.def(parsedJson, 'borderColor', 'grey', appStoreData, index, originKeyData)

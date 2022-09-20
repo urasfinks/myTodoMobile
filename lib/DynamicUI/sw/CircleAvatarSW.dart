@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../AppStore/PageData.dart';
+import '../../Util.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
@@ -10,6 +10,7 @@ class CircleAvatarSW extends StatelessWidget {
 
   CircleAvatarSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
     render = CircleAvatar(
+      key: Util.getKey(parsedJson, appStoreData, index, originKeyData),
       backgroundImage: DynamicUI.def(parsedJson, 'backgroundImage', null, appStoreData, index, originKeyData),
       backgroundColor: TypeParser.parseColor(
         DynamicUI.def(parsedJson, 'backgroundColor', null, appStoreData, index, originKeyData),

@@ -10,6 +10,7 @@ import 'package:myTODO/DynamicUI/TypeParser.dart';
 import 'dart:developer' as developer;
 
 import 'AppMetric.dart';
+import 'AppStore/PageData.dart';
 import 'DynamicPage/DynamicFn.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -211,5 +212,9 @@ class Util {
     if(uri != null){
       DynamicFn.openUri(null, {"uri": uri.toString()});
     }
+  }
+
+  static Key getKey(parsedJson, PageData appStoreData, int index, String originKeyData){
+    return UniqueKey();
   }
 }

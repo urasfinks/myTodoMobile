@@ -1,26 +1,35 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../AppStore/PageData.dart';
 import '../../DynamicPage/DynamicFn.dart';
+import '../../Util.dart';
 import '../DynamicUI.dart';
 import '../TypeParser.dart';
 
 class IconButtonSW extends StatelessWidget {
   late final Widget render;
+  late final EdgeInsets padding;
+  late final double? iconSize;
+  late final Color? color;
 
   IconButtonSW(parsedJson, PageData appStoreData, int index, String originKeyData, {super.key}) {
+    padding = TypeParser.parseEdgeInsets(
+      DynamicUI.def(parsedJson, 'padding', '8', appStoreData, index, originKeyData),
+    )!;
+    iconSize = TypeParser.parseDouble(
+      DynamicUI.def(parsedJson, 'iconSize', null, appStoreData, index, originKeyData),
+    );
+    color = TypeParser.parseColor(
+      DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
+    );
     render = IconButton(
+      key: Util.getKey(parsedJson, appStoreData, index, originKeyData),
       icon: DynamicUI.def(parsedJson, 'icon', null, appStoreData, index, originKeyData),
-      iconSize: TypeParser.parseDouble(
-        DynamicUI.def(parsedJson, 'iconSize', null, appStoreData, index, originKeyData),
-      ),
+      iconSize: iconSize,
       splashRadius: TypeParser.parseDouble(
         DynamicUI.def(parsedJson, 'splashRadius', null, appStoreData, index, originKeyData),
       ),
-      color: TypeParser.parseColor(
-        DynamicUI.def(parsedJson, 'color', null, appStoreData, index, originKeyData),
-      ),
+      color: color,
       focusColor: TypeParser.parseColor(
         DynamicUI.def(parsedJson, 'focusColor', null, appStoreData, index, originKeyData),
       ),
@@ -36,9 +45,7 @@ class IconButtonSW extends StatelessWidget {
       disabledColor: TypeParser.parseColor(
         DynamicUI.def(parsedJson, 'disabledColor', null, appStoreData, index, originKeyData),
       ),
-      padding: TypeParser.parseEdgeInsets(
-        DynamicUI.def(parsedJson, 'padding', '8', appStoreData, index, originKeyData),
-      )!,
+      padding: padding,
       alignment: TypeParser.parseAlignment(
         DynamicUI.def(parsedJson, 'alignment', 'center', appStoreData, index, originKeyData),
       )!,
