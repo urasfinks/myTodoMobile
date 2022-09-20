@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
@@ -19,7 +17,6 @@ import 'package:myTODO/DynamicUI/sw/IconSW.dart';
 import 'package:myTODO/DynamicUI/sw/IconButtonSW.dart';
 import 'package:myTODO/DynamicUI/sw/InkWellSW.dart';
 import 'package:myTODO/DynamicUI/sw/LoopSW.dart';
-import 'package:myTODO/DynamicUI/sw/MaterialSW.dart';
 import 'package:myTODO/DynamicUI/sw/PaddingSW.dart';
 import 'package:myTODO/DynamicUI/sw/RawMaterialButtonSW.dart';
 import 'package:myTODO/DynamicUI/sw/RowSW.dart';
@@ -153,10 +150,6 @@ class FlutterType {
         ),
       ),
     );
-  }
-
-  static dynamic pMaterial(parsedJson, PageData appStoreData, int index, String originKeyData) {
-    return MaterialSW(parsedJson, appStoreData, index, originKeyData);
   }
 
   static void dynamicFunction(parsedJson, PageData appStoreData, String key, int index, String originKeyData) {

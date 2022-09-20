@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -25,6 +26,7 @@ Future<void> loadPref() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
+  GestureBinding.instance.resamplingEnabled = true; // Set this flag.
   await loadPref();
   Util.handleIncomingLinks();
   Util.handleInitialUri();
@@ -76,7 +78,9 @@ class _LifecycleAppState extends State<LifecycleApp> with WidgetsBindingObserver
             //Замена события
             return !TabScope.getInstance().popHistory(null);
           },
-          child: const TabWrap(),
+          child: const Material(
+            child: TabWrap(),
+          ),
         ),
       ),
     );

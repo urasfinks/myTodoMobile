@@ -46,6 +46,7 @@ class TabScope {
           "backgroundColor": "blue.600",
           "pullToRefreshBackgroundColor": "blue.600",
           "progressIndicatorBackgroundColor": "transparent",
+          "progressIndicatorColor": "#ffffff",
           "root": true,
         },
       ),

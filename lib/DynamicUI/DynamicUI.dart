@@ -43,7 +43,7 @@ class DynamicUI {
       "ElevatedButtonIcon": FlutterType.pElevatedButtonIcon,
       "ElevatedButton": FlutterType.pElevatedButton,
       "ButtonStyle": FlutterType.pButtonStyle,
-      "Material": FlutterType.pMaterial,
+      "Material": FlutterType.pContainer,
       "InkWell": FlutterType.pInkWell,
       "RoundedRectangleBorder": FlutterType.pRoundedRectangleBorder,
       "Text": FlutterType.pText,

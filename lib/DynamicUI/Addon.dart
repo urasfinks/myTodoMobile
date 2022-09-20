@@ -10,21 +10,23 @@ class Addon{
   }
 
   static void _topRadius(parsedJson){
-    if(parsedJson["flutterType"] == "Material"){
+    /*if(parsedJson["flutterType"] == "Material"){
       _materialTopRadius(parsedJson);
     }
     if(parsedJson["flutterType"] == "Container"){
       _containerTopRadius(parsedJson);
-    }
+    }*/
+    _containerTopRadius(parsedJson);
   }
 
   static void _bottomRadius(parsedJson){
-    if(parsedJson["flutterType"] == "Material"){
+    /*if(parsedJson["flutterType"] == "Material"){
       _materialBottomRadius(parsedJson);
     }
     if(parsedJson["flutterType"] == "Container"){
       _containerBottomRadius(parsedJson);
-    }
+    }*/
+    _containerBottomRadius(parsedJson);
   }
 
   static void _containerTopRadius(parsedJson) {
