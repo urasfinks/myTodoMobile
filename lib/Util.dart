@@ -16,6 +16,9 @@ import 'package:uni_links/uni_links.dart';
 
 class Util {
 
+  static bool isIOs(){
+    return Platform.isIOS;
+  }
   static bool isAndroid(){
     return Platform.isAndroid;
   }
