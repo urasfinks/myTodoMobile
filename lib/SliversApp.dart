@@ -53,7 +53,7 @@ class ShrinkWrapSlivers extends StatefulWidget {
   _ShrinkWrapSliversState createState() => _ShrinkWrapSliversState();
 }
 
-class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
+class _ShrinkWrapSliversState2 extends State<ShrinkWrapSlivers> {
   List<Widget> list = [];
 
   @override
@@ -77,8 +77,20 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
     return LayoutBuilder(
       key: UniqueKey(),
       builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        return CustomScrollView(
+          physics: Util.getPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                children: list,
+              ),
+            ),
+          ],
+        );
+        /*
         return SingleChildScrollView(
-          primary: false,
+          primary: true,
           key: UniqueKey(),
           reverse: widget.reverse,
           physics: Util.getPhysics(),
@@ -87,13 +99,13 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: list,
           ),
-        );
+        );*/
       },
     );
   }
 }
 
-class _ShrinkWrapSliversState2 extends State<ShrinkWrapSlivers> {
+class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
   List<Widget> sliverLists = [];
 
   @override
@@ -191,7 +203,7 @@ class _ShrinkWrapSliversState2 extends State<ShrinkWrapSlivers> {
     //dynamic data = jsonDecode(cachedDataPage!);
     dynamic data = widget.pageData.getServerResponse();
 
-    int each = 7;
+    int each = 30;
     List listItem = [];
     for (int i = 0; i < data["list"].length; i++) {
       listItem.add(DynamicUI.mainJson(data["list"][i], widget.pageData, i, 'Data'));

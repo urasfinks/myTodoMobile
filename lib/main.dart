@@ -27,11 +27,11 @@ Future<void> loadPref() async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
   //GestureBinding.instance.resamplingEnabled = true; // Set this flag.
-  GestureBinding.instance!.resamplingEnabled = true;
-  GestureBinding.instance!.samplingOffset = const Duration(milliseconds: -16);
-  /*if(!Util.isIOs()){
+  if(Util.isIOs()){
     GestureBinding.instance!.resamplingEnabled = true;
-  }*/
+    GestureBinding.instance!.samplingOffset = const Duration(milliseconds: -18);
+    //GestureBinding.instance!.resamplingEnabled = true;
+  }
   await loadPref();
   Util.handleIncomingLinks();
   Util.handleInitialUri();
@@ -68,10 +68,12 @@ class _LifecycleAppState extends State<LifecycleApp> with WidgetsBindingObserver
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: UniqueKey(),
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: MaterialApp(
+        key: UniqueKey(),
         navigatorObservers: [ClearFocusOnPush()],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
@@ -79,12 +81,14 @@ class _LifecycleAppState extends State<LifecycleApp> with WidgetsBindingObserver
         ],
         debugShowCheckedModeBanner: false,
         home: WillPopScope(
+          key: UniqueKey(),
           onWillPop: () async {
             //Замена события
             return !TabScope.getInstance().popHistory(null);
           },
-          child: const Material(
-            child: TabWrap(),
+          child: Material(
+            key: UniqueKey(),
+            child: const TabWrap(),
           ),
         ),
       ),
