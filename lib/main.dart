@@ -29,9 +29,9 @@ void main() async {
   //GestureBinding.instance.resamplingEnabled = true; // Set this flag.
   GestureBinding.instance!.resamplingEnabled = true;
   GestureBinding.instance!.samplingOffset = const Duration(milliseconds: -16);
-  if(!Util.isIOs()){
+  /*if(!Util.isIOs()){
     GestureBinding.instance!.resamplingEnabled = true;
-  }
+  }*/
   await loadPref();
   Util.handleIncomingLinks();
   Util.handleInitialUri();

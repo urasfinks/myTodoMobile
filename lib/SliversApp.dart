@@ -81,7 +81,7 @@ class _ShrinkWrapSliversState extends State<ShrinkWrapSlivers> {
           primary: false,
           key: UniqueKey(),
           reverse: widget.reverse,
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: Util.getPhysics(),
           scrollDirection: Axis.vertical,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
