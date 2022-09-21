@@ -28,6 +28,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //accessed before the binding was initialized
   //GestureBinding.instance.resamplingEnabled = true; // Set this flag.
   GestureBinding.instance!.resamplingEnabled = true;
+  GestureBinding.instance!.samplingOffset = const Duration(milliseconds: -16);
   await loadPref();
   Util.handleIncomingLinks();
   Util.handleInitialUri();
