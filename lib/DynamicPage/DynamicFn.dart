@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:myTODO/DynamicPage/DynamicDirective.dart';
 import 'package:myTODO/DynamicPage/DynamicPageUtil.dart';
@@ -17,6 +19,7 @@ import '../Util.dart';
 import 'DynamicPageWidget.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_share/flutter_share.dart';
 
@@ -442,7 +445,7 @@ class DynamicFn {
 
   static dynamic openGallery(PageData appStoreData, dynamic data) async {
     //GlobalData.debug("OPEN GALLERY");
-    /*var image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 600);
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 600);
     if (image != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
         aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
@@ -471,7 +474,7 @@ class DynamicFn {
         await Util.uploadImage(File(croppedFile.path), "${GlobalData.host}${data["url"]}");
         appStoreData.onIndexRevisionError();
       }
-    }*/
+    }
     //print("IMAGE: ${image}");
   }
 
